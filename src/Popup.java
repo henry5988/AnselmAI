@@ -17,7 +17,7 @@ public class Popup extends JFrame {
     JFrame f;
     JFrame.setDefaultLookAndFeelDecorated(true);
     JDialog.setDefaultLookAndFeelDecorated(true);
-    f = new JFrame("JTable Test");
+    f = new JFrame("JTable Te55st");
     f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close JFrame
     f.setSize(1000, 600);
     f.setLocationRelativeTo(null);
@@ -64,8 +64,8 @@ public class Popup extends JFrame {
     cp.add(new JScrollPane(table), BorderLayout.CENTER);
     DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
     tcr.setHorizontalAlignment(JLabel.CENTER);
-    table.getTableHeader().setReorderingAllowed(false);//防拖拉
-    table.setRowHeight(80);//設定儲存格高度
+    table.getTableHeader().setReorderingAllowed(false);//�����
+    table.setRowHeight(80);//閮剖�摮擃漲
     f.setVisible(true);
   }
 
