@@ -67,7 +67,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(image3, gbc_image3);
 		
 		
-		JLabel name1 = new JLabel("<HTML><U>"+name.get(0)+"</U></HTML>");
+		JLabel name1 = new JLabel("<HTML><U>"+names.get(0)+"</U></HTML>");
 		name1.setFont(new Font("Stencil", Font.PLAIN, 20));
 		name1.setForeground(Color.BLUE);
 		GridBagConstraints gbc_name1 = new GridBagConstraints();
@@ -91,7 +91,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(name1, gbc_name1);
 		
 		
-		JLabel name2 = new JLabel("<HTML><U>"+name.get(1)+"</U></HTML>");
+		JLabel name2 = new JLabel("<HTML><U>"+names.get(1)+"</U></HTML>");
 		name2.setFont(new Font("Stencil", Font.PLAIN, 20));
 		name2.setForeground(Color.BLUE);
 		GridBagConstraints gbc_name2 = new GridBagConstraints();
@@ -115,7 +115,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(name2, gbc_name2);
 		
 		
-		JLabel name3 = new JLabel("<HTML><U>"+name.get(2)+"</U></HTML>");
+		JLabel name3 = new JLabel("<HTML><U>"+names.get(2)+"</U></HTML>");
 		name3.setFont(new Font("Stencil", Font.PLAIN, 20));
 		name3.setForeground(Color.BLUE);
 		GridBagConstraints gbc_name3 = new GridBagConstraints();
