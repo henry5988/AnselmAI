@@ -1,21 +1,17 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.ComponentOrientation;
-import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Font;
+import java.awt.event.MouseEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+
 
 import com.agile.api.IAgileSession;
 import com.agile.api.INode;
@@ -24,12 +20,7 @@ import com.agile.px.IEventAction;
 import com.agile.px.IEventInfo;
 import com.agile.px.IObjectEventInfo;
 
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
