@@ -101,7 +101,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_name1.gridx = 0;
 		gbc_name1.gridy = 2;
 		gbc_name1.gridwidth = 7;
-		//gbc_name1.insets = new Insets(0, 0, 5, 5);
+		gbc_name1.insets = new Insets(5, 0, 0, 0);
 		
 		name1.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		name1.addMouseListener(new MouseAdapter() {
@@ -125,7 +125,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_name2.gridx = 10;
 		gbc_name2.gridy = 2;
 		gbc_name2.gridwidth = 7;
-		//gbc_name2.insets = new Insets(0, 0, 5, 5);
+		gbc_name2.insets = new Insets(5, 0, 0, 0);
 		
 		name2.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		name2.addMouseListener(new MouseAdapter() {
@@ -149,8 +149,8 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_name3.gridx = 20;
 		gbc_name3.gridy = 2;
 		gbc_name3.gridwidth = 7;
-		//gbc_name3.insets = new Insets(0, 0, 5, 5);
-	
+		gbc_name3.insets = new Insets(5, 0, 0, 0);
+
 		name3.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		name3.addMouseListener(new MouseAdapter() {
 	            @Override
@@ -202,7 +202,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_amount1.gridx = 0;
 		gbc_amount1.gridy = 5;
 		gbc_amount1.gridwidth = 7;
-		//gbc_amount1.insets = new Insets(0, 0, 5, 5);
+		gbc_amount1.insets = new Insets(20, 0, 0, 0);
 		
 		frame.getContentPane().add(amount1, gbc_amount1);
 		
@@ -212,7 +212,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_amount2.gridx = 10;
 		gbc_amount2.gridy = 5;
 		gbc_amount2.gridwidth = 7;
-		//gbc_amount2.insets = new Insets(0, 0, 5, 5);
+		gbc_amount2.insets = new Insets(20, 0, 0, 0);
 		
 		frame.getContentPane().add(amount2, gbc_amount2);
 		
@@ -222,7 +222,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_amount3.gridx = 20;
 		gbc_amount3.gridy = 5;
 		gbc_amount3.gridwidth = 7;
-		//gbc_amount3.insets = new Insets(0, 0, 5, 5);
+		gbc_amount3.insets = new Insets(20, 0, 0, 0);
 		
 		frame.getContentPane().add(amount3, gbc_amount3);
 		

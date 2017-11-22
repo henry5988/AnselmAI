@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.Cursor;
@@ -32,37 +33,43 @@ public class Popup extends JFrame {
 		
 		
 		JLabel image1 = new JLabel("");
-		image1.setIcon(new ImageIcon(images.get(0)));
+		//image1.setIcon(new ImageIcon(images.get(0)));
+		ImageIcon imageIcon1 = new ImageIcon(new ImageIcon(images.get(0)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		image1.setIcon(imageIcon1);
 		GridBagConstraints gbc_image1 = new GridBagConstraints();
-		gbc_image1.gridx = 14;
+		gbc_image1.gridx = 0;
 		gbc_image1.gridy = 0;
 		gbc_image1.gridwidth = 7;
 		gbc_image1.gridheight = 2;
-		gbc_image1.insets = new Insets(0, 0, 5, 0);
+		//gbc_image1.insets = new Insets(0, 0, 5, 0);
 		
 		frame.getContentPane().add(image1, gbc_image1);
 		
 		
 		JLabel image2 = new JLabel("");
-		image2.setIcon(new ImageIcon(images.get(1)));
+		//image2.setIcon(new ImageIcon(images.get(1)));
+		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(images.get(1)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		image2.setIcon(imageIcon2);
 		GridBagConstraints gbc_image2 = new GridBagConstraints();
-		gbc_image2.gridx = 0;
+		gbc_image2.gridx = 7;
 		gbc_image2.gridy = 0;
 		gbc_image2.gridwidth = 7;
 		gbc_image2.gridheight = 2;
-		gbc_image2.insets = new Insets(0, 0, 5, 5);
+		gbc_image2.insets = new Insets(0, 100, 0, 100);// you can modify the space between components by changing the value here 
 		
 		frame.getContentPane().add(image2, gbc_image2);
 		
 		
 		JLabel image3 = new JLabel("");
-		image3.setIcon(new ImageIcon(images.get(2)));
+		//image3.setIcon(new ImageIcon(images.get(2)));
+		ImageIcon imageIcon3 = new ImageIcon(new ImageIcon(images.get(2)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		image3.setIcon(imageIcon3);
 		GridBagConstraints gbc_image3 = new GridBagConstraints();
-		gbc_image3.gridx = 7;
+		gbc_image3.gridx = 14;
 		gbc_image3.gridy = 0;
 		gbc_image3.gridwidth = 7;
 		gbc_image3.gridheight = 2;
-		gbc_image3.insets = new Insets(0, 0, 5, 5);
+		//gbc_image3.insets = new Insets(0, 0, 5, 5);
 		
 		frame.getContentPane().add(image3, gbc_image3);
 		
@@ -74,7 +81,7 @@ public class Popup extends JFrame {
 		gbc_name1.gridx = 0;
 		gbc_name1.gridy = 2;
 		gbc_name1.gridwidth = 7;
-		gbc_name1.insets = new Insets(0, 0, 5, 5);
+		gbc_name1.insets = new Insets(5, 0, 0, 0);
 		
 		name1.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		name1.addMouseListener(new MouseAdapter() {
@@ -98,7 +105,7 @@ public class Popup extends JFrame {
 		gbc_name2.gridx = 7;
 		gbc_name2.gridy = 2;
 		gbc_name2.gridwidth = 7;
-		gbc_name2.insets = new Insets(0, 0, 5, 5);
+		gbc_name2.insets = new Insets(5, 0, 0, 0);
 		
 		name2.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		name2.addMouseListener(new MouseAdapter() {
@@ -122,7 +129,7 @@ public class Popup extends JFrame {
 		gbc_name3.gridx = 14;
 		gbc_name3.gridy = 2;
 		gbc_name3.gridwidth = 7;
-		gbc_name3.insets = new Insets(0, 0, 5, 5);
+		gbc_name3.insets = new Insets(5, 0, 0, 0);
 	
 		name3.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		name3.addMouseListener(new MouseAdapter() {
@@ -144,7 +151,7 @@ public class Popup extends JFrame {
 		gbc_description1.gridx = 0;
 		gbc_description1.gridy = 3;
 		gbc_description1.gridwidth = 7;
-		gbc_description1.insets = new Insets(0, 0, 5, 5);
+		//gbc_description1.insets = new Insets(0, 0, 5, 5);
 		
 		frame.getContentPane().add(description1, gbc_description1);
 		
@@ -154,7 +161,7 @@ public class Popup extends JFrame {
 		gbc_description2.gridx = 7;
 		gbc_description2.gridy = 3;
 		gbc_description2.gridwidth = 7;
-		gbc_description2.insets = new Insets(0, 0, 5, 5);
+		//gbc_description2.insets = new Insets(0, 0, 5, 5);
 		
 		frame.getContentPane().add(description2, gbc_description2);
 		
@@ -164,37 +171,37 @@ public class Popup extends JFrame {
 		gbc_description3.gridx = 14;
 		gbc_description3.gridy = 3;
 		gbc_description3.gridwidth = 7;
-		gbc_description3.insets = new Insets(0, 0, 5, 5);
+		//gbc_description3.insets = new Insets(0, 0, 5, 5);
 		
 		frame.getContentPane().add(description3, gbc_description3);
 		
 		
-		JLabel amount1 = new JLabel("New label");
+		JLabel amount1 = new JLabel(/*數量+*/"x個人看過這個檔案");
 		GridBagConstraints gbc_amount1 = new GridBagConstraints();
 		gbc_amount1.gridx = 0;
 		gbc_amount1.gridy = 5;
 		gbc_amount1.gridwidth = 7;
-		gbc_amount1.insets = new Insets(0, 0, 5, 5);
+		gbc_amount1.insets = new Insets(20, 0, 0, 0);
 		
 		frame.getContentPane().add(amount1, gbc_amount1);
 		
 		
-		JLabel amount2 = new JLabel("New label");
+		JLabel amount2 = new JLabel(/*數量+*/"y個人看過這個檔案");
 		GridBagConstraints gbc_amount2 = new GridBagConstraints();
 		gbc_amount2.gridx = 7;
 		gbc_amount2.gridy = 5;
 		gbc_amount2.gridwidth = 7;
-		gbc_amount2.insets = new Insets(0, 0, 5, 5);
+		gbc_amount2.insets = new Insets(20, 0, 0, 0);
 		
 		frame.getContentPane().add(amount2, gbc_amount2);
 		
 		
-		JLabel amount3 = new JLabel("New label");
+		JLabel amount3 = new JLabel(/*數量+*/"z個人看過這個檔案");
 		GridBagConstraints gbc_amount3 = new GridBagConstraints();
 		gbc_amount3.gridx = 14;
 		gbc_amount3.gridy = 5;
 		gbc_amount3.gridwidth = 7;
-		gbc_amount3.insets = new Insets(0, 0, 5, 5);
+		gbc_amount3.insets = new Insets(20, 0, 0, 0);
 		
 		frame.getContentPane().add(amount3, gbc_amount3);
 		
