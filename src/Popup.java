@@ -250,8 +250,8 @@ public class Popup extends JFrame {
     cp.add(new JScrollPane(table), BorderLayout.CENTER);
     DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
     tcr.setHorizontalAlignment(JLabel.CENTER);
-    table.getTableHeader().setReorderingAllowed(false);//嚙踐�蕭嚙踐■嚙踝蕭
-    table.setRowHeight(80);//���蕭謍堆�謢畸僱��朱瞍�
+    table.getTableHeader().setReorderingAllowed(false);//���蕭��������
+    table.setRowHeight(80);//嚙踐�蕭嚙踐�雓�蕭賹雓Ｙ�嚙踝蕭����蕭
     f.setVisible(true);*/
   }
 
