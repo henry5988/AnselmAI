@@ -1,13 +1,3 @@
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Font;
-import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -41,7 +31,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 
 	private void frame() {
 		// TODO Auto-generated method stub
-		JFrame frame = new JFrame("看過這個的人也看過");
+		JFrame frame = new JFrame("嚙豎過嚙緻嚙諉迎蕭嚙瘡嚙稽嚙豎過");
 		frame.setBounds(100, 100, 1008, 455);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -167,7 +157,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		
 		
 		JLabel description1 = new JLabel("156");
-		description1.setFont(new Font("標楷體", Font.PLAIN, 18));
+		description1.setFont(new Font("嚙請瘀蕭嚙踝蕭", Font.PLAIN, 18));
 		GridBagConstraints gbc_description1 = new GridBagConstraints();
 		gbc_description1.gridx = 0;
 		gbc_description1.gridy = 3;
@@ -197,7 +187,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		frame.getContentPane().add(description3, gbc_description3);
 		
 		
-		JLabel amount1 = new JLabel("5人看過這個檔案");
+		JLabel amount1 = new JLabel("5嚙瘡嚙豎過嚙緻嚙踝蕭嚙褕殷蕭");
 		GridBagConstraints gbc_amount1 = new GridBagConstraints();
 		gbc_amount1.gridx = 0;
 		gbc_amount1.gridy = 5;

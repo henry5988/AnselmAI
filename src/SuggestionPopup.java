@@ -1,4 +1,4 @@
-import static com.HF.*;
+import static com.HF.out;
 
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
@@ -14,21 +14,14 @@ import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction {
 
-  protected static final String USERNAME = "agile";
-  protected static final String PASSWORD = "tartan";
-
-  public static String getUSERNAME() {
-    return USERNAME;
-  }
-
-  public static String getPASSWORD() {
-    return PASSWORD;
-  }
+  static final String USERNAME = "agile";
+  static final String PASSWORD = "tartan";
+  static final String URL = "jdbc:oracle:thin:@win-ooi3viu801v:1521:agile9";
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     try {
-      LinkedList<IAgileObject> list = getItemAdvice(session, req);
+      LinkedList list = getItemAdvice(session, req);
       out("convert Object to String info...");
       LinkedList infoList = convertObjectToInfo(list);
       out("retrieving name array...");
@@ -38,7 +31,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
       out("retrieving description array...");
       List descriptions = (List) infoList.get(2);
       out("retrieving related user count...");
-      List userCounts = (List) infoList.get(3);
+      //List userCounts = (List) infoList.get(3);
       Popup.frame(names, images, descriptions);
     } catch (SQLException | APIException e) {
       out("Error occured", "err");
@@ -49,9 +42,11 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     return null;
   }
 
-  protected abstract LinkedList<LinkedList<String>> convertObjectToInfo(
+  protected static LinkedList<LinkedList<String>> convertObjectToInfo(
       LinkedList<IAgileObject> list)
-      throws APIException;
+      throws APIException {
+    return null;
+  }
 
   protected abstract LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
       throws SQLException, APIException;

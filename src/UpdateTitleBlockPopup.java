@@ -21,7 +21,7 @@ import java.util.LinkedList;
 public class UpdateTitleBlockPopup extends SuggestionPopup {
 
   @Override
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
+  protected static LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
       throws APIException {
     list = removeNull(list);
     LinkedList infoList = new LinkedList();
@@ -69,7 +69,7 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
       throws SQLException, APIException {
     // Tells what documents people have looked at this document
     // get connection
-    Connection conn = getConnection(USERNAME, PASSWORD);
+    Connection conn = getConnection(USERNAME, PASSWORD, URL);
     out("Executing SQL statement...");
     //String sql = "SELECT ITEM.ITEM_NUMBER from ITEM where ITEM.CLASS=9000";
     IItem item = (IItem) getTitleObject(req);
@@ -116,5 +116,4 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
   }
 
 
-
-} 
+}
