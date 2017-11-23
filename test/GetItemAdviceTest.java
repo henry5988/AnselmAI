@@ -14,63 +14,26 @@ import java.util.Map;
 
 public class GetItemAdviceTest {
 
-  final static String URL = "http://agile936d:7001/Agile";
-  final static String USERNAME = "admin";
-  final static String PASSWORD = "agile936";
+  private final static String URL = "http://win-ooi3viu801v:7001/Agile";
+  private final static String USERNAME = "admin";
+  private final static String PASSWORD = "agile936";
 
   public static void main(String[] args) {
     try {
-      GetFilePopup p = new GetFilePopup();
+      // instantiate which class's getItemAdvice method should be tested
+      SuggestionPopup p = new GetFilePopup();
 
       IAgileSession session = sessionLogin(USERNAME, PASSWORD);
-      IEventInfo info = new IObjectEventInfo() {
-        @Override
-        public IDataObject getDataObject() throws APIException {
-          return (IDataObject) session.getObject(ItemConstants.CLASS_DOCUMENT, "D00001");
-        }
+      IEventInfo info = getTestObj(session);
 
-        @Override
-        public int getEventType() throws APIException {
-          return 0;
-        }
-
-        @Override
-        public int getEventTriggerType() throws APIException {
-          return 0;
-        }
-
-        @Override
-        public String getEventName() throws APIException {
-          return null;
-        }
-
-        @Override
-        public String getEventSubscriberName() throws APIException {
-          return null;
-        }
-
-        @Override
-        public String getEventHandlerName() throws APIException {
-          return null;
-        }
-
-        @Override
-        public Map getUserDefinedMap() throws APIException {
-          return null;
-        }
-
-        @Override
-        public void setUserDefinedMap(Map map) throws APIException {
-
-        }
-      };
       LinkedList list = p.getItemAdvice(session, info);
-      while(list.isEmpty() == false){
+      while(!list.isEmpty()){
         LinkedList fields = (LinkedList) list.pop();
-        while(fields.isEmpty() == false){
+        while(!fields.isEmpty()){
           out(fields.pop().toString() + ", ");
         }
       }
+
     } catch (APIException e) {
       out("Error during GetItemAdviceTest()", "err");
     } catch (SQLException e) {
@@ -87,4 +50,50 @@ public class GetItemAdviceTest {
     params.put(AgileSessionFactory.PASSWORD, password);
     return instance.createSession(params);
   }
+
+  private static IEventInfo getTestObj(IAgileSession session) {
+
+    return new IObjectEventInfo() {
+      @Override
+      public IDataObject getDataObject() throws APIException {
+        return (IDataObject) session.getObject(ItemConstants.CLASS_DOCUMENT, "D00001");
+      }
+
+      @Override
+      public int getEventType() throws APIException {
+        return 0;
+      }
+
+      @Override
+      public int getEventTriggerType() throws APIException {
+        return 0;
+      }
+
+      @Override
+      public String getEventName() throws APIException {
+        return null;
+      }
+
+      @Override
+      public String getEventSubscriberName() throws APIException {
+        return null;
+      }
+
+      @Override
+      public String getEventHandlerName() throws APIException {
+        return null;
+      }
+
+      @Override
+      public Map getUserDefinedMap() throws APIException {
+        return null;
+      }
+
+      @Override
+      public void setUserDefinedMap(Map map) throws APIException {
+
+      }
+    };
+  }
+
 }
