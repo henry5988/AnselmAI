@@ -1,5 +1,6 @@
 import static com.HF.executeSQL;
 import static com.HF.getConnection;
+import static com.HF.getWordInParen;
 import static com.HF.out;
 import static com.HF.removeDup;
 import static com.HF.removeNull;
@@ -36,9 +37,9 @@ public class GetFilePopup extends SuggestionPopup implements IEventAction {
     out("Getting files that was downloaded...");
     IEventDirtyFile[] files = info.getFiles();
     for (int i = 0; i < files.length; i++) {
+      out("New dirty file");
       out("Getting related file from " + files[i].getFilename());
-      IAttachmentFile file = (IAttachmentFile) files[i];
-      lists.add(getAttachmentAdvice(conn, (IItem) info.getDataObject(), eventName, session));
+      lists.add(getAttachmentAdvice(conn, file[i], eventName, session));
     }
     if(lists.contains(null)){
       out("Culling null items...");
@@ -46,22 +47,36 @@ public class GetFilePopup extends SuggestionPopup implements IEventAction {
     }
     while(lists.size() < 3){
       //TODO work-around for if the list has fewer than 3 items, need to design a way to display nothing
+      out("list fewer than 3 items...");
       lists.add((IItem)info.getDataObject());
     }
 
     return lists;
   }
 
-  private LinkedList getAttachmentAdvice(Connection conn, IItem item, String eventName,
+  private LinkedList getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
       IAgileSession session)
       throws APIException, SQLException {
-    LinkedList advices = new LinkedList();
-    String sql = "SELECT OWNER FROM EVENT_HISTORY where EVENT_NAME = '" + eventName + "' AND OBJECT_NUMBER = " + item.getObjectId();
-    LinkedList userNameSet = executeSQL(conn, sql);
-    userNameSet = removeDup(userNameSet);
-    while(!userNameSet.isEmpty()){
+    out("getAttachmentAdvice begin...");
+    IEventDirtyFile downloaded = file; // file is the file that was downloaded
+    String folderNum = downloaded.getFileFolder().getName();
+    out("Folder name: " + folderNum);
+    Integer[] folderVers = (Integer[]) downloaded.getFileFolder().getVersions();
+    Integer folderVer = folderVers[Integer.parseInt(downloaded.getRowId().toString())];
+    out("Folder Version: " + folderVer.toString());
+    String DBDetails = folderNum + " V " + folderVer + " " + downloaded.getFilename();
+    LinkedList advices = new LinkedList(); // declare and instantiate advices
+    // select all users who have downloaded the same version of the file
+    String sql = "SELECT USER_NAME FROM ITEM_HISTORY WHERE DETAILS = " + DBDetails + " ORDER BY TIMESTAMP DESC";
+    LinkedList userSet = executeSQL(conn, sql);
+    userSet = removeDup(userSet);
+    LinkedList userNames = new LinkedList();
+    for (Object user : userSet) {
+      userNames.add(getWordInParen((String) user));
+    }
+    while(!userNames.isEmpty()){
       out("Scanning for user file download history...");
-      sql = "SELECT * FROM(SELECT OBJECT_NUMBER FROM EVENT_HISTORY where OWNER =" + userNameSet.pop()
+      sql = "SELECT * FROM(SELECT OBJECT_NUMBER FROM EVENT_HISTORY where OWNER =" + userNames.pop()
           + "AND EVENT_NAME = '" + eventName + "' Order by START_TIMESTAMP DESC) WHERE ROWNUM <= 10";
       LinkedList suggestedItems = executeSQL(conn, sql);
       suggestedItems = removeDup(suggestedItems);
