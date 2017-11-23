@@ -1,4 +1,5 @@
 import static com.HF.out;
+import static com.HF.removeNull;
 
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
@@ -42,11 +43,47 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     return null;
   }
 
-  protected static LinkedList<LinkedList<String>> convertObjectToInfo(
-      LinkedList<IAgileObject> list)
-      throws APIException {
-    return null;
+  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
+      throws APIException{
+    list = removeNull(list);
+    LinkedList infoList = new LinkedList();
+    ItemInfoConverter converter = new ItemInfoConverter();
+    LinkedList names = new LinkedList();
+    LinkedList descriptions = new LinkedList();
+    out("List of objects to convert: " + list);
+    out("Setting name type array...");
+    names.add("names");
+    descriptions.add("descriptions");
+    LinkedList images = new LinkedList();
+    images.push("images3");
+    images.push("images2");
+    images.push("images1");
+    images.push("images");
+    out("converter variables defined");
+    while (!list.isEmpty()) {
+      out("converting " + list.peekLast().getName() == null ? "null" : list.peekLast().getName());
+      converter.setConverterAtt("name");
+      out("extracting name...");
+      names.add(converter.convert(list.peekLast()));
+      out("extracting description...");
+      converter.setConverterAtt("description");
+      descriptions.add(converter.convert(list.peekLast()));
+      out("extracting images...");
+      converter.setConverterAtt("image");
+      list.removeLast();
+    }
+    out("adding names...");
+    infoList.add(names);
+    out("adding descriptions...");
+    infoList.add(descriptions);
+    out("adding images...");
+    infoList.add(images);
+    out("info list: " + infoList.toString());
+    infoList = (LinkedList) converter
+        .orderLists(infoList, new String[]{"names", "images", "descriptions"});
+    return infoList;
   }
+
 
   protected abstract LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
       throws SQLException, APIException;

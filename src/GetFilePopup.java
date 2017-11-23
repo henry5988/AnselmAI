@@ -5,7 +5,6 @@ import static com.HF.removeDup;
 import static com.HF.removeNull;
 
 import com.agile.api.APIException;
-import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IAttachmentFile;
 import com.agile.api.IItem;
@@ -22,12 +21,6 @@ import java.util.LinkedList;
 public class GetFilePopup extends SuggestionPopup implements IEventAction {
 
   private final static String GETFILEEVENTNAME = "Get File";
-
-  @Override
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
-      throws APIException {
-    return UpdateTitleBlockPopup.convertObjectToInfo(list);
-  }
 
   @Override
   protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
