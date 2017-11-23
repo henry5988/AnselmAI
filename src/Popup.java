@@ -9,6 +9,7 @@ import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

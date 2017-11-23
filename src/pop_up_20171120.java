@@ -1,4 +1,14 @@
 
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -66,7 +76,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_image2.gridy = 0;
 		gbc_image2.gridwidth = 7;
 		gbc_image2.gridheight = 2;
-		gbc_image2.insets = new Insets(0, 100, 0, 100);// you can modify the space between components by changing the value here 
+		gbc_image2.insets = new Insets(0, 100, 0, 100);// you can modify the space between components by changing the value here
 		
 		frame.getContentPane().add(image2, gbc_image2);
 		
