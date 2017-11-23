@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ItemInfoConverter {
+  // This Class extracts attribute specified in converterAtt from input IAgileObject
 
   //fields
   private String converterAtt;
