@@ -16,6 +16,7 @@ import com.agile.px.IFileEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GetFilePopup extends FileSuggestionPopup {
 
@@ -55,6 +56,7 @@ public class GetFilePopup extends FileSuggestionPopup {
   private LinkedList getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
       IAgileSession session)
       throws APIException, SQLException {
+    List visitCount = new LinkedList();
     StringParser sp = new StringParser();
     out("getAttachmentAdvice begin...");
     IEventDirtyFile downloaded = file; // file is the file that was downloaded
@@ -76,8 +78,8 @@ public class GetFilePopup extends FileSuggestionPopup {
       userNames.add(getWordInParen((String) user));
       sql = "SELECT DETAILS FROM ITEM_HISTORY WHERE USER_NAME = '" + user
           + "' AND ACTION = 15 ORDER BY TIMESTAMP DESC";
-      LinkedList relavantFiles = executeSQL(conn, sql, true);
-      advices.addAll(relavantFiles);
+      List relevantFiles = executeSQL(conn, sql, true);
+      advices.addAll(relevantFiles);
       out("advices: " + advices.toString());
     }
     LinkedList attAdvices = new LinkedList();

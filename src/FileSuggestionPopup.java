@@ -1,3 +1,4 @@
+import static com.HF.countOccurance;
 import static com.HF.executeSQL;
 import static com.HF.getConnection;
 import static com.HF.out;
@@ -9,6 +10,7 @@ import com.agile.px.IEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 public abstract class FileSuggestionPopup extends SuggestionPopup implements IEventAction {
 
@@ -22,13 +24,14 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
     // TODO convert attachment file object to printed info
     // TODO need file name, description, image, and viewer count
     // TODO both image and viewer count need their own private algorithm to get
-    // TODO image needs to grab the suffix of the file name and find the corresponding file image
+    // image needs to grab the suffix of the file name and find the corresponding file image
     // TODO viewer count needs a aggregate function to add up all relevant views
     Connection conn = null;
     try {
       conn = getConnection(USERNAME, PASSWORD, URL);
 
       out("GetFilePopup.convertObjectToInfo()...");
+      List scanned = new LinkedList();
       for (Object file : list
           ) {
         String sql =
@@ -37,7 +40,9 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
         LinkedList descriptions = executeSQL(conn, sql);
         String description = (String) descriptions.pop();
         String imageSrc = getImageSrc((String)file);
-        String viewerCount = getViewerCount((String) file);
+        if(!scanned.contains(file)) {
+          Integer viewerCount = getViewerCount(list, (String) file);
+        }
       }
 
       return super.convertObjectToInfo(list);
@@ -52,8 +57,8 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
     return ip.getImagePath(imageType);
   }
 
-  private String getViewerCount(String file){
-
+  private Integer getViewerCount(List fileList, String file){
+    return countOccurance(fileList, file, 0);
   }
 
   protected class StringParser {
