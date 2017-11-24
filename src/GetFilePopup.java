@@ -1,4 +1,6 @@
+import static com.HF.countOccurance;
 import static com.HF.executeSQL;
+import static com.HF.extractTop;
 import static com.HF.getConnection;
 import static com.HF.getWordInParen;
 import static com.HF.out;
@@ -9,14 +11,15 @@ import com.agile.api.IAgileSession;
 import com.agile.api.IItem;
 import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
-import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class GetFilePopup extends FileSuggestionPopup {
 
@@ -38,7 +41,7 @@ public class GetFilePopup extends FileSuggestionPopup {
     for (int i = 0; i < files.length; i++) {
       out("New dirty file");
       out("Getting related file from " + files[i].getFilename());
-      lists.addAll(getAttachmentAdvice(conn, files[i], eventName, session));
+      lists.addAll(getAttachmentAdvice(conn, files[i], eventName, session)); // gets file list that contains filename and viewer count
     }
     if (lists.contains(null)) {
       out("Culling null items...");
@@ -53,9 +56,10 @@ public class GetFilePopup extends FileSuggestionPopup {
     return lists;
   }
 
-  private LinkedList getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
+  private List getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
       IAgileSession session)
       throws APIException, SQLException {
+    Map viewerCounts = new HashMap();
     List visitCount = new LinkedList();
     StringParser sp = new StringParser();
     out("getAttachmentAdvice begin...");
@@ -82,12 +86,18 @@ public class GetFilePopup extends FileSuggestionPopup {
       advices.addAll(relevantFiles);
       out("advices: " + advices.toString());
     }
-    LinkedList attAdvices = new LinkedList();
+    List attAdvices = new LinkedList();
     for (Object detail : advices) {
       detail = sp.getDetailsFileName((String) detail);
       attAdvices.add(detail);
     }
-
+    for ( Object fileName : attAdvices) {
+      if(!viewerCounts.containsKey(fileName)){
+        viewerCounts.put(file, countOccurance(attAdvices, fileName, 0));
+      }
+    }
+    List topViewerCounts = extractTop(viewerCounts, 3);
+    attAdvices = topViewerCounts;
     return attAdvices;
   }
 

@@ -23,41 +23,54 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
       throws APIException {
     // TODO convert attachment file object to printed info
     // TODO need file name, description, image, and viewer count
-    // TODO both image and viewer count need their own private algorithm to get
+    // both image and viewer count need their own private algorithm to get
     // image needs to grab the suffix of the file name and find the corresponding file image
-    // TODO viewer count needs a aggregate function to add up all relevant views
-    Connection conn = null;
+    // viewer count needs a aggregate function to add up all relevant views
+    Connection conn;
+    List info = new LinkedList();
+    List scanned = new LinkedList();
+    List fileNames = new LinkedList();
+    List images = new LinkedList();
+    List descriptions = new LinkedList();
+    List viewerCounts = new LinkedList();
     try {
       conn = getConnection(USERNAME, PASSWORD, URL);
 
       out("GetFilePopup.convertObjectToInfo()...");
-      List scanned = new LinkedList();
-      for (Object file : list
-          ) {
+
+      for (Object file : list) {
         String sql =
             "SELECT ATTACHMENT.Description FROM ATTACHMENT JOIN FILES ON FILES.ID = ATTACHMENT.ID WHERE FILES.FILENAME = '"
                 + file + "'";
-        LinkedList descriptions = executeSQL(conn, sql);
-        String description = (String) descriptions.pop();
+
+        String description = (String) executeSQL(conn, sql).pop();
+        descriptions.add(description);
         String imageSrc = getImageSrc((String)file);
+        images.add(imageSrc);
         if(!scanned.contains(file)) {
+          scanned.add(file);
           Integer viewerCount = getViewerCount(list, (String) file);
+          viewerCounts.add(viewerCounts.toString());
         }
       }
+      info.add(descriptions);
+      info.add(images);
+      info.add(viewerCounts);
 
-      return super.convertObjectToInfo(list);
+
     } catch (SQLException e) {
       out("Error when establishing database connection", "err");
     }
+    return (LinkedList<LinkedList<String>>) info;
   }
 
-  private String getImageSrc(String file) {
+  protected String getImageSrc(String file) {
     String imageType = file.substring(file.indexOf('.') + 1, file.length());
     ImagePath ip = new ImagePath();
     return ip.getImagePath(imageType);
   }
 
-  private Integer getViewerCount(List fileList, String file){
+  protected Integer getViewerCount(List fileList, String file){
     return countOccurance(fileList, file, 0);
   }
 
