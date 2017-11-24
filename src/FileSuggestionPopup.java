@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 public abstract class FileSuggestionPopup extends SuggestionPopup implements IEventAction {
 
@@ -23,6 +24,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
       throws APIException {
     // TODO convert attachment file object to printed info
     // TODO need file name, description, image, and viewer count
+    // TODO list could contain map entries, which would need to be access for keys to get the file names
     // both image and viewer count need their own private algorithm to get
     // image needs to grab the suffix of the file name and find the corresponding file image
     // viewer count needs a aggregate function to add up all relevant views
@@ -41,7 +43,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
       for (Object file : list) {
         String sql =
             "SELECT ATTACHMENT.Description FROM ATTACHMENT JOIN FILES ON FILES.ID = ATTACHMENT.ID WHERE FILES.FILENAME = '"
-                + file + "'";
+                + file+ "'";
 
         String description = (String) executeSQL(conn, sql).pop();
         descriptions.add(description);
