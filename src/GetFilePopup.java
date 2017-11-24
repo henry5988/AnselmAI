@@ -1,4 +1,6 @@
+import static com.HF.countOccurance;
 import static com.HF.executeSQL;
+import static com.HF.extractTop;
 import static com.HF.getConnection;
 import static com.HF.getWordInParen;
 import static com.HF.out;
@@ -9,29 +11,19 @@ import com.agile.api.IAgileSession;
 import com.agile.api.IItem;
 import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
-import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-public class GetFilePopup extends SuggestionPopup implements IEventAction {
+public class GetFilePopup extends FileSuggestionPopup {
 
   private final static String GETFILEEVENTNAME = "Get File";
-
-  private class StringParser {
-
-    String buildDetails(String folderNum, String folderVer, String fileName) {
-      return folderNum + " V " + folderVer + " " + fileName;
-    }
-
-    String getDetailsFileName(String details) {
-      return details.substring(details.lastIndexOf(' ') + 1, details.length());
-    }
-
-  }
 
   @Override
   protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
@@ -49,7 +41,7 @@ public class GetFilePopup extends SuggestionPopup implements IEventAction {
     for (int i = 0; i < files.length; i++) {
       out("New dirty file");
       out("Getting related file from " + files[i].getFilename());
-      lists.addAll(getAttachmentAdvice(conn, files[i], eventName, session));
+      lists.addAll(getAttachmentAdvice(conn, files[i], eventName, session)); // gets file list that contains filename and viewer count
     }
     if (lists.contains(null)) {
       out("Culling null items...");
@@ -64,9 +56,11 @@ public class GetFilePopup extends SuggestionPopup implements IEventAction {
     return lists;
   }
 
-  private LinkedList getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
+  private List getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
       IAgileSession session)
       throws APIException, SQLException {
+    Map viewerCounts = new HashMap();
+    List visitCount = new LinkedList();
     StringParser sp = new StringParser();
     out("getAttachmentAdvice begin...");
     IEventDirtyFile downloaded = file; // file is the file that was downloaded
@@ -88,43 +82,23 @@ public class GetFilePopup extends SuggestionPopup implements IEventAction {
       userNames.add(getWordInParen((String) user));
       sql = "SELECT DETAILS FROM ITEM_HISTORY WHERE USER_NAME = '" + user
           + "' AND ACTION = 15 ORDER BY TIMESTAMP DESC";
-      LinkedList relavantFiles = executeSQL(conn, sql, true);
-      advices.addAll(relavantFiles);
+      List relevantFiles = executeSQL(conn, sql, true);
+      advices.addAll(relevantFiles);
       out("advices: " + advices.toString());
     }
-    LinkedList attAdvices = new LinkedList();
+    List attAdvices = new LinkedList();
     for (Object detail : advices) {
       detail = sp.getDetailsFileName((String) detail);
       attAdvices.add(detail);
     }
-
+    for ( Object fileName : attAdvices) {
+      if(!viewerCounts.containsKey(fileName)){
+        viewerCounts.put(file, countOccurance(attAdvices, fileName, 0));
+      }
+    }
+    List topViewerCounts = extractTop(viewerCounts, 3);
+    attAdvices = topViewerCounts;
     return attAdvices;
   }
 
-  @Override
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList list)
-      throws APIException {
-    // TODO convert attachment file object to printed info
-    // TODO need file name, description, image, and viewer count
-    // TODO both image and viewer count need their own private algorithm to get
-    // TODO image needs to grab the suffix of the file name and find the corresponding file image
-    // TODO viewer count needs a aggregate function to add up all relevant views
-    Connection conn = null;
-    try {
-      conn = getConnection(USERNAME, PASSWORD, URL);
-
-      out("GetFilePopup.convertObjectToInfo()...");
-      for (Object file : list
-          ) {
-        String sql =
-            "SELECT ATTACHMENT.Description FROM ATTACHMENT JOIN FILES ON FILES.ID = ATTACHMENT.ID WHERE FILES.FILENAME = '"
-                + file + "'";
-        LinkedList description = executeSQL(conn, sql);
-      }
-
-      return super.convertObjectToInfo(list);
-    } catch (SQLException e) {
-      out("Error when establishing database connection", "err");
-    }
-  }
 }
