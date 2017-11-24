@@ -5,13 +5,24 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
 
 //Useful Functions for general purposes
 public class HF {
+  private static class EntryValueCompare implements Comparator<Entry<String, Integer>>{
+
+    @Override
+    public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+      return o2.getValue().compareTo(o1.getValue());
+    }
+  }
 
   /*Database*/
   public static Connection getConnection(String username, String password, String url) throws SQLException {
@@ -69,7 +80,7 @@ public class HF {
   }
 
   /*Container Operations*/
-
+  // Lists
   // remove null elememts from a LinkedList
   public static LinkedList removeNull(LinkedList list) {
     list.removeIf(Objects::isNull);
@@ -94,6 +105,16 @@ public class HF {
       count = countOccurance(fileList, file, ++count);
     }
     return count;
+  }
+
+  //Maps
+  public static List extractTop(Map map, Integer rank){
+    List top = new LinkedList();
+    for (Object entry: map.entrySet()) {
+      top.add(entry);
+    }
+    Collections.sort(top, new EntryValueCompare());
+    return top.subList(0, rank);
   }
 
   /*Print Screen*/
