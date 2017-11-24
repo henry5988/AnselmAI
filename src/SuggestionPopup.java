@@ -43,7 +43,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     return null;
   }
 
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
+  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList list)
       throws APIException{
     list = removeNull(list);
     LinkedList infoList = new LinkedList();
@@ -61,13 +61,13 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     images.push("images");
     out("converter variables defined");
     while (!list.isEmpty()) {
-      out("converting " + list.peekLast().getName() == null ? "null" : list.peekLast().getName());
+      out("converting " + ((IAgileObject)list.peekLast()).getName());
       converter.setConverterAtt("name");
       out("extracting name...");
-      names.add(converter.convert(list.peekLast()));
+      names.add(converter.convert((IAgileObject) list.peekLast()));
       out("extracting description...");
       converter.setConverterAtt("description");
-      descriptions.add(converter.convert(list.peekLast()));
+      descriptions.add(converter.convert((IAgileObject) list.peekLast()));
       out("extracting images...");
       converter.setConverterAtt("image");
       list.removeLast();
