@@ -23,17 +23,27 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     try {
       LinkedList list = getItemAdvice(session, req);
-      out("convert Object to String info...");
-      List infoList = convertObjectToInfo(list);
-      out("retrieving name array...");
-      List names = (List) infoList.get(0);
-      out("retrieving image array...");
-      List images = (List) infoList.get(1);
-      out("retrieving description array...");
-      List descriptions = (List) infoList.get(2);
-      out("retrieving related user count...");
-      List viewerCounts = (List) infoList.get(3);
-      Popup.frame(names, images, descriptions, viewerCounts);
+      out("List size: " + list.size());
+      out("List: " + list.toString());
+      if (list.size() >= 3) {
+        out("convert Object to String info...");
+        List infoList = convertObjectToInfo(list);
+        out("retrieving name array...");
+        List names = (List) infoList.get(0);
+        out(infoList.get(0).toString());
+        out("retrieving image array...");
+        out(infoList.get(1).toString());
+        List images = (List) infoList.get(1);
+        out("retrieving description array...");
+        out(infoList.get(2).toString());
+        List descriptions = (List) infoList.get(2);
+        out("retrieving related user count...");
+        out(infoList.get(3).toString());
+        List viewerCounts = (List) infoList.get(3);
+        Popup.frame(names, images, descriptions, viewerCounts);
+      }else{
+        out("list has fewer than 3 items, does nothing");
+      }
     } catch (SQLException | APIException e) {
       out("Error occured", "err");
       e.getMessage();
@@ -44,7 +54,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
   }
 
   protected List<List<String>> convertObjectToInfo(List l)
-      throws APIException{
+      throws APIException {
     LinkedList list = (LinkedList) l;
     list = removeNull(list);
     LinkedList infoList = new LinkedList();
@@ -62,7 +72,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     images.push("images");
     out("converter variables defined");
     while (!list.isEmpty()) {
-      out("converting " + ((IAgileObject)list.peekLast()).getName());
+      out("converting " + ((IAgileObject) list.peekLast()).getName());
       converter.setConverterAtt("name");
       out("extracting name...");
       names.add(converter.convert((IAgileObject) list.peekLast()));

@@ -34,7 +34,13 @@ public class ImagePath {
     return PDFPATH;
   }
 
-  public String getImagePath(String fileType) {
+  public String getImagePath(String file) {
+    String fileType;
+    if(file.contains(".")) {
+      fileType = file.substring(file.indexOf('.') + 1, file.length());
+    }else{
+      fileType = file;
+    }
     return imagePath.get(fileType);
   }
 }

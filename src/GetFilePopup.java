@@ -16,6 +16,7 @@ import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,11 +49,6 @@ public class GetFilePopup extends FileSuggestionPopup {
       out("Culling null items...");
       removeNull(lists);
     }
-    while (lists.size() < 3) {
-      //TODO work-around for if the list has fewer than 3 items, need to design a way to display nothing
-      out("list size: " + lists.size() + "; list fewer than 3 items...");
-      lists.add((IItem) info.getDataObject());
-    }
 
     return lists;
   }
@@ -63,15 +59,16 @@ public class GetFilePopup extends FileSuggestionPopup {
     List info;
     List viewerCounts = new LinkedList();
     List objects = new LinkedList();
-
-    viewerCounts.add("viewerCounts");
+    out("GetFilePopup.convertObjectToInfo()...");
     for (Object entry : list) {
       Map.Entry e = (Entry) entry;
-      viewerCounts.add((Map.Entry) e.getValue());
+      viewerCounts.add(e.getValue().toString());
       objects.add(e.getKey());
     }
+    out("List to convert: " + objects.toString());
     info = super.convertObjectToInfo(objects);
     info.add(viewerCounts);
+    out("GetFilePopup.convertObjectToInfo() ends...");
     return info;
   }
 
@@ -80,7 +77,6 @@ public class GetFilePopup extends FileSuggestionPopup {
       IAgileSession session)
       throws APIException, SQLException {
     Map viewerCounts = new HashMap();
-    List visitCount = new LinkedList();
     StringParser sp = new StringParser();
     out("getAttachmentAdvice begin...");
     IEventDirtyFile downloaded = file; // file is the file that was downloaded
@@ -90,7 +86,6 @@ public class GetFilePopup extends FileSuggestionPopup {
     out("File row: " + folderVers[folderVers.length - 1].toString());
     Integer folderVer = folderVers[folderVers.length - 1];
     out("Folder Version: " + folderVer.toString());
-    String DBDetails = sp.buildDetails(folderNum, folderVer.toString(), downloaded.getFilename());
     LinkedList advices = new LinkedList(); // declare and instantiate advices
     // select all users who have downloaded the same version of the file
     String sql =
@@ -108,16 +103,16 @@ public class GetFilePopup extends FileSuggestionPopup {
     }
     List attAdvices = new LinkedList();
     for (Object detail : advices) {
-      detail = sp.getDetailsFileName((String) detail);
-      attAdvices.add(detail);
-    }
-    for ( Object fileName : attAdvices) {
+      out("Getting file name from action details...");
+      String fileName = sp.getDetailsFileName((String) detail);
       if(!viewerCounts.containsKey(fileName)){
-        viewerCounts.put(file, countOccurance(attAdvices, fileName, 0));
+        viewerCounts.put(fileName, Collections.frequency(advices, detail));
       }
+      out("file name and frequency added");
     }
     List topViewerCounts = extractTop(viewerCounts, 3);
     attAdvices = topViewerCounts;
+    out("getAttachmentAdvice ends...");
     return attAdvices;
   }
 
