@@ -30,16 +30,12 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
     // viewer count needs a aggregate function to add up all relevant views
     Connection conn;
     List info = new LinkedList();
-    List scanned = new LinkedList();
-    List fileNames = new LinkedList();
     List images = new LinkedList();
     List descriptions = new LinkedList();
-    List viewerCounts = new LinkedList();
+
     try {
       conn = getConnection(USERNAME, PASSWORD, URL);
-
       out("GetFilePopup.convertObjectToInfo()...");
-
       for (Object file : list) {
         String sql =
             "SELECT ATTACHMENT.Description FROM ATTACHMENT JOIN FILES ON FILES.ID = ATTACHMENT.ID WHERE FILES.FILENAME = '"
@@ -49,17 +45,9 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
         descriptions.add(description);
         String imageSrc = getImageSrc((String)file);
         images.add(imageSrc);
-        if(!scanned.contains(file)) {
-          scanned.add(file);
-          Integer viewerCount = getViewerCount(list, (String) file);
-          viewerCounts.add(viewerCounts.toString());
-        }
       }
       info.add(descriptions);
       info.add(images);
-      info.add(viewerCounts);
-
-
     } catch (SQLException e) {
       out("Error when establishing database connection", "err");
     }
