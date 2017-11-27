@@ -1,33 +1,31 @@
+import static com.HF.countOccurance;
 import static com.HF.executeSQL;
+import static com.HF.extractTop;
 import static com.HF.getConnection;
+import static com.HF.getWordInParen;
 import static com.HF.out;
-import static com.HF.removeDup;
 import static com.HF.removeNull;
 
 import com.agile.api.APIException;
-import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IAttachmentFile;
 import com.agile.api.IItem;
 import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
-import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-public class GetFilePopup extends SuggestionPopup implements IEventAction {
+public class GetFilePopup extends FileSuggestionPopup {
 
   private final static String GETFILEEVENTNAME = "Get File";
-
-  @Override
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
-      throws APIException {
-    return UpdateTitleBlockPopup.convertObjectToInfo(list);
-  }
 
   @Override
   protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
@@ -43,40 +41,79 @@ public class GetFilePopup extends SuggestionPopup implements IEventAction {
     out("Getting files that was downloaded...");
     IEventDirtyFile[] files = info.getFiles();
     for (int i = 0; i < files.length; i++) {
+      out("New dirty file");
       out("Getting related file from " + files[i].getFilename());
-      IAttachmentFile file = (IAttachmentFile) files[i];
-      lists.add(getAttachmentAdvice(conn, (IItem) info.getDataObject(), eventName, session));
+      lists.addAll(getAttachmentAdvice(conn, files[i], eventName, session)); // gets file list that contains filename and viewer count
     }
-    if(lists.contains(null)){
+    if (lists.contains(null)) {
       out("Culling null items...");
       removeNull(lists);
-    }
-    while(lists.size() < 3){
-      //TODO work-around for if the list has fewer than 3 items, need to design a way to display nothing
-      lists.add((IItem)info.getDataObject());
     }
 
     return lists;
   }
 
-  private LinkedList getAttachmentAdvice(Connection conn, IItem item, String eventName,
+  @Override
+  protected List<List<String>> convertObjectToInfo(List list)
+      throws APIException {
+    List info;
+    List viewerCounts = new LinkedList();
+    List objects = new LinkedList();
+    out("GetFilePopup.convertObjectToInfo()...");
+    for (Object entry : list) {
+      Map.Entry e = (Entry) entry;
+      viewerCounts.add(e.getValue().toString());
+      objects.add(e.getKey());
+    }
+    out("List to convert: " + objects.toString());
+    info = super.convertObjectToInfo(objects);
+    info.add(viewerCounts);
+    out("GetFilePopup.convertObjectToInfo() ends...");
+    return info;
+  }
+
+
+  private List getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
       IAgileSession session)
       throws APIException, SQLException {
-    LinkedList advices = new LinkedList();
-    String sql = "SELECT OWNER FROM EVENT_HISTORY where EVENT_NAME = '" + eventName + "' AND OBJECT_NUMBER = " + item.getObjectId();
-    LinkedList userNameSet = executeSQL(conn, sql);
-    userNameSet = removeDup(userNameSet);
-    while(!userNameSet.isEmpty()){
-      out("Scanning for user file download history...");
-      sql = "SELECT * FROM(SELECT OBJECT_NUMBER FROM EVENT_HISTORY where OWNER =" + userNameSet.pop()
-          + "AND EVENT_NAME = '" + eventName + "' Order by START_TIMESTAMP DESC) WHERE ROWNUM <= 10";
-      LinkedList suggestedItems = executeSQL(conn, sql);
-      suggestedItems = removeDup(suggestedItems);
-      while(!suggestedItems.isEmpty()){
-        item = (IItem) session.getObject(ItemConstants.CLASS_ITEM_BASE_CLASS, suggestedItems.pop());
-        advices.add(item);
-      }
+    Map viewerCounts = new HashMap();
+    StringParser sp = new StringParser();
+    out("getAttachmentAdvice begin...");
+    IEventDirtyFile downloaded = file; // file is the file that was downloaded
+    String folderNum = downloaded.getFileFolder().getName();
+    out("Folder name: " + folderNum);
+    Integer[] folderVers = (Integer[]) downloaded.getFileFolder().getVersions();
+    out("File row: " + folderVers[folderVers.length - 1].toString());
+    Integer folderVer = folderVers[folderVers.length - 1];
+    out("Folder Version: " + folderVer.toString());
+    LinkedList advices = new LinkedList(); // declare and instantiate advices
+    // select all users who have downloaded the same version of the file
+    String sql =
+        "SELECT USER_NAME FROM ITEM_HISTORY WHERE DETAILS LIKE '%" + downloaded.getFilename()
+            + "' ORDER BY TIMESTAMP DESC";
+    LinkedList userSet = executeSQL(conn, sql, true);
+    LinkedList userNames = new LinkedList();
+    for (Object user : userSet) {
+      userNames.add(getWordInParen((String) user));
+      sql = "SELECT DETAILS FROM ITEM_HISTORY WHERE USER_NAME = '" + user
+          + "' AND ACTION = 15 ORDER BY TIMESTAMP DESC";
+      List relevantFiles = executeSQL(conn, sql, true);
+      advices.addAll(relevantFiles);
+      out("advices: " + advices.toString());
     }
-    return advices;
+    List attAdvices = new LinkedList();
+    for (Object detail : advices) {
+      out("Getting file name from action details...");
+      String fileName = sp.getDetailsFileName((String) detail);
+      if(!viewerCounts.containsKey(fileName)){
+        viewerCounts.put(fileName, Collections.frequency(advices, detail));
+      }
+      out("file name and frequency added");
+    }
+    List topViewerCounts = extractTop(viewerCounts, 3);
+    attAdvices = topViewerCounts;
+    out("getAttachmentAdvice ends...");
+    return attAdvices;
   }
+
 }
