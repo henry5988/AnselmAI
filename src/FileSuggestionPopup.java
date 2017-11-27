@@ -20,7 +20,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
       throws SQLException, APIException;
 
   @Override
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList list)
+  protected List<List<String>> convertObjectToInfo(List list)
       throws APIException {
     // TODO convert attachment file object to printed info
     // TODO need file name, description, image, and viewer count
@@ -63,7 +63,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup implements IEv
     } catch (SQLException e) {
       out("Error when establishing database connection", "err");
     }
-    return (LinkedList<LinkedList<String>>) info;
+    return (List<List<String>>) info;
   }
 
   protected String getImageSrc(String file) {

@@ -24,7 +24,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     try {
       LinkedList list = getItemAdvice(session, req);
       out("convert Object to String info...");
-      LinkedList infoList = convertObjectToInfo(list);
+      List infoList = convertObjectToInfo(list);
       out("retrieving name array...");
       List names = (List) infoList.get(0);
       out("retrieving image array...");
@@ -43,8 +43,9 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     return null;
   }
 
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList list)
+  protected List<List<String>> convertObjectToInfo(List l)
       throws APIException{
+    LinkedList list = (LinkedList) l;
     list = removeNull(list);
     LinkedList infoList = new LinkedList();
     ItemInfoConverter converter = new ItemInfoConverter();

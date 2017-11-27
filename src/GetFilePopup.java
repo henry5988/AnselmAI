@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class GetFilePopup extends FileSuggestionPopup {
 
@@ -55,6 +56,25 @@ public class GetFilePopup extends FileSuggestionPopup {
 
     return lists;
   }
+
+  @Override
+  protected List<List<String>> convertObjectToInfo(List list)
+      throws APIException {
+    List info;
+    List viewerCounts = new LinkedList();
+    List objects = new LinkedList();
+
+    viewerCounts.add("viewerCounts");
+    for (Object entry: list) {
+      Map.Entry e = (Entry) entry;
+      viewerCounts.add((Map.Entry) e.getValue());
+      objects.add(e.getKey());
+    }
+    info = super.convertObjectToInfo(objects);
+    info.add(viewerCounts);
+    return info;
+  }
+
 
   private List getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
       IAgileSession session)
