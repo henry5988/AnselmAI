@@ -100,10 +100,11 @@ public class HF {
   }
 
   public static Integer countOccurance(List fileList, Object file, int count) {
-    if(fileList.contains(file)) {
-      fileList.remove(fileList.indexOf(file));
-      count = countOccurance(fileList, file, ++count);
-    }
+    count = Collections.frequency(fileList, file);
+//    if(fileList.contains(file)) {
+//      fileList.remove(fileList.indexOf(file));
+//      count = countOccurance(fileList, file, ++count);
+//    }
     return count;
   }
 
@@ -111,10 +112,11 @@ public class HF {
   public static List extractTop(Map map, Integer rank){
     List top = new LinkedList();
     for (Object entry: map.entrySet()) {
-      top.add(entry);
+      Entry e = (Entry) entry;
+      top.add(e);
     }
     Collections.sort(top, new EntryValueCompare());
-    return top.subList(0, rank);
+    return top.size() >= rank ? top.subList(0, rank) : top.subList(0, top.size());
   }
 
   /*Print Screen*/
