@@ -114,7 +114,7 @@ public class HF {
       top.add(entry);
     }
     Collections.sort(top, new EntryValueCompare());
-    return top.subList(0, rank);
+    return top.size() >= rank ? top.subList(0, rank): top.subList(0, top.size());
   }
 
   /*Print Screen*/
