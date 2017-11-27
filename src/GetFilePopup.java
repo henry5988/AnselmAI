@@ -65,7 +65,7 @@ public class GetFilePopup extends FileSuggestionPopup {
     List objects = new LinkedList();
 
     viewerCounts.add("viewerCounts");
-    for (Object entry: list) {
+    for (Object entry : list) {
       Map.Entry e = (Entry) entry;
       viewerCounts.add((Map.Entry) e.getValue());
       objects.add(e.getKey());

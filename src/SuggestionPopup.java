@@ -32,8 +32,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
       out("retrieving description array...");
       List descriptions = (List) infoList.get(2);
       out("retrieving related user count...");
-      //List userCounts = (List) infoList.get(3);
-      Popup.frame(names, images, descriptions);
+      List viewerCounts = (List) infoList.get(3);
+      Popup.frame(names, images, descriptions, viewerCounts);
     } catch (SQLException | APIException e) {
       out("Error occured", "err");
       e.getMessage();

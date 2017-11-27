@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Popup extends JFrame {
 
-  public static void frame(List names, List images, List descriptions) {
+  public static void frame(List names, List images, List descriptions, List viewerCounts) {
 
     JFrame f;
     JFrame.setDefaultLookAndFeelDecorated(true);
@@ -23,7 +23,7 @@ public class Popup extends JFrame {
     f.setLocationRelativeTo(null);
     Container cp = f.getContentPane();
 
-    String[] columns = {"Name", "Picture", "Description", "openFile"};
+    String[] columns = {"Name", "Picture", "Description", "ViewerCount","openFile"};
     Object[][] data = new Object[3][4];
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data.length; j++) {
@@ -34,6 +34,8 @@ public class Popup extends JFrame {
         } else if (j == 2) {
           data[i][j] = descriptions.get(i);
         } else if (j == 3) {
+          data[i][j] = viewerCounts.get(i);
+        } else if (j == 4){
           data[i][j] = "openFile";
         }
       }
