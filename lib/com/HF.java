@@ -26,7 +26,6 @@ public class HF {
 
   /*Database*/
   public static Connection getConnection(String username, String password, String url) throws SQLException {
-    // TODO Auto-generated method stub
     Connection conn;
     Properties connectionProps = new Properties();
     connectionProps.put("user", username);

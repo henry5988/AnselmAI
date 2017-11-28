@@ -1,4 +1,3 @@
-import static com.HF.countOccurance;
 import static com.HF.executeSQL;
 import static com.HF.extractTop;
 import static com.HF.getConnection;
@@ -25,33 +24,6 @@ import java.util.Map.Entry;
 
 public class GetFilePopup extends FileSuggestionPopup {
 
-  private final static String GETFILEEVENTNAME = "Get File";
-
-  @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
-      throws SQLException, APIException {
-    LinkedList lists = new LinkedList();
-    String eventName = GETFILEEVENTNAME;
-    out("Getting attachment file advice...");
-    Connection conn = getConnection(USERNAME, PASSWORD, URL);
-    IFileEventInfo info = (IFileEventInfo) req;
-    IItem obj = (IItem) info.getDataObject();
-    out("Getting " + obj.toString() + "'s attachment table");
-    ITable attachments = obj.getTable(ItemConstants.TABLE_ATTACHMENTS);
-    out("Getting files that was downloaded...");
-    IEventDirtyFile[] files = info.getFiles();
-    for (int i = 0; i < files.length; i++) {
-      out("New dirty file");
-      out("Getting related file from " + files[i].getFilename());
-      lists.addAll(getAttachmentAdvice(conn, files[i], eventName, session)); // gets file list that contains filename and viewer count
-    }
-    if (lists.contains(null)) {
-      out("Culling null items...");
-      removeNull(lists);
-    }
-
-    return lists;
-  }
 
   @Override
   protected List<List<String>> convertObjectToInfo(List list)
@@ -73,7 +45,7 @@ public class GetFilePopup extends FileSuggestionPopup {
   }
 
 
-  private List getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
+  protected List getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
       IAgileSession session)
       throws APIException, SQLException {
     Map viewerCounts = new HashMap();
