@@ -10,9 +10,9 @@ import java.util.List;
 public class CheckOutFilePopup extends FileSuggestionPopup{
 
   @Override
-  protected List getAttachmentAdvice(Connection conn, IEventDirtyFile file, String eventName,
+  protected List getAttachmentAdvice(Connection conn, IEventDirtyFile file,
       IAgileSession session) throws APIException, SQLException {
-
+    setActionCode("22");
     return null;
   }
 }
