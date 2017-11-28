@@ -19,11 +19,18 @@ import java.net.URISyntaxException;
 
 public class Popup extends JFrame {
 
+	private string action;
+	public String getAction() {
+		return action;
+	} 
+	public void setAction(String action) {
+		 this.action = action;
+	}
   public static void frame(List names, List images, List descriptions) {
 	  
 		JFrame.setDefaultLookAndFeelDecorated(true);
 	    JDialog.setDefaultLookAndFeelDecorated(true);
-		JFrame frame = new JFrame("看過這個的人也看過");
+		JFrame frame = new JFrame(action+"過這個的人也看過");
 		frame.setBounds(50,50, 600, 300);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -33,9 +40,7 @@ public class Popup extends JFrame {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0.0};
 		frame.getContentPane().setLayout(gridBagLayout);
 		
-		
-		
-		
+	
 		
 		JLabel image1 = new JLabel("");
 		ImageIcon imageIcon1 = new ImageIcon(new ImageIcon(images.get(0)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
@@ -181,7 +186,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(description3, gbc_description3);
 		
 		
-		JLabel amount1 = new JLabel("x 人看過");
+		JLabel amount1 = new JLabel("x 人"+action+"過");
 		amount1.setFont(new Font("標楷體", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount1 = new GridBagConstraints();
 		gbc_amount1.gridx = 0;
@@ -192,7 +197,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(amount1, gbc_amount1);
 		
 		
-		JLabel amount2 = new JLabel("y 人看過");
+		JLabel amount2 = new JLabel("y 人"+action+"過");
 		amount2.setFont(new Font("標楷體", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount2 = new GridBagConstraints();
 		gbc_amount2.gridx = 10;
@@ -203,7 +208,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(amount2, gbc_amount2);
 		
 		
-		JLabel amount3 = new JLabel(/*數量+*/"z 人看過");
+		JLabel amount3 = new JLabel(/*數量+*/"z人"+action+"過");
 		amount3.setFont(new Font("標楷體", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount3 = new GridBagConstraints();
 		gbc_amount3.gridx = 20;
@@ -217,59 +222,7 @@ public class Popup extends JFrame {
 
 		
 	    frame.setVisible(true); 
-    /*JFrame f;
-    JFrame.setDefaultLookAndFeelDecorated(true);
-    JDialog.setDefaultLookAndFeelDecorated(true);
-    f = new JFrame("JTable Te55st");
-    f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Close JFrame
-    f.setSize(1000, 600);
-    f.setLocationRelativeTo(null);
-    Container cp = f.getContentPane();
 
-    String[] columns = {"Name", "Picture", "Description", "openFile"};
-    Object[][] data = new Object[3][4];
-    for (int i = 0; i < data.length; i++) {
-      for (int j = 0; j < data.length; j++) {
-        if (j == 0) {
-          data[i][j] = names.get(i);
-        } else if (j == 1) {
-          data[i][j] = images.get(i);
-        } else if (j == 2) {
-          data[i][j] = descriptions.get(i);
-        } else if (j == 3) {
-          data[i][j] = "openFile";
-        }
-      }
-    }
-
-    DefaultTableModel model = new DefaultTableModel(data, columns);
-    JTable table = new JTable(model) {
-      //  Returning the Class of each column will allow different
-      //  renderers to be used based on Class
-      public Class getColumnClass(int column) {
-        return getValueAt(0, column).getClass();
-      }
-
-      //only allow column 3 to be editable
-      public boolean isCellEditable(int row, int column) {
-        //Only the third column
-        return column == 3;
-      }
-    };
-
-    table.getColumnModel().getColumn(3).setCellRenderer(new TableButtonRenderer());
-
-    table.getColumnModel().getColumn(3).setCellEditor(new TableButtonEditor(new JTextField()));
-
-    JScrollPane pane = new JScrollPane(table);
-    f.getContentPane().add(pane);
-
-    cp.add(new JScrollPane(table), BorderLayout.CENTER);
-    DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
-    tcr.setHorizontalAlignment(JLabel.CENTER);
-    table.getTableHeader().setReorderingAllowed(false);//嚙踝蕭謕蕭��嚙踐�蕭�嚙踝蕭謕蕭��蕭蹎蕭謕蕭豲
-    table.setRowHeight(80);//���蕭�����蕭�����蕭��鞈察縑���撕�嚙踝���嚙踐�蕭謓塚蕭嚙踝�
-    f.setVisible(true);*/
   }
 
 }
