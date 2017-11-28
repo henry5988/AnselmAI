@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -21,10 +22,10 @@ import java.net.URISyntaxException;
 public class Popup extends JFrame {
 
 
-  public static void frame(List names, List images, List descriptions) {
+  public static void frame(List names, List images, List descriptions, List viewerCounts) {
 	  
 		JFrame.setDefaultLookAndFeelDecorated(true);
-	    JDialog.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame("看過這個的人也看過");
 		frame.setBounds(50,50, 600, 300);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -40,7 +41,7 @@ public class Popup extends JFrame {
 		
 		
 		JLabel image1 = new JLabel("");
-		ImageIcon imageIcon1 = new ImageIcon(new ImageIcon(images.get(0)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		ImageIcon imageIcon1 = new ImageIcon(new ImageIcon((String) images.get(0)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
 		image1.setIcon(imageIcon1);
 		GridBagConstraints gbc_image1 = new GridBagConstraints();
 		gbc_image1.gridx = 0;
@@ -53,7 +54,7 @@ public class Popup extends JFrame {
 		
 		
 		JLabel image2 = new JLabel("");
-		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon(images.get(1)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		ImageIcon imageIcon2 = new ImageIcon(new ImageIcon((String) images.get(1)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
 		image2.setIcon(imageIcon2);
 		GridBagConstraints gbc_image2 = new GridBagConstraints();
 		gbc_image2.gridx = 10;
@@ -66,7 +67,7 @@ public class Popup extends JFrame {
 		
 		
 		JLabel image3 = new JLabel("");
-		ImageIcon imageIcon3 = new ImageIcon(new ImageIcon(images.get(2)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+		ImageIcon imageIcon3 = new ImageIcon(new ImageIcon((String) images.get(2)).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
 		image3.setIcon(imageIcon3);
 		GridBagConstraints gbc_image3 = new GridBagConstraints();
 		gbc_image3.gridx = 20;
@@ -78,7 +79,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(image3, gbc_image3);
 		
 		
-		JLabel name1 = new JLabel("<HTML><U>"+name.get(0)+"</U></HTML>");
+		JLabel name1 = new JLabel("<HTML><U>"+names.get(0)+"</U></HTML>");
 		name1.setFont(new Font("Stencil", Font.PLAIN, 20));
 		name1.setForeground(Color.BLUE);
 		GridBagConstraints gbc_name1 = new GridBagConstraints();
@@ -102,7 +103,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(name1, gbc_name1);
 		
 		
-		JLabel name2 = new JLabel("<HTML><U>"+name.get(1)+"</U></HTML>");
+		JLabel name2 = new JLabel("<HTML><U>"+names.get(1)+"</U></HTML>");
 		name2.setFont(new Font("Stencil", Font.PLAIN, 20));
 		name2.setForeground(Color.BLUE);
 		GridBagConstraints gbc_name2 = new GridBagConstraints();
@@ -126,7 +127,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(name2, gbc_name2);
 		
 		
-		JLabel name3 = new JLabel("<HTML><U>"+name.get(2)+"</U></HTML>");
+		JLabel name3 = new JLabel("<HTML><U>"+names.get(2)+"</U></HTML>");
 		name3.setFont(new Font("Stencil", Font.PLAIN, 20));
 		name3.setForeground(Color.BLUE);
 		GridBagConstraints gbc_name3 = new GridBagConstraints();
@@ -183,7 +184,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(description3, gbc_description3);
 		
 		
-		JLabel amount1 = new JLabel("x 人看過");
+		JLabel amount1 = new JLabel(viewerCounts.get(0) + " 人看過");
 		amount1.setFont(new Font("標楷體", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount1 = new GridBagConstraints();
 		gbc_amount1.gridx = 0;
@@ -194,7 +195,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(amount1, gbc_amount1);
 		
 		
-		JLabel amount2 = new JLabel("y 人看過");
+		JLabel amount2 = new JLabel(viewerCounts.get(1) + " 人看過");
 		amount2.setFont(new Font("標楷體", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount2 = new GridBagConstraints();
 		gbc_amount2.gridx = 10;
@@ -205,7 +206,7 @@ public class Popup extends JFrame {
 		frame.getContentPane().add(amount2, gbc_amount2);
 		
 		
-		JLabel amount3 = new JLabel(/*數量+*/"z 人看過");
+		JLabel amount3 = new JLabel(/*數量+*/viewerCounts.get(2) + " 人看過");
 		amount3.setFont(new Font("標楷體", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount3 = new GridBagConstraints();
 		gbc_amount3.gridx = 20;

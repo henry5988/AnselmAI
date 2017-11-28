@@ -91,7 +91,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
     infoList.add(images);
     out("info list: " + infoList.toString());
     infoList = (LinkedList) converter
-        .orderLists(infoList, new String[]{"names", "images", "descriptions"});
+        .orderLists(infoList, new String[]{"names", "images", "descriptions", "viewerCounts"});
     return infoList;
   }
 
