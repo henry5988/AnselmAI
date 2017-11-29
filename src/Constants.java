@@ -1,3 +1,6 @@
+/* Constants used in the system, including paths for images,
+   download directory, and database credentials.*/
+
 interface Constants{
   //database constants
   String USERNAME = "agile";
