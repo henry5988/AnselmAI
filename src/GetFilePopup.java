@@ -30,16 +30,9 @@ public class GetFilePopup extends FileSuggestionPopup {
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
-    try {
-      out("Action code: " + req.getEventType());
-      setActionCode(String.valueOf(req.getEventType()));
-    } catch (APIException e) {
-      e.printStackTrace();
-    }
-    if(Objects.equals(getActionCode(), "15"))
+    if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
       return super.doAction(session, node, req);
-    else
-      return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
   }
 
   @Override
@@ -65,7 +58,6 @@ public class GetFilePopup extends FileSuggestionPopup {
   protected List getAttachmentAdvice(Connection conn, IEventDirtyFile file,
       IAgileSession session)
       throws APIException, SQLException {
-    setActionCode("15");
     return super.getAttachmentAdvice(conn, file, session);
   }
 

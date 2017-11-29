@@ -15,13 +15,13 @@ import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
 
-  protected String actionCode;
+  private String actionCode;
 
-  public String getActionCode() {
+  String getActionCode() {
     return actionCode;
   }
 
-  public void setActionCode(String actionCode) {
+  void setActionCode(String actionCode) {
     this.actionCode = actionCode;
   }
 
@@ -34,19 +34,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       if (list.size() >= 3) {
         out("convert Object to String info...");
         List infoList = convertObjectToInfo(list);
-        out("retrieving name array...");
-        List names = (List) infoList.get(0);
-        out(infoList.get(0).toString());
-        out("retrieving image array...");
-        out(infoList.get(1).toString());
-        List images = (List) infoList.get(1);
-        out("retrieving description array...");
-        out(infoList.get(2).toString());
-        List descriptions = (List) infoList.get(2);
-        out("retrieving related user count...");
-        out(infoList.get(3).toString());
-        List viewerCounts = (List) infoList.get(3);
-        Popup.frame(names, images, descriptions, viewerCounts);
+
+        Popup.frame(session, infoList);
       }else{
         out("list has fewer than 3 items, does nothing");
       }

@@ -12,19 +12,16 @@ import com.agile.api.IFileFolder;
 import com.agile.api.IItem;
 import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
-import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public abstract class FileSuggestionPopup extends SuggestionPopup {
 
@@ -62,7 +59,6 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
       out("Culling null items...");
       removeNull(lists);
     }
-
     return lists;
   }
 
@@ -89,23 +85,23 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     for (Object user : userSet) {
       userNames.add(getWordInParen((String) user));
       sql = "SELECT DETAILS FROM ITEM_HISTORY WHERE USER_NAME = '" + user
-          + "' AND ACTION = " + actionCode + " ORDER BY TIMESTAMP DESC";
+          + "' AND ACTION = " + getActionCode() + " ORDER BY TIMESTAMP DESC";
       List relevantFiles = executeSQL(conn, sql, true);
       advices.addAll(relevantFiles);
       out("advices: " + advices.toString());
     }
-    List attAdvices = new LinkedList();
+    List attAdvices;
     for (Object detail : advices) {
       out("Getting file name from action details...");
-      String fileName = sp.getDetailsFileName((String) detail);
-      if(!viewerCounts.containsKey(fileName)){
-        viewerCounts.put(fileName, Collections.frequency(advices, detail));
+      if(!viewerCounts.containsKey(detail)){
+        viewerCounts.put(detail, Collections.frequency(advices, detail));
       }
       out("file name and frequency added");
     }
     List topViewerCounts = extractTop(viewerCounts, 3);
     attAdvices = topViewerCounts;
     out("getAttachmentAdvice ends...");
+    conn.close();
     return attAdvices;
   }
 
@@ -119,31 +115,37 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     // image needs to grab the suffix of the file name and find the corresponding file image
     // viewer count needs a aggregate function to add up all relevant views
     Connection conn;
+    StringParser sp = new StringParser();
     List info = new LinkedList();
     List images = new LinkedList();
     List descriptions = new LinkedList();
     List names = new LinkedList();
+    List folders = new LinkedList();
 
     try {
       conn = getConnection(USERNAME, PASSWORD, URL);
       out("FileSuggestionPopup.convertObjectToInfo()...");
       for (Object f : list) {
-        String file = (String) f;
+        String file = sp.getDetailsFileName((String) f);
+        String folder = sp.getDetailsFolderName((String) f);
         out("File: " + file);
         String sql =
             "SELECT Attachment.DESCRIPTION FROM ATTACHMENT join bo_attach_versions_history on attachment.id = bo_attach_versions_history.attach_id join files on bo_attach_versions_history.file_id = files.id and files.FILENAME = '"
                 + file + "'";
         String description = (String) executeSQL(conn, sql).pop();
         String imageSrc = getImageSrc(file);
+        folders.add(folder);
         names.add(file);
         descriptions.add(description);
         images.add(imageSrc);
         out("converted file: " + file);
       }
       // the order in which the lists are added does matter as they are being taken out, in the parent class, according to their indices
+      info.add(folders);
       info.add(names);
       info.add(images);
       info.add(descriptions);
+      conn.close();
     } catch (SQLException e) {
       out("Error when establishing database connection", "err");
     }
@@ -161,6 +163,18 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     return countOccurance(fileList, file, 0);
   }
 
+  protected boolean checkEventType(IEventInfo req, int eventType, String actionCode){
+    try {
+      out("Event type: " + req.getEventType());
+      setActionCode(String.valueOf(actionCode));
+      if(req.getEventType() == eventType)
+        return true;
+    } catch (APIException e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
   protected class StringParser {
 
     String buildDetails(String folderNum, String folderVer, String fileName) {
@@ -169,6 +183,10 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
 
     String getDetailsFileName(String details) {
       return details.replaceAll("^(\\S*\\s){3}", "");
+    }
+
+    String getDetailsFolderName(String details){
+      return details.substring(0, details.indexOf(' '));
     }
 
   }

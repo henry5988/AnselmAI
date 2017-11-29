@@ -1,29 +1,52 @@
+import static com.HF.out;
+
+import com.agile.api.APIException;
+import com.agile.api.IAgileSession;
+import com.agile.api.IFileFolder;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Font;
 import java.awt.event.MouseEvent;
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-public class Popup extends JFrame {
+public class Popup extends JFrame implements Constants {
 
 
-  public static void frame(List names, List images, List descriptions, List viewerCounts) {
-	  
+  public static void frame(IAgileSession session, List infoList) {
+  	out("retrieving folders array...");
+  	List folders = (List) infoList.get(0);
+		out("retrieving name array...");
+		List names = (List) infoList.get(1);
+		out(infoList.get(1).toString());
+		out("retrieving image array...");
+		out(infoList.get(2).toString());
+		List images = (List) infoList.get(2);
+		out("retrieving description array...");
+		out(infoList.get(3).toString());
+		List descriptions = (List) infoList.get(3);
+		out("retrieving related user count...");
+		out(infoList.get(4).toString());
+		List viewerCounts = (List) infoList.get(4);
+
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JDialog.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame("看過這個的人也看過");
@@ -117,7 +140,7 @@ public class Popup extends JFrame {
 	            @Override
 	            public void mouseClicked(MouseEvent e) {
 	                    try {
-	                            Desktop.getDesktop().browse(new URI("tw.yahoo.com"));
+	                            Desktop.getDesktop().browse(new URI("https://tw.yahoo.com"));
 	                    } catch (URISyntaxException | IOException ex) {
 	                            //It looks like there's a problem
 	                    }
@@ -140,13 +163,54 @@ public class Popup extends JFrame {
 		name3.addMouseListener(new MouseAdapter() {
 	            @Override
 	            public void mouseClicked(MouseEvent e) {
-	                    try {
-	                            Desktop.getDesktop().browse(new URI("www.amazon.com"));
-	                    } catch (URISyntaxException | IOException ex) {
-	                            //It looks like there's a problem
+								System.out.println("Mouse Clicked!!!");
+								try {
+									OutputStream outputStream = null;
+									IFileFolder attachmentFile = (IFileFolder) session.getObject(IFileFolder.OBJECT_TYPE, folders.get(2));
+									out("Folder " + folders.get(2).toString());
+									InputStream input = attachmentFile.getFile();
+									ZipInputStream zis = new ZipInputStream(input);
+									ZipEntry ze = zis.getNextEntry();
+												try {
+													if(!ze.isDirectory()){
+													outputStream =
+															new FileOutputStream(new File(DOWNLOADFILEPATH + ze.getName()));
+
+													int read = 0;
+													byte[] bytes = new byte[8 * 1024];
+
+													while ((read = zis.read(bytes)) != -1) {
+														outputStream.write(bytes, 0, read);
+													}
+													input.close();
+													zis.close();
+													outputStream.close();
+													}
+
+													System.out.println("Done!");
+
+												} catch (IOException e1) {
+													e1.printStackTrace();
+												} finally {
+													if (input != null) {
+														try {
+															input.close();
+														} catch (IOException e1) {
+															e1.printStackTrace();
+														}
+													}
+													if (outputStream != null) {
+														try {
+															// outputStream.flush();
+															outputStream.close();
+														} catch (IOException e1) {
+															e1.printStackTrace();
+														}
+													}
+							        } }catch(APIException | IOException e1){
+	                    	e1.printStackTrace();
 	                    }
-	            }
-	     });
+							}});
 		
 		frame.getContentPane().add(name3, gbc_name3);
 		

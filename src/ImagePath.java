@@ -1,12 +1,8 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class ImagePath {
+public class ImagePath implements Constants{
   //fields
-  private final static String XLSXPATH = "..\\static\\xlsx.png";
-  private final static String DOCXPATH = "..\\static\\docx.png";
-  private final static String PPTXPATH = "..\\static\\pptx.png";
-  private final static String PDFPATH = "..\\static\\pdf.png";
   private Map<String, String> imagePath = new HashMap<String, String>();
 
   //constructor
@@ -15,6 +11,7 @@ public class ImagePath {
     imagePath.put("docx", DOCXPATH);
     imagePath.put("pptx", PPTXPATH);
     imagePath.put("pdf", PDFPATH);
+    imagePath.put("txt", TXTPATH);
   }
 
   //getter
@@ -33,6 +30,8 @@ public class ImagePath {
   public static String getPDFPATH() {
     return PDFPATH;
   }
+
+  public static String getTXTPATH() { return TXTPATH; }
 
   public String getImagePath(String file) {
     String fileType;
