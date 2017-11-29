@@ -19,6 +19,16 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction {
   static final String PASSWORD = "tartan";
   static final String URL = "jdbc:oracle:thin:@win-ooi3viu801v:1521:agile9";
 
+  protected String actionCode;
+
+  public String getActionCode() {
+    return actionCode;
+  }
+
+  public void setActionCode(String actionCode) {
+    this.actionCode = actionCode;
+  }
+
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     try {

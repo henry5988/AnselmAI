@@ -29,15 +29,6 @@ import java.util.Map.Entry;
 public abstract class FileSuggestionPopup extends SuggestionPopup implements IEventAction {
 
   static String fileEventName;
-  protected String actionCode;
-
-  public String getActionCode() {
-    return actionCode;
-  }
-
-  public void setActionCode(String actionCode) {
-    this.actionCode = actionCode;
-  }
 
   public static String getFileEventName() {
     return fileEventName;
