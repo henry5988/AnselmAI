@@ -13,11 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFrame;
 
-public abstract class SuggestionPopup extends JFrame implements IEventAction {
-
-  static final String USERNAME = "agile";
-  static final String PASSWORD = "tartan";
-  static final String URL = "jdbc:oracle:thin:@win-ooi3viu801v:1521:agile9";
+public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
 
   protected String actionCode;
 

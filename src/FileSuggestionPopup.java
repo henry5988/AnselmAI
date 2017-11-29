@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public abstract class FileSuggestionPopup extends SuggestionPopup implements IEventAction {
+public abstract class FileSuggestionPopup extends SuggestionPopup {
 
   static String fileEventName;
 
