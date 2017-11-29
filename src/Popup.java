@@ -115,12 +115,8 @@ public class Popup extends JFrame implements Constants {
 		name1.addMouseListener(new MouseAdapter() {
 	            @Override
 	            public void mouseClicked(MouseEvent e) {
-	                    try {
-	                            Desktop.getDesktop().browse(new URI("www.google.com"));
-	                    } catch (URISyntaxException | IOException ex) {
-	                            //It looks like there's a problem
-	                    }
-	            }
+								suggestionMouseEvent(session, folders, 0);
+							}
 	     });
 		
 		frame.getContentPane().add(name1, gbc_name1);
@@ -139,12 +135,8 @@ public class Popup extends JFrame implements Constants {
 		name2.addMouseListener(new MouseAdapter() {
 	            @Override
 	            public void mouseClicked(MouseEvent e) {
-	                    try {
-	                            Desktop.getDesktop().browse(new URI("https://tw.yahoo.com"));
-	                    } catch (URISyntaxException | IOException ex) {
-	                            //It looks like there's a problem
-	                    }
-	            }
+								suggestionMouseEvent(session, folders, 1);
+							}
 	     });
 		
 		frame.getContentPane().add(name2, gbc_name2);
@@ -163,53 +155,7 @@ public class Popup extends JFrame implements Constants {
 		name3.addMouseListener(new MouseAdapter() {
 	            @Override
 	            public void mouseClicked(MouseEvent e) {
-								System.out.println("Mouse Clicked!!!");
-								try {
-									OutputStream outputStream = null;
-									IFileFolder attachmentFile = (IFileFolder) session.getObject(IFileFolder.OBJECT_TYPE, folders.get(2));
-									out("Folder " + folders.get(2).toString());
-									InputStream input = attachmentFile.getFile();
-									ZipInputStream zis = new ZipInputStream(input);
-									ZipEntry ze = zis.getNextEntry();
-												try {
-													if(!ze.isDirectory()){
-													outputStream =
-															new FileOutputStream(new File(DOWNLOADFILEPATH + ze.getName()));
-
-													int read = 0;
-													byte[] bytes = new byte[8 * 1024];
-
-													while ((read = zis.read(bytes)) != -1) {
-														outputStream.write(bytes, 0, read);
-													}
-													input.close();
-													zis.close();
-													outputStream.close();
-													}
-
-													System.out.println("Done!");
-
-												} catch (IOException e1) {
-													e1.printStackTrace();
-												} finally {
-													if (input != null) {
-														try {
-															input.close();
-														} catch (IOException e1) {
-															e1.printStackTrace();
-														}
-													}
-													if (outputStream != null) {
-														try {
-															// outputStream.flush();
-															outputStream.close();
-														} catch (IOException e1) {
-															e1.printStackTrace();
-														}
-													}
-							        } }catch(APIException | IOException e1){
-	                    	e1.printStackTrace();
-	                    }
+								suggestionMouseEvent(session, folders, 2);
 							}});
 		
 		frame.getContentPane().add(name3, gbc_name3);
@@ -341,5 +287,58 @@ public class Popup extends JFrame implements Constants {
     table.setRowHeight(80);//���蕭�����蕭�����蕭��鞈察縑���撕�嚙踝���嚙踐�蕭謓塚蕭嚙踝�
     f.setVisible(true);*/
   }
+
+  private static boolean suggestionMouseEvent(IAgileSession session, List folders, int itemIndex){
+		System.out.println("Mouse Clicked!!!");
+		try {
+			OutputStream outputStream = null;
+			IFileFolder attachmentFile = (IFileFolder) session.getObject(IFileFolder.OBJECT_TYPE, folders.get(itemIndex));
+			out("Folder " + folders.get(itemIndex).toString());
+			InputStream input = attachmentFile.getFile();
+			ZipInputStream zis = new ZipInputStream(input);
+			ZipEntry ze = zis.getNextEntry();
+			try {
+				if(!ze.isDirectory()){
+					outputStream =
+							new FileOutputStream(new File(DOWNLOADFILEPATH + ze.getName()));
+
+					int read = 0;
+					byte[] bytes = new byte[8 * 1024];
+
+					while ((read = zis.read(bytes)) != -1) {
+						outputStream.write(bytes, 0, read);
+					}
+					input.close();
+					zis.close();
+					outputStream.close();
+				}
+
+				System.out.println("Done!");
+
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				return false;
+			} finally {
+				if (input != null) {
+					try {
+						input.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				if (outputStream != null) {
+					try {
+						// outputStream.flush();
+						outputStream.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			} }catch(APIException | IOException e1){
+			e1.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 
 }
