@@ -36,25 +36,6 @@ public class GetFilePopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected List<List<String>> convertObjectToInfo(List list)
-      throws APIException {
-    List info;
-    List viewerCounts = new LinkedList();
-    List objects = new LinkedList();
-    out("GetFilePopup.convertObjectToInfo()...");
-    for (Object entry : list) {
-      Map.Entry e = (Entry) entry;
-      viewerCounts.add(e.getValue().toString());
-      objects.add(e.getKey());
-    }
-    out("List to convert: " + objects.toString());
-    info = super.convertObjectToInfo(objects);
-    info.add(viewerCounts);
-    out("GetFilePopup.convertObjectToInfo() ends...");
-    return info;
-  }
-
-  @Override
   protected List getAttachmentAdvice(Connection conn, IEventDirtyFile file,
       IAgileSession session)
       throws APIException, SQLException {

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public abstract class FileSuggestionPopup extends SuggestionPopup {
 
@@ -106,7 +107,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
   }
 
   @Override
-  protected List<List<String>> convertObjectToInfo(List list)
+  protected List<List<String>> convertObjectToInfo(List l)
       throws APIException {
     // convert attachment file object to printed info
     // need file name, description, image, and viewer count
@@ -121,6 +122,15 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     List descriptions = new LinkedList();
     List names = new LinkedList();
     List folders = new LinkedList();
+    List viewerCounts = new LinkedList();
+    List list = new LinkedList();
+    out("GetFilePopup.convertObjectToInfo()...");
+    for (Object entry : l) {
+      Map.Entry e = (Entry) entry;
+      viewerCounts.add(e.getValue().toString());
+      list.add(e.getKey());
+    }
+    out("List to convert: " + list.toString());
 
     try {
       conn = getConnection(USERNAME, PASSWORD, URL);
@@ -145,6 +155,8 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
       info.add(names);
       info.add(images);
       info.add(descriptions);
+      info.add(viewerCounts);
+      out("GetFilePopup.convertObjectToInfo() ends...");
       conn.close();
     } catch (SQLException e) {
       out("Error when establishing database connection", "err");
