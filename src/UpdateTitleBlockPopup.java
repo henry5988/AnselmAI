@@ -20,56 +20,13 @@ import java.util.LinkedList;
 
 public class UpdateTitleBlockPopup extends SuggestionPopup {
 
-  @Override
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
-      throws APIException {
-    list = removeNull(list);
-    LinkedList infoList = new LinkedList();
-    ItemInfoConverter converter = new ItemInfoConverter();
-    LinkedList names = new LinkedList();
-    LinkedList descriptions = new LinkedList();
-    out("List of objects to convert: " + list);
-    out("Setting name type array...");
-    names.add("names");
-    descriptions.add("descriptions");
-    LinkedList images = new LinkedList();
-    images.push("images3");
-    images.push("images2");
-    images.push("images1");
-    images.push("images");
-    out("converter variables defined");
-    while (list.isEmpty() == false) {
-      out("converting " + list.peekLast().getName() == null ? "null" : list.peekLast().getName());
-      converter.setConverterAtt("name");
-      out("extracting name...");
-      names.add(converter.convert(list.peekLast()));
-      out("extracting description...");
-      converter.setConverterAtt("description");
-      descriptions.add(converter.convert(list.peekLast()));
-      out("extracting images...");
-      converter.setConverterAtt("image");
-      list.removeLast();
-    }
-    out("adding names...");
-    infoList.add(names);
-    out("adding descriptions...");
-    infoList.add(descriptions);
-    out("adding images...");
-    infoList.add(images);
-    out("info list: " + infoList.toString());
-    infoList = (LinkedList) converter
-        .orderLists(infoList, new String[]{"names", "images", "descriptions"});
-    return infoList;
-  }
-
-// Helper Functions
 
   @Override
   protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
       throws SQLException, APIException {
     // Tells what documents people have looked at this document
     // get connection
-    Connection conn = getConnection(USERNAME, PASSWORD);
+    Connection conn = getConnection(USERNAME, PASSWORD, URL);
     out("Executing SQL statement...");
     //String sql = "SELECT ITEM.ITEM_NUMBER from ITEM where ITEM.CLASS=9000";
     IItem item = (IItem) getTitleObject(req);
@@ -116,5 +73,4 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
   }
 
 
-
-} 
+}

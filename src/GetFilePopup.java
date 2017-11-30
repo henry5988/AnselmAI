@@ -1,33 +1,64 @@
+import static com.HF.executeSQL;
+import static com.HF.extractTop;
 import static com.HF.getConnection;
+import static com.HF.getWordInParen;
 import static com.HF.out;
+import static com.HF.removeNull;
 
 import com.agile.api.APIException;
-import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IDataObject;
-import com.agile.px.IEventAction;
+import com.agile.api.IItem;
+import com.agile.api.INode;
+import com.agile.api.ITable;
+import com.agile.api.ItemConstants;
+import com.agile.px.ActionResult;
+import com.agile.px.EventActionResult;
+import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
-import com.agile.px.IObjectEventInfo;
+import com.agile.px.IFileEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 
-public class GetFilePopup extends SuggestionPopup implements IEventAction {
+public class GetFilePopup extends FileSuggestionPopup {
 
   @Override
-  protected LinkedList<LinkedList<String>> convertObjectToInfo(LinkedList<IAgileObject> list)
+  public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
+    if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
+      return super.doAction(session, node, req);
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
+  }
+
+  @Override
+  protected List<List<String>> convertObjectToInfo(List list)
       throws APIException {
-    return null;
+    List info;
+    List viewerCounts = new LinkedList();
+    List objects = new LinkedList();
+    out("GetFilePopup.convertObjectToInfo()...");
+    for (Object entry : list) {
+      Map.Entry e = (Entry) entry;
+      viewerCounts.add(e.getValue().toString());
+      objects.add(e.getKey());
+    }
+    out("List to convert: " + objects.toString());
+    info = super.convertObjectToInfo(objects);
+    info.add(viewerCounts);
+    out("GetFilePopup.convertObjectToInfo() ends...");
+    return info;
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
-      throws SQLException, APIException {
-    out("Getting attachment file advice...");
-    Connection conn= getConnection(USERNAME, PASSWORD);
-    IObjectEventInfo info = (IObjectEventInfo) req;
-    IDataObject obj = info.getDataObject();
-    out(obj.toString());
-    return null;
+  protected List getAttachmentAdvice(Connection conn, IEventDirtyFile file,
+      IAgileSession session)
+      throws APIException, SQLException {
+    return super.getAttachmentAdvice(conn, file, session);
   }
+
 }

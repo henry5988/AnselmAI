@@ -1,14 +1,14 @@
+
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Font;
 import java.awt.event.MouseEvent;
-
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -44,7 +44,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		// TODO Auto-generated method stub
 		JFrame.setDefaultLookAndFeelDecorated(true);
 	    JDialog.setDefaultLookAndFeelDecorated(true);
-		JFrame frame = new JFrame("¬Ý¹L³o­Óªº¤H¤]¬Ý¹L");
+		JFrame frame = new JFrame("ï¿½Ý¹Lï¿½oï¿½Óªï¿½ï¿½Hï¿½]ï¿½Ý¹L");
 		frame.setBounds(50,50, 600, 300);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -79,7 +79,7 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		gbc_image2.gridy = 0;
 		gbc_image2.gridwidth = 7;
 		gbc_image2.gridheight = 2;
-		gbc_image2.insets = new Insets(0, 100, 0, 100);// you can modify the space between components by changing the value here 
+		gbc_image2.insets = new Insets(0, 100, 0, 100);// you can modify the space between components by changing the value here
 		
 		frame.getContentPane().add(image2, gbc_image2);
 		
@@ -167,10 +167,9 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 	     });
 		
 		frame.getContentPane().add(name3, gbc_name3);
-		
-		
-		JLabel description1 = new JLabel("(FDA510Kªk³W)");
-		description1.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+
+		JLabel description1 = new JLabel("(FDA510Kï¿½kï¿½W)");
+		description1.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
 		GridBagConstraints gbc_description1 = new GridBagConstraints();
 		gbc_description1.gridx = 0;
 		gbc_description1.gridy = 3;
@@ -180,8 +179,8 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		frame.getContentPane().add(description1, gbc_description1);
 		
 		
-		JLabel description2 = new JLabel("(«È¤á­n¨D³W®æ)");
-		description2.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+		JLabel description2 = new JLabel("(ï¿½È¤ï¿½nï¿½Dï¿½Wï¿½ï¿½)");
+		description2.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
 		GridBagConstraints gbc_description2 = new GridBagConstraints();
 		gbc_description2.gridx = 10;
 		gbc_description2.gridy = 3;
@@ -191,8 +190,8 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		frame.getContentPane().add(description2, gbc_description2);
 		
 		
-		JLabel description3 = new JLabel("(²£«~³W®æ®Ñ)");
-		description3.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+		JLabel description3 = new JLabel("(ï¿½ï¿½ï¿½~ï¿½Wï¿½ï¿½ï¿½)");
+		description3.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
 		GridBagConstraints gbc_description3 = new GridBagConstraints();
 		gbc_description3.gridx = 20;
 		gbc_description3.gridy = 3;
@@ -200,10 +199,9 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		//gbc_description3.insets = new Insets(0, 0, 5, 5);
 		
 		frame.getContentPane().add(description3, gbc_description3);
-		
-		
-		JLabel amount1 = new JLabel("x ¤H¬Ý¹L");
-		amount1.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+
+		JLabel amount1 = new JLabel("x ï¿½Hï¿½Ý¹L");
+		amount1.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount1 = new GridBagConstraints();
 		gbc_amount1.gridx = 0;
 		gbc_amount1.gridy = 5;
@@ -213,8 +211,8 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		frame.getContentPane().add(amount1, gbc_amount1);
 		
 		
-		JLabel amount2 = new JLabel("y ¤H¬Ý¹L");
-		amount2.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+		JLabel amount2 = new JLabel("y ï¿½Hï¿½Ý¹L");
+		amount2.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount2 = new GridBagConstraints();
 		gbc_amount2.gridx = 10;
 		gbc_amount2.gridy = 5;
@@ -224,8 +222,8 @@ public class pop_up_20171120 extends JFrame implements IEventAction{
 		frame.getContentPane().add(amount2, gbc_amount2);
 		
 		
-		JLabel amount3 = new JLabel(/*¼Æ¶q+*/"z ¤H¬Ý¹L");
-		amount3.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+		JLabel amount3 = new JLabel(/*ï¿½Æ¶q+*/"z ï¿½Hï¿½Ý¹L");
+		amount3.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
 		GridBagConstraints gbc_amount3 = new GridBagConstraints();
 		gbc_amount3.gridx = 20;
 		gbc_amount3.gridy = 5;
