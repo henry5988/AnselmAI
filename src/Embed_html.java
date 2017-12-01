@@ -88,7 +88,7 @@ public class Embed_html implements Constants{
 	}
 
 	private static String nameHTML(String name){
-		return "<td style=\"text-align: center;\"><a href=\"http://win-ooi3viu801v:7001/Agile/PLMServlet?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D"+ name +"%26objid%3D6018835%26tabid%3D0%26\">"+ name +"</a></td>";
+		return "<td style=\"text-align: center;\"><a href=\"http://" + LOCALHOST + ":7001/Agile/PLMServlet?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D"+ name +"%26objid%3D6018835%26tabid%3D0%26\">"+ name +"</a></td>";
 	}
 }
 

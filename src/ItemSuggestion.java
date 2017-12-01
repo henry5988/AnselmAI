@@ -38,22 +38,22 @@ public class ItemSuggestion implements Constants{
       sql = "SELECT * FROM (SELECT ITEM FROM ITEM_HISTORY where USER_NAME = '" + ((LinkedList) userSet).pop()
           + "' ORDER BY TIMESTAMP DESC) WHERE ROWNUM <= 100";
       List recentlyVisited = executeSQL(conn, sql, true);
-      while(!recentlyVisited.isEmpty()){
+      while(!recentlyVisited.isEmpty()) {
         Integer id = Integer.parseInt((String) ((LinkedList) recentlyVisited).pop());
         item = (IItem) session.getObject(ItemConstants.CLASS_ITEM_BASE_CLASS, id);
         items.add(item);
-        if(items.contains(null)){
+        if (items.contains(null)) {
           removeNull((LinkedList) items);
         }
       }
-      for (Object o : items) {
-        if(!visitedItems.containsKey((IItem) o))
-          visitedItems.put(o, 1);
-        else{
-          Integer oldValue = (Integer) visitedItems.get(o);
-          Integer newValue = oldValue + 1;
-          visitedItems.replace(o, oldValue, newValue);
-        }
+    }
+    for (Object o : items) {
+      if(!visitedItems.containsKey((IItem) o))
+        visitedItems.put(o, 1);
+      else{
+        Integer oldValue = (Integer) visitedItems.get(o);
+        Integer newValue = oldValue + 1;
+        visitedItems.replace(o, oldValue, newValue);
       }
     }
     topItems = extractTop(visitedItems, 3);
