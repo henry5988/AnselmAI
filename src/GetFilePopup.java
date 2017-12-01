@@ -35,11 +35,4 @@ public class GetFilePopup extends FileSuggestionPopup {
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
   }
 
-  @Override
-  protected List getAttachmentAdvice(Connection conn, IEventDirtyFile file,
-      IAgileSession session)
-      throws APIException, SQLException {
-    return super.getAttachmentAdvice(conn, file, session);
-  }
-
 }

@@ -167,7 +167,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
 
   protected String getImageSrc(String file) {
     String imageType = file.substring(file.indexOf('.') + 1, file.length());
-    ImagePath ip = new ImagePath();
+    ImagePath ip = new ImagePath(LOCALPATH);
     return ip.getImagePath(imageType);
   }
 
