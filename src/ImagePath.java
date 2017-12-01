@@ -56,16 +56,22 @@ public class ImagePath implements Constants{
     IRow row;
     for(; it.hasNext();){
       row = (IRow) it.next();
-      IAttachmentFile file = (IAttachmentFile) row;
-      out("file type detected: " + file.toString());
-      String fileType = getFileTypeExtension(file.toString());
+      row.getName();
+      //IAttachmentFile file = (IAttachmentFile) row;
+      out("file type detected: " + row.getName());
+      String fileType = getFileTypeExtension(row.getName());
       fileList.add(fileType);
     }
-    for (Object s : fileList) {
-      if(!fileTypes.containsKey(s)){
-        fileTypes.put(s, Collections.frequency(fileList, s));
+    for (Object o : fileList) {
+      if(!fileTypes.containsKey(o)) fileTypes.put(o, 1);
+      else{
+        Integer oldValue = (Integer) fileTypes.get(o);
+        Integer newValue = oldValue + 1;
+        fileTypes.replace(o, oldValue, newValue);
       }
     }
-    return (String) extractTop(fileTypes, 1).get(0);
+    String topFileType = (String) ((Entry) extractTop(fileTypes, 1).get(0)).getKey();
+
+    return imagePath.get(topFileType);
   }
 }

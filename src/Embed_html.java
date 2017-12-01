@@ -32,7 +32,7 @@ public class Embed_html implements Constants{
 				List names = infoList.get(NAMEPRINTSQ);
 				List descriptions = infoList.get(DESCRIPTIONPRINTSQ);
 				List viewerCounts = infoList.get(VIEWERPRINTSQ);
-
+        out("image url: " + images.get(0));
 				String itemNumber = row.getValue(1001).toString();
 				System.out.println(itemNumber);
 				
@@ -55,9 +55,9 @@ public class Embed_html implements Constants{
 						+"			<td style=\"text-align: center;\">"+ descriptions.get(2) +"</td>"
 						+"		</tr>"
 						+"		<tr>" //amount
-						+"			<td style=\"text-align: center;\">"+ viewerCounts.get(0).toString() +" 人看過</td>"
-						+"			<td style=\"text-align: center;\">"+ viewerCounts.get(1).toString() +" 人看過</td>"
-						+"			<td style=\"text-align: center;\">"+ viewerCounts.get(2).toString() +" 人看過</td>"
+						+"			<td style=\"text-align: center;\">"+ viewerCounts.get(0).toString() +" �H�ݹL</td>"
+						+"			<td style=\"text-align: center;\">"+ viewerCounts.get(1).toString() +" �H�ݹL</td>"
+						+"			<td style=\"text-align: center;\">"+ viewerCounts.get(2).toString() +" �H�ݹL</td>"
 						+"		</tr>"
 						+"	</tbody>"  
 						+"</table>";
@@ -88,7 +88,7 @@ public class Embed_html implements Constants{
 	}
 
 	private static String nameHTML(String name){
-		return "<td style=\"text-align: center;\"><a href=\"http://agile936d:7001/Agile/PLMServlet?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D"+ name +"%26objid%3D6018835%26tabid%3D0%26\">"+ name +"</a></td>";
+		return "<td style=\"text-align: center;\"><a href=\"http://win-ooi3viu801v:7001/Agile/PLMServlet?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D"+ name +"%26objid%3D6018835%26tabid%3D0%26\">"+ name +"</a></td>";
 	}
 }
 

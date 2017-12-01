@@ -22,14 +22,15 @@ public class ItemSuggestion implements Constants{
   protected List getItemSuggestion(IAgileSession session, IItem item)
       throws SQLException, APIException, ClassNotFoundException {
     String itemNum;
+    List placeholder = new LinkedList();
     List userNameSet = new LinkedList<String>();
     List items = new LinkedList();
     Map visitedItems = new HashMap<IItem, Integer>();
     List topItems = new LinkedList();
     Connection conn = getConnection(USERNAME, PASSWORD, URL);
-    itemNum = item.getName();
+    itemNum = item.getObjectId().toString();
     String sql =
-        "SELECT USER_NAME FROM ITEM_HISTORY where ITEM = '" + itemNum + "' ORDER　BY TIMESTAMP DESC";
+        "SELECT USER_NAME FROM ITEM_HISTORY where ITEM = '" + itemNum + "'";
     List userSet = executeSQL(conn, sql, true);
     while(!userSet.isEmpty()){
       userNameSet.add(getWordInParen((String) ((LinkedList) userSet).peek()));
@@ -56,19 +57,23 @@ public class ItemSuggestion implements Constants{
       }
     }
     topItems = extractTop(visitedItems, 3);
-    return topItems;
+    for(Object o : visitedItems.entrySet()){
+      while(placeholder.size()<3) placeholder.add(o);
+    }
+    out("top item size: " + topItems.size());
+    out("place holder size: " + placeholder.size());
+    return topItems.size() == 3 ? topItems:placeholder;
   }
 
   protected List convertItemsToInfo(List l) throws APIException {
     ImagePath ip = new ImagePath(URLPATH);
-    LinkedList list = (LinkedList) l;
     List infoList = new LinkedList<LinkedList>();
     List names = new LinkedList();
     List descriptions = new LinkedList();
     List images = new LinkedList();
     List viewerCounts = new LinkedList();
 
-    for ( Object e: list) {
+    for ( Object e: l) {
       Entry entry = (Entry) e;
       IItem item = (IItem) entry.getKey();
       Integer viewerCount = (Integer) entry.getValue();
