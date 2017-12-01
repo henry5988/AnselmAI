@@ -17,7 +17,6 @@ import java.util.Properties;
 //Useful Functions for general purposes
 public class HF {
   private static class EntryValueCompare implements Comparator<Entry<String, Integer>>{
-
     @Override
     public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
       return o2.getValue().compareTo(o1.getValue());
@@ -25,8 +24,10 @@ public class HF {
   }
 
   /*Database*/
-  public static Connection getConnection(String username, String password, String url) throws SQLException {
+  public static Connection getConnection(String username, String password, String url)
+      throws SQLException, ClassNotFoundException {
     Connection conn;
+    Class.forName("oracle.jdbc.driver.OracleDriver");
     Properties connectionProps = new Properties();
     connectionProps.put("user", username);
     connectionProps.put("password", password);
@@ -44,7 +45,7 @@ public class HF {
     while (rs.next()) {
       result = rs.getString(1);
       list.push(result);
-      out("Got resultset: " + result.toString());
+      out("Got resultset: " + result);
     }
     out("ResultSet exhausted.");
     return list;
@@ -76,6 +77,10 @@ public class HF {
     } else {
       return string;
     }
+  }
+
+  public static String getFileTypeExtension(String file){
+    return file.substring(file.indexOf('.') + 1, file.length());
   }
 
   /*Container Operations*/
