@@ -44,7 +44,12 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     String eventName = "Get File";
     setFileEventName(eventName);
     out("Getting attachment file advice...");
-    Connection conn = getConnection(USERNAME, PASSWORD, URL);
+    Connection conn = null;
+    try {
+      conn = getConnection(USERNAME, PASSWORD, URL);
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
     IFileEventInfo info = (IFileEventInfo) req;
     IItem obj = (IItem) info.getDataObject();
     out("Getting " + obj.toString() + "'s attachment table");
@@ -160,6 +165,8 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
       conn.close();
     } catch (SQLException e) {
       out("Error when establishing database connection", "err");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
     }
     out("FileSuggestionPopup.convertObjectToInfo() ends...");
     return (List<List<String>>) info;

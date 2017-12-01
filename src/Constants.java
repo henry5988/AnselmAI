@@ -24,6 +24,12 @@ interface Constants{
   // Download file path
   String DOWNLOADFILEPATH = "C:\\demo\\";
 
+  // Suggestion Display sequence
+  int IMAGEPRINTSQ = 0;
+  int NAMEPRINTSQ = 1;
+  int DESCRIPTIONPRINTSQ = 2;
+  int VIEWERPRINTSQ = 3;
+
   // utility constants
   int GETFILEEVENTTYPE = 2000011562;
   int CHECKOUTFILEEVENTTYPE = 2000011559;

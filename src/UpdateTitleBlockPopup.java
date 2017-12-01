@@ -26,7 +26,12 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
       throws SQLException, APIException {
     // Tells what documents people have looked at this document
     // get connection
-    Connection conn = getConnection(USERNAME, PASSWORD, URL);
+    Connection conn = null;
+    try {
+      conn = getConnection(USERNAME, PASSWORD, URL);
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
     out("Executing SQL statement...");
     //String sql = "SELECT ITEM.ITEM_NUMBER from ITEM where ITEM.CLASS=9000";
     IItem item = (IItem) getTitleObject(req);
