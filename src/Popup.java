@@ -5,6 +5,7 @@ import com.agile.api.IAgileSession;
 import com.agile.api.IFileFolder;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Font;
@@ -28,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class Popup extends JFrame implements Constants {
 
