@@ -26,6 +26,7 @@ interface Constants{
   String DOWNLOADFILEPATH = "C:\\demo\\";
 
   // Suggestion Display sequence
+  // TODO BUG: changing the sequence result in array index error
   int IMAGEPRINTSQ = 0;
   int NAMEPRINTSQ = 1;
   int DESCRIPTIONPRINTSQ = 2;

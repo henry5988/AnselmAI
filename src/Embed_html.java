@@ -2,13 +2,18 @@ import static com.HF.executeSQL;
 import static com.HF.getConnection;
 import static com.HF.out;
 
+import com.agile.api.APIException;
+import com.agile.api.AgileSessionFactory;
+import com.agile.api.IAgileSession;
+import com.agile.api.IItem;
+import com.agile.api.IQuery;
+import com.agile.api.IRow;
+import com.agile.api.ITable;
+import com.agile.api.ITwoWayIterator;
+import com.agile.api.ItemConstants;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
-
-import com.agile.api.*;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Embed_html implements Constants{

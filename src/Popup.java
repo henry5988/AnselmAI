@@ -188,7 +188,7 @@ public class Popup extends JFrame implements Constants {
 
     frame.getContentPane().add(description3, gbc_description3);
 
-    JLabel amount1 = new JLabel(viewerCounts.get(0) + " 人看過");
+    JLabel amount1 = new JLabel(viewerCounts.get(0) + " 人也看過");
     amount1.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_amount1 = new GridBagConstraints();
     gbc_amount1.gridx = 0;
@@ -198,7 +198,7 @@ public class Popup extends JFrame implements Constants {
 
     frame.getContentPane().add(amount1, gbc_amount1);
 
-    JLabel amount2 = new JLabel(viewerCounts.get(1) + " 人看過");
+    JLabel amount2 = new JLabel(viewerCounts.get(1) + " 人也看過");
     amount2.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_amount2 = new GridBagConstraints();
     gbc_amount2.gridx = 10;
@@ -208,7 +208,7 @@ public class Popup extends JFrame implements Constants {
 
     frame.getContentPane().add(amount2, gbc_amount2);
 
-    JLabel amount3 = new JLabel(/*數量+*/viewerCounts.get(2) + " 人看過");
+    JLabel amount3 = new JLabel(/*數量+*/viewerCounts.get(2) + " 人也看過");
     amount3.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_amount3 = new GridBagConstraints();
     gbc_amount3.gridx = 20;
