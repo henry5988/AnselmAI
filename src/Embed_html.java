@@ -1,10 +1,14 @@
+import static com.HF.executeSQL;
+import static com.HF.getConnection;
 import static com.HF.out;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 
 import com.agile.api.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Embed_html implements Constants{
@@ -87,8 +91,12 @@ public class Embed_html implements Constants{
 		return session;
 	}
 
-	private static String nameHTML(String name){
-		return "<td style=\"text-align: center;\"><a href=\"http://" + LOCALHOST + ":7001/Agile/PLMServlet?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D"+ name +"%26objid%3D6018835%26tabid%3D0%26\">"+ name +"</a></td>";
+	private static String nameHTML(String name) throws SQLException, ClassNotFoundException {
+		String sql = "select ID from ITEM where ITEM_NUMBER = '" + name + "'";
+		Connection conn = getConnection(USERNAME, PASSWORD, URL);
+		String ID = executeSQL(conn, sql).pop();
+    conn.close();
+		return "<td style=\"text-align: center;\"><a href=\"http://" + LOCALHOST + ":7001/Agile/PLMServlet?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D10000%26objid%3D"+ ID +"%26tabid%3D0%26\">"+ name +"</a></td>";
 	}
 }
 
