@@ -114,7 +114,7 @@ public class Popup extends JFrame implements Constants {
     name1.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        suggestionMouseEvent(session, folders, 0);
+        suggestionMouseEvent(session, folders, 0, frame);
       }
     });
 
@@ -133,7 +133,7 @@ public class Popup extends JFrame implements Constants {
     name2.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        suggestionMouseEvent(session, folders, 1);
+        suggestionMouseEvent(session, folders, 1, frame);
       }
     });
 
@@ -152,7 +152,7 @@ public class Popup extends JFrame implements Constants {
     name3.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        suggestionMouseEvent(session, folders, 2);
+        suggestionMouseEvent(session, folders, 2, frame);
       }
     });
 
@@ -221,7 +221,7 @@ public class Popup extends JFrame implements Constants {
     frame.setVisible(true);
   }
 
-  private static boolean suggestionMouseEvent(IAgileSession session, List folders, int itemIndex) {
+  private static boolean suggestionMouseEvent(IAgileSession session, List folders, int itemIndex, JFrame frame) {
     System.out.println("Mouse Clicked!!!");
     try {
       OutputStream outputStream = null;
@@ -245,6 +245,10 @@ public class Popup extends JFrame implements Constants {
           input.close();
           zis.close();
           outputStream.close();
+          
+          Container cp=frame.getContentPane();
+		  cp.setLayout(null);
+		  JOptionPane.showMessageDialog(frame,"下載成功至 "+DOWNLOADFILEPATH);
         }
 
         System.out.println("Done!");
