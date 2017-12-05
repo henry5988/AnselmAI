@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 public class Popup extends JFrame implements Constants {
 
 
-  public static void frame(IAgileSession session, List infoList) {
+  public static void frame(IAgileSession session, List infoList, String itemName) {
     out("retrieving folders array...");
     List folders = (List) infoList.get(0);
     out("retrieving name array...");
@@ -52,7 +52,8 @@ public class Popup extends JFrame implements Constants {
 
     JFrame.setDefaultLookAndFeelDecorated(true);
     JDialog.setDefaultLookAndFeelDecorated(true);
-    JFrame frame = new JFrame("看過這個的人也看過");
+    String frameTitle = "看過 "+ itemName +" 的人也看過";
+    JFrame frame = new JFrame(frameTitle);
     frame.setBounds(50, 50, 600, 300);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     GridBagLayout gridBagLayout = new GridBagLayout();

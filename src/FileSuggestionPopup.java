@@ -27,6 +27,15 @@ import java.util.Map.Entry;
 public abstract class FileSuggestionPopup extends SuggestionPopup {
 
   static String fileEventName;
+  static String targetFile;
+
+  public static String getTargetFile() {
+    return targetFile;
+  }
+
+  public static void setTargetFile(String targetFile) {
+    FileSuggestionPopup.targetFile = targetFile;
+  }
 
   public static String getFileEventName() {
     return fileEventName;
@@ -38,20 +47,15 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
 
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
-      throws SQLException, APIException{
+  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IFileEventInfo info)
+      throws SQLException, APIException, ClassNotFoundException {
     LinkedList lists = new LinkedList();
     String eventName = "Get File";
     setFileEventName(eventName);
     out("Getting attachment file advice...");
-    Connection conn = null;
-    try {
-      conn = getConnection(USERNAME, PASSWORD, URL);
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    IFileEventInfo info = (IFileEventInfo) req;
-    IItem obj = (IItem) info.getDataObject();
+
+    Connection conn = getConnection(USERNAME, PASSWORD, URL);
+
     out("Getting " + obj.toString() + "'s attachment table");
     ITable attachments = obj.getTable(ItemConstants.TABLE_ATTACHMENTS);
     out("Getting files that was downloaded...");
@@ -59,6 +63,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     for (int i = 0; i < files.length; i++) {
       out("New dirty file");
       out("Getting related file from " + files[i].getFilename());
+      setTargetFile(files[i].getFilename());
       lists.addAll(getAttachmentAdvice(conn, files[i], session)); // gets file list that contains filename and viewer count
     }
     if (lists.contains(null)) {

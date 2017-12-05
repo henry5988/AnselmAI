@@ -1,13 +1,17 @@
+import static com.HF.getConnection;
 import static com.HF.out;
 import static com.HF.removeNull;
 
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
+import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventAction;
 import com.agile.px.IEventInfo;
+import com.agile.px.IFileEventInfo;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,18 +32,28 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     try {
-      LinkedList list = getItemAdvice(session, req);
+
+      Connection conn = null;
+      try {
+        conn = getConnection(USERNAME, PASSWORD, URL);
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+      IFileEventInfo info = (IFileEventInfo) req;
+      IItem obj = (IItem) info.getDataObject();
+      conn.close();
+      LinkedList list = getItemAdvice(session, obj, info);
       out("List size: " + list.size());
       out("List: " + list.toString());
       if (list.size() >= 3) {
         out("convert Object to String info...");
         List infoList = convertObjectToInfo(list);
 
-        Popup.frame(session, infoList);
+        Popup.frame(session, infoList, obj.getName());
       }else{
         out("list has fewer than 3 items, does nothing");
       }
-    } catch (SQLException | APIException e) {
+    } catch (SQLException | APIException | ClassNotFoundException e) {
       out("Error occured", "err");
       e.getMessage();
       e.printStackTrace();
@@ -91,6 +105,6 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   }
 
 
-  protected abstract LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
-      throws SQLException, APIException;
+  protected abstract LinkedList getItemAdvice(IAgileSession session, IItem obj, IFileEventInfo req)
+      throws SQLException, APIException, ClassNotFoundException;
 }
