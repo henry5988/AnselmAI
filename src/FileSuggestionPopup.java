@@ -7,11 +7,16 @@ import static com.HF.out;
 import static com.HF.removeNull;
 
 import com.agile.api.APIException;
+import com.agile.api.FolderConstants;
 import com.agile.api.IAgileSession;
+import com.agile.api.IAttachmentFile;
 import com.agile.api.IFileFolder;
+import com.agile.api.IFolder;
 import com.agile.api.IItem;
 import com.agile.api.ITable;
+import com.agile.api.IUser;
 import com.agile.api.ItemConstants;
+import com.agile.api.UserConstants;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
@@ -57,7 +62,6 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     Connection conn = getConnection(USERNAME, PASSWORD, URL);
 
     out("Getting " + obj.toString() + "'s attachment table");
-    ITable attachments = obj.getTable(ItemConstants.TABLE_ATTACHMENTS);
     out("Getting files that was downloaded...");
     IEventDirtyFile[] files = info.getFiles();
     for (int i = 0; i < files.length; i++) {
@@ -95,9 +99,15 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     LinkedList userNames = new LinkedList();
     for (Object user : userSet) {
       userNames.add(getWordInParen((String) user));
+      if(userNames.getLast().equals(session.getCurrentUser().getName())){
+        userNames.removeLast();
+        continue;
+      }
       sql = "SELECT DETAILS FROM ITEM_HISTORY WHERE USER_NAME = '" + user
           + "' AND ACTION = " + getActionCode() + " ORDER BY TIMESTAMP DESC";
       List relevantFiles = executeSQL(conn, sql, true);
+
+      relevantFiles = filterRelevantFiles(relevantFiles, session, conn);
       advices.addAll(relevantFiles);
       out("advices: " + advices.toString());
     }
@@ -150,8 +160,8 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
         String folder = sp.getDetailsFolderName((String) f);
         out("File: " + file);
         String sql =
-            "SELECT Attachment.DESCRIPTION FROM ATTACHMENT join bo_attach_versions_history on attachment.id = bo_attach_versions_history.attach_id join files on bo_attach_versions_history.file_id = files.id and files.FILENAME = '"
-                + file + "'";
+            "SELECT Attachment.DESCRIPTION FROM ATTACHMENT where ATTACHMENT_NUMBER ='"
+                + folder + "'";
         String description = (String) executeSQL(conn, sql).pop();
         String imageSrc = getImageSrc(file);
         folders.add(folder);
@@ -197,6 +207,49 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
       e.printStackTrace();
     }
     return false;
+  }
+
+  protected boolean checkFilePrivilege(IAgileSession session, Object item) throws APIException {
+    IUser user = session.getCurrentUser();
+    IItem thisItem = (IItem) item;
+    out("current user is " + user.getName());
+
+    out("Privilege read");
+    return user.hasPrivilege(UserConstants.PRIV_READ, item, true);
+  }
+
+  private List filterRelevantFiles(List relevantFiles, IAgileSession session, Connection conn)
+      throws SQLException, APIException {
+    List filteredFiles = new LinkedList();
+    int index = 0;
+    for (Object f : relevantFiles) {
+      out("iterating through files...");
+      StringParser sp = new StringParser();
+      if(sp.getDetailsFileName(f.toString()).equals(getTargetFile())) continue;
+      out("file being processed: " + sp.getDetailsFolderName(f.toString()));
+      String sql =
+          "SELECT ATTACHMENT_MAP.PARENT_ID FROM ATTACHMENT_MAP JOIN ATTACHMENT ON ATTACHMENT_MAP.ATTACH_ID=ATTACHMENT.ID WHERE ATTACHMENT.ATTACHMENT_NUMBER = '"
+              + sp.getDetailsFolderName(f.toString()) + "'";
+      List parentIDs = executeSQL(conn, sql, false);
+      out("ParentID size: " + parentIDs.size());
+      if (parentIDs.size() == 0 || parentIDs.get(0).toString().equals("704")){
+        continue;
+      }
+      out("scanning proceeds...");
+      Integer parentIDNum = Integer.parseInt((String) parentIDs.get(0));
+      IItem item = (IItem) session
+          .getObject(ItemConstants.CLASS_ITEM_BASE_CLASS, parentIDNum);
+      if (checkFilePrivilege(session, item)) {
+        out(session.getCurrentUser().getName() +" has privilege to " + item.getName());
+        index++;
+        filteredFiles.add(f);
+      } else {
+        out(session.getCurrentUser().getName() + " has no privilege to " + item.getName());
+        parentIDs.remove(0);
+        out("relevantFiles length after removal of non-privileged item: " + parentIDs.size());
+      }
+    }
+    return filteredFiles;
   }
 
   protected class StringParser {
