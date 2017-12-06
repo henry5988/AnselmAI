@@ -4,8 +4,10 @@ import com.agile.api.APIException;
 import com.agile.api.AgileSessionFactory;
 import com.agile.api.IAgileSession;
 import com.agile.api.IDataObject;
+import com.agile.api.IItem;
 import com.agile.api.ItemConstants;
 import com.agile.px.IEventInfo;
+import com.agile.px.IFileEventInfo;
 import com.agile.px.IObjectEventInfo;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -25,8 +27,10 @@ public class GetItemAdviceTest {
 
       IAgileSession session = sessionLogin(USERNAME, PASSWORD);
       IEventInfo info = getTestObj(session);
+      IFileEventInfo fileInfo = (IFileEventInfo) info;
+      IItem item = (IItem) fileInfo.getDataObject();
 
-      LinkedList list = p.getItemAdvice(session, info);
+      LinkedList list = p.getItemAdvice(session, item, fileInfo);
       while(!list.isEmpty()){
         LinkedList fields = (LinkedList) list.pop();
         while(!fields.isEmpty()){
@@ -38,6 +42,8 @@ public class GetItemAdviceTest {
       out("Error during GetItemAdviceTest()", "err");
     } catch (SQLException e) {
       out("Error during SQL query", "err");
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
   }
