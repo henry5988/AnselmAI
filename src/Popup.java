@@ -54,7 +54,7 @@ public class Popup extends JFrame implements Constants {
     JDialog.setDefaultLookAndFeelDecorated(true);
     String frameTitle = "看過 "+ itemName +" 的人也看過";
     JFrame frame = new JFrame(frameTitle);
-    frame.setBounds(50, 50, 600, 300);
+    frame.setBounds(50, 50, 700, 300);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     GridBagLayout gridBagLayout = new GridBagLayout();
     gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

@@ -11,6 +11,7 @@ interface Constants{
   String CLIENTURL = "http://" + LOCALHOST + ":7001/Agile";
 
   // image path constants
+  String NOPATH = "C:\\demo\\images\\noLogo.png";
   String XLSXPATH = "C:\\demo\\images\\excelLogo.png";
   String DOCXPATH = "C:\\demo\\images\\wordLogo.png";
   String PPTXPATH = "C:\\demo\\images\\pptLogo.png";

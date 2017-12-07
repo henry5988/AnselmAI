@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
@@ -46,15 +47,19 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       LinkedList list = getItemAdvice(session, obj, info);
       out("List size: " + list.size());
       out("List: " + list.toString());
-      if (list.size() >= 3) {
-        out("convert Object to String info...");
-        List infoList = convertObjectToInfo(list);
-        // TODO obj.getName() should be name of the downloaded file
-        String fileName = getDownloadedFileName(info);
-        Popup.frame(session, infoList, fileName);
-      }else{
+      List<List<String>> infoList = convertObjectToInfo(list);
+      if (list.size() < 3) {
         out("list has fewer than 3 items, does nothing");
+        while(((List) infoList.get(1)).size() < 3){
+          infoList.get(1).add("n/a");
+          infoList.get(2).add(NOPATH);
+          infoList.get(3).add("n/a");
+          infoList.get(4).add("n/a");
+        }
       }
+      out("convert Object to String info...");
+      String fileName = getDownloadedFileName(info);
+      Popup.frame(session, infoList, fileName);
     } catch (SQLException | APIException | ClassNotFoundException e) {
       out("Error occured", "err");
       e.getMessage();
