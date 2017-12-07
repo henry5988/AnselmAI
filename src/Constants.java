@@ -17,6 +17,7 @@ interface Constants{
   String PPTXPATH = "C:\\demo\\images\\pptLogo.png";
   String PDFPATH = "C:\\demo\\images\\pdfLogo.png";
   String TXTPATH = "C:\\demo\\images\\txtLogo.jpg";
+  String NOURL = "https://seansi.org/usana/wp-content/themes/Usana/images/no-img.png";
   String XLSXURL = "https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/022017/untitled-3_4.jpg?itok=jxziWG7L";
   String DOCXURL = "http://vectorlogo4u.com/wp-content/uploads/2016/06/microsoft-word-vector.png";
   String PPTXURL = "https://cdn.worldvectorlogo.com/logos/microsoft-powerpoint-2013.svg";

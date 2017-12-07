@@ -36,6 +36,7 @@ public class ImagePath implements Constants{
       imagePath.put("pptx", PPTXURL);
       imagePath.put("pdf", PDFURL);
       imagePath.put("txt", TXTURL);
+      imagePath.put("null", NOURL);
     }
   }
 
