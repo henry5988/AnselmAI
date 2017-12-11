@@ -10,8 +10,11 @@ import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IDataObject;
 import com.agile.api.IItem;
+import com.agile.api.IUser;
 import com.agile.api.ItemConstants;
+import com.agile.api.UserConstants;
 import com.agile.px.IEventInfo;
+import com.agile.px.IFileEventInfo;
 import com.agile.px.IUpdateEventInfo;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,7 +25,7 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
 
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
+  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IFileEventInfo info)
       throws SQLException, APIException {
     // Tells what documents people have looked at this document
     // get connection
@@ -34,7 +37,7 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
     }
     out("Executing SQL statement...");
     //String sql = "SELECT ITEM.ITEM_NUMBER from ITEM where ITEM.CLASS=9000";
-    IItem item = (IItem) getTitleObject(req);
+    IItem item = obj;
     String itemNum = item.getObjectId().toString();
     LinkedList<IItem> items = new LinkedList();
     // select who have viewed the doc from database recently
@@ -69,13 +72,4 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
     out("Got recently visited items!");
     return items;
   }
-
-
-  private IDataObject getTitleObject(IEventInfo req) throws APIException {
-    IUpdateEventInfo info = (IUpdateEventInfo) req;
-    IDataObject obj = info.getDataObject();
-    return obj;
-  }
-
-
 }

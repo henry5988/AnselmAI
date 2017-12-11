@@ -1,16 +1,25 @@
+import static com.HF.getConnection;
 import static com.HF.out;
 import static com.HF.removeNull;
 
 import com.agile.api.APIException;
+import com.agile.api.AgileSessionFactory;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
+import com.agile.api.IItem;
 import com.agile.api.INode;
+import com.agile.api.ITable;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventAction;
+import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
+import com.agile.px.IFileEventInfo;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
@@ -28,24 +37,41 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     try {
-      LinkedList list = getItemAdvice(session, req);
+      //session = connect();
+      Connection conn = null;
+      conn = getConnection(USERNAME, PASSWORD, URL);
+
+      IFileEventInfo info = (IFileEventInfo) req;
+      IItem obj = (IItem) info.getDataObject();
+      conn.close();
+      LinkedList list = getItemAdvice(session, obj, info);
       out("List size: " + list.size());
       out("List: " + list.toString());
-      if (list.size() >= 3) {
-        out("convert Object to String info...");
-        List infoList = convertObjectToInfo(list);
-
-        Popup.frame(session, infoList);
-      }else{
+      List<List<String>> infoList = convertObjectToInfo(list);
+      if (list.size() < 3) {
         out("list has fewer than 3 items, does nothing");
+        while(((List) infoList.get(1)).size() < 3){
+          infoList.get(1).add("n/a");
+          infoList.get(2).add(NOPATH);
+          infoList.get(3).add("n/a");
+          infoList.get(4).add("n/a");
+        }
       }
-    } catch (SQLException | APIException e) {
+      out("convert Object to String info...");
+      String fileName = getDownloadedFileName(info);
+      Popup.frame(session, infoList, fileName);
+    } catch (SQLException | APIException | ClassNotFoundException e) {
       out("Error occured", "err");
       e.getMessage();
       e.printStackTrace();
     }
     out("JFrame info printed");
     return null;
+  }
+
+  private String getDownloadedFileName(IFileEventInfo info) throws APIException {
+    IEventDirtyFile[] files = info.getFiles();
+    return files[0].getFilename();
   }
 
   protected List<List<String>> convertObjectToInfo(List l)
@@ -91,6 +117,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   }
 
 
-  protected abstract LinkedList getItemAdvice(IAgileSession session, IEventInfo req)
-      throws SQLException, APIException;
+  protected abstract LinkedList getItemAdvice(IAgileSession session, IItem obj, IFileEventInfo req)
+      throws SQLException, APIException, ClassNotFoundException;
 }
+
+

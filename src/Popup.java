@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 public class Popup extends JFrame implements Constants {
 
 
-  public static void frame(IAgileSession session, List infoList) {
+  public static void frame(IAgileSession session, List infoList, String itemName) {
     out("retrieving folders array...");
     List folders = (List) infoList.get(0);
     out("retrieving name array...");
@@ -52,8 +52,9 @@ public class Popup extends JFrame implements Constants {
 
     JFrame.setDefaultLookAndFeelDecorated(true);
     JDialog.setDefaultLookAndFeelDecorated(true);
-    JFrame frame = new JFrame("看過這個的人也看過");
-    frame.setBounds(50, 50, 600, 300);
+    String frameTitle = "看過 "+ itemName +" 的人也看過";
+    JFrame frame = new JFrame(frameTitle);
+    frame.setBounds(50, 50, 700, 300);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     GridBagLayout gridBagLayout = new GridBagLayout();
     gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -74,8 +75,6 @@ public class Popup extends JFrame implements Constants {
     gbc_image1.gridheight = 2;
     //gbc_image1.insets = new Insets(0, 0, 5, 5);
 
-    frame.getContentPane().add(image1, gbc_image1);
-
     JLabel image2 = new JLabel("");
     ImageIcon imageIcon2 = new ImageIcon(new ImageIcon((String) images.get(1)).getImage()
         .getScaledInstance(100, 100, Image.SCALE_DEFAULT));
@@ -88,8 +87,6 @@ public class Popup extends JFrame implements Constants {
     gbc_image2.insets = new Insets(0, 100, 0,
         100);// you can modify the space between components by changing the value here
 
-    frame.getContentPane().add(image2, gbc_image2);
-
     JLabel image3 = new JLabel("");
     ImageIcon imageIcon3 = new ImageIcon(new ImageIcon((String) images.get(2)).getImage()
         .getScaledInstance(100, 100, Image.SCALE_DEFAULT));
@@ -100,8 +97,6 @@ public class Popup extends JFrame implements Constants {
     gbc_image3.gridwidth = 7;
     gbc_image3.gridheight = 2;
     //gbc_image3.insets = new Insets(0, 0, 5, 0);
-
-    frame.getContentPane().add(image3, gbc_image3);
 
     JLabel name1 = new JLabel("<HTML><U>" + names.get(0) + "</U></HTML>");
     name1.setFont(new Font("Stencil", Font.PLAIN, 20));
@@ -120,8 +115,6 @@ public class Popup extends JFrame implements Constants {
       }
     });
 
-    frame.getContentPane().add(name1, gbc_name1);
-
     JLabel name2 = new JLabel("<HTML><U>" + names.get(1) + "</U></HTML>");
     name2.setFont(new Font("Stencil", Font.PLAIN, 20));
     name2.setForeground(Color.BLUE);
@@ -138,8 +131,6 @@ public class Popup extends JFrame implements Constants {
         suggestionMouseEvent(session, folders, 1, frame);
       }
     });
-
-    frame.getContentPane().add(name2, gbc_name2);
 
     JLabel name3 = new JLabel("<HTML><U>" + names.get(2) + "</U></HTML>");
     name3.setFont(new Font("Stencil", Font.PLAIN, 20));
@@ -158,8 +149,6 @@ public class Popup extends JFrame implements Constants {
       }
     });
 
-    frame.getContentPane().add(name3, gbc_name3);
-
     JLabel description1 = new JLabel("(" + descriptions.get(0) + ")");
     description1.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_description1 = new GridBagConstraints();
@@ -167,8 +156,6 @@ public class Popup extends JFrame implements Constants {
     gbc_description1.gridy = 3;
     gbc_description1.gridwidth = 7;
     //gbc_description1.insets = new Insets(0, 0, 5, 5);
-
-    frame.getContentPane().add(description1, gbc_description1);
 
     JLabel description2 = new JLabel("(" + descriptions.get(1) + ")");
     description2.setFont(new Font("標楷體", Font.PLAIN, 18));
@@ -178,8 +165,6 @@ public class Popup extends JFrame implements Constants {
     gbc_description2.gridwidth = 7;
     //gbc_description2.insets = new Insets(0, 0, 5, 5);
 
-    frame.getContentPane().add(description2, gbc_description2);
-
     JLabel description3 = new JLabel("(" + descriptions.get(2) + ")");
     description3.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_description3 = new GridBagConstraints();
@@ -188,9 +173,7 @@ public class Popup extends JFrame implements Constants {
     gbc_description3.gridwidth = 7;
     //gbc_description3.insets = new Insets(0, 0, 5, 5);
 
-    frame.getContentPane().add(description3, gbc_description3);
-
-    JLabel amount1 = new JLabel(viewerCounts.get(0) + " 人看過");
+    JLabel amount1 = new JLabel(viewerCounts.get(0) + " 人也看過");
     amount1.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_amount1 = new GridBagConstraints();
     gbc_amount1.gridx = 0;
@@ -198,9 +181,7 @@ public class Popup extends JFrame implements Constants {
     gbc_amount1.gridwidth = 7;
     gbc_amount1.insets = new Insets(20, 0, 0, 0);
 
-    frame.getContentPane().add(amount1, gbc_amount1);
-
-    JLabel amount2 = new JLabel(viewerCounts.get(1) + " 人看過");
+    JLabel amount2 = new JLabel(viewerCounts.get(1) + " 人也看過");
     amount2.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_amount2 = new GridBagConstraints();
     gbc_amount2.gridx = 10;
@@ -208,9 +189,7 @@ public class Popup extends JFrame implements Constants {
     gbc_amount2.gridwidth = 7;
     gbc_amount2.insets = new Insets(20, 0, 0, 0);
 
-    frame.getContentPane().add(amount2, gbc_amount2);
-
-    JLabel amount3 = new JLabel(/*數量+*/viewerCounts.get(2) + " 人看過");
+    JLabel amount3 = new JLabel(/*數量+*/viewerCounts.get(2) + " 人也看過");
     amount3.setFont(new Font("標楷體", Font.PLAIN, 18));
     GridBagConstraints gbc_amount3 = new GridBagConstraints();
     gbc_amount3.gridx = 20;
@@ -218,6 +197,19 @@ public class Popup extends JFrame implements Constants {
     gbc_amount3.gridwidth = 7;
     gbc_amount3.insets = new Insets(20, 0, 0, 0);
 
+    frame.getContentPane().add(image1, gbc_image1);
+    frame.getContentPane().add(name1, gbc_name1);
+    frame.getContentPane().add(description1, gbc_description1);
+    frame.getContentPane().add(amount1, gbc_amount1);
+
+    frame.getContentPane().add(image2, gbc_image2);
+    frame.getContentPane().add(name2, gbc_name2);
+    frame.getContentPane().add(description2, gbc_description2);
+    frame.getContentPane().add(amount2, gbc_amount2);
+
+    frame.getContentPane().add(image3, gbc_image3);
+    frame.getContentPane().add(name3, gbc_name3);
+    frame.getContentPane().add(description3, gbc_description3);
     frame.getContentPane().add(amount3, gbc_amount3);
 
     frame.setVisible(true);
