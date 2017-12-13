@@ -40,7 +40,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       //session = connect();
       Connection conn = null;
       conn = getConnection(USERNAME, PASSWORD, URL);
-
+      Popup p = new AttachmentPopup();
       IFileEventInfo info = (IFileEventInfo) req;
       IItem obj = (IItem) info.getDataObject();
       conn.close();
@@ -59,7 +59,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       }
       out("convert Object to String info...");
       String fileName = getDownloadedFileName(info);
-      Popup.frame(session, infoList, fileName);
+      p.frame(session, infoList, fileName);
     } catch (SQLException | APIException | ClassNotFoundException e) {
       out("Error occured", "err");
       e.getMessage();
