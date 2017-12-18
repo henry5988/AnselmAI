@@ -10,9 +10,11 @@ import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IDataObject;
 import com.agile.api.IItem;
+import com.agile.api.INode;
 import com.agile.api.IUser;
 import com.agile.api.ItemConstants;
 import com.agile.api.UserConstants;
+import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
 import com.agile.px.IUpdateEventInfo;
@@ -21,11 +23,11 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 
-public class UpdateTitleBlockPopup extends SuggestionPopup {
+public class UpdateTitleBlockPopup extends FileSuggestionPopup {
 
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IFileEventInfo info)
+  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo info)
       throws SQLException, APIException {
     // Tells what documents people have looked at this document
     // get connection

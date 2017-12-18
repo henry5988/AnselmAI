@@ -13,10 +13,12 @@ import com.agile.api.IAttachmentFile;
 import com.agile.api.IFileFolder;
 import com.agile.api.IFolder;
 import com.agile.api.IItem;
+import com.agile.api.INode;
 import com.agile.api.ITable;
 import com.agile.api.IUser;
 import com.agile.api.ItemConstants;
 import com.agile.api.UserConstants;
+import com.agile.px.EventActionResult;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
@@ -50,10 +52,44 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     FileSuggestionPopup.fileEventName = fileEventName;
   }
 
+  @Override
+  public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
+    try {
+      //session = connect();
+      Connection conn = null;
+      conn = getConnection(USERNAME, PASSWORD, URL);
+      IFileEventInfo info = (IFileEventInfo) req;
+      IItem obj = (IItem) info.getDataObject();
+      conn.close();
+      LinkedList list = getItemAdvice(session, obj, info);
+      out("List size: " + list.size());
+      out("List: " + list.toString());
+      List<List<String>> infoList = convertObjectToInfo(list);
+      if (list.size() < 3) {
+        out("list has fewer than 3 items, does nothing");
+        while(((List) infoList.get(1)).size() < 3){
+          infoList.get(1).add("n/a");
+          infoList.get(2).add(NOPATH);
+          infoList.get(3).add("n/a");
+          infoList.get(4).add("n/a");
+        }
+      }
+      out("convert Object to String info...");
+      String fileName = getDownloadedFileName(info);
+      p.frame(session, infoList, fileName);
+    } catch (SQLException | APIException | ClassNotFoundException e) {
+      out("Error occured", "err");
+      e.getMessage();
+      e.printStackTrace();
+    }
+    out("JFrame info printed");
+    return null;
+  }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IFileEventInfo info)
+  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
+    IFileEventInfo info = (IFileEventInfo) req;
     LinkedList lists = new LinkedList();
     String eventName = "Get File";
     setFileEventName(eventName);
@@ -267,4 +303,10 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     }
 
   }
+
+  private String getDownloadedFileName(IFileEventInfo info) throws APIException {
+    IEventDirtyFile[] files = info.getFiles();
+    return files[0].getFilename();
+  }
+
 }
