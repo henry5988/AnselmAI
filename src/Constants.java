@@ -1,13 +1,13 @@
 interface Constants{
   //database constants
-  String LOCALHOST = "win-ooi3viu801v";
+  String LOCALHOST = "agile936d";
   String USERNAME = "agile";
   String PASSWORD = "tartan";
   String URL = "jdbc:oracle:thin:@"+ LOCALHOST +":1521:agile9";
 
   // admin client credentials
   String ADMINUSERNAME = "admin";
-  String ADMINPASSWORD = "agile936";
+  String ADMINPASSWORD = "agile936d";
   String CLIENTURL = "http://" + LOCALHOST + ":7001/Agile";
 
   // image path constants
