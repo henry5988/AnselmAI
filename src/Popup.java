@@ -1,5 +1,11 @@
 import static com.HF.out;
-
+import static com.HF.executeSQL;
+import static com.HF.executeInsertSQL;
+import static com.HF.extractTop;
+import static com.HF.getConnection;
+import static com.HF.getWordInParen;
+import static com.HF.out;
+import static com.HF.removeNull;
 import com.agile.api.APIException;
 import com.agile.api.IAgileSession;
 import com.agile.api.IFileFolder;
@@ -22,6 +28,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -34,21 +43,23 @@ import javax.swing.JOptionPane;
 public class Popup extends JFrame implements Constants {
 
 
-  public static void frame(IAgileSession session, List infoList, String itemName) {
-    out("retrieving folders array...");
+  public static void frame(IAgileSession session, List infoList, String itemName, String folderName) {
+    //out("retrieving folders array...");
     List folders = (List) infoList.get(0);
-    out("retrieving name array...");
+    //out( "******"+infoList.get(5).toString());
+    //out("retrieving name array...");
     List names = (List) infoList.get(1);
-    out(infoList.get(1).toString());
-    out("retrieving image array...");
-    out(infoList.get(2).toString());
+    //out(infoList.get(1).toString());
+    //out("retrieving image array...");
+    //out(infoList.get(2).toString());
     List images = (List) infoList.get(2);
-    out("retrieving description array...");
-    out(infoList.get(3).toString());
+    //out("retrieving description array...");
+    //out(infoList.get(3).toString());
     List descriptions = (List) infoList.get(3);
-    out("retrieving related user count...");
-    out(infoList.get(4).toString());
+    //out("retrieving related user count...");
+    //out(infoList.get(4).toString());
     List viewerCounts = (List) infoList.get(4);
+    List wholename = (List) infoList.get(5);
 
     JFrame.setDefaultLookAndFeelDecorated(true);
     JDialog.setDefaultLookAndFeelDecorated(true);
@@ -84,8 +95,7 @@ public class Popup extends JFrame implements Constants {
     gbc_image2.gridy = 0;
     gbc_image2.gridwidth = 7;
     gbc_image2.gridheight = 2;
-    gbc_image2.insets = new Insets(0, 100, 0,
-        100);// you can modify the space between components by changing the value here
+    gbc_image2.insets = new Insets(0, 100, 0,100);// you can modify the space between components by changing the value here
 
     JLabel image3 = new JLabel("");
     ImageIcon imageIcon3 = new ImageIcon(new ImageIcon((String) images.get(2)).getImage()
@@ -112,6 +122,12 @@ public class Popup extends JFrame implements Constants {
       @Override
       public void mouseClicked(MouseEvent e) {
         suggestionMouseEvent(session, folders, 0, frame);
+        try {
+			savepoints(folderName,wholename.get(0).toString(),wholename.get(1).toString(),wholename.get(2).toString());
+		} catch (ClassNotFoundException | SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
       }
     });
 
@@ -221,7 +237,7 @@ public class Popup extends JFrame implements Constants {
       OutputStream outputStream = null;
       IFileFolder attachmentFile = (IFileFolder) session
           .getObject(IFileFolder.OBJECT_TYPE, folders.get(itemIndex));
-      out("Folder " + folders.get(itemIndex).toString());
+      //out("Folder " + folders.get(itemIndex).toString());
       InputStream input = attachmentFile.getFile();
       ZipInputStream zis = new ZipInputStream(input);
       ZipEntry ze = zis.getNextEntry();
@@ -273,5 +289,49 @@ public class Popup extends JFrame implements Constants {
     }
     return true;
   }
+  
+  private static void savepoints(String OriginalFile, String ClickFile, String OtherFile1, String OtherFile2) throws ClassNotFoundException, SQLException {
+	 
+	  Connection conn = getConnection(USERNAME2, PASSWORD2, URL2);
+	  String sql = "SELECT * FROM  AI WHERE ORIGINALFILE = '"+OriginalFile+"' AND FILENAME = '"+ClickFile+"'";
+	  List userSet = executeSQL(conn, sql, true);
+	  if (userSet.isEmpty() & ClickFile !="n/a") {
+		  String sqlinsert = "INSERT INTO AI(ORIGINALFILE,FILENAME,COUNT,POINTS) VALUES ('"+OriginalFile+"','"+ClickFile+"',1,3)";
+		
+		  int Insert = executeInsertSQL(conn, sqlinsert);
+	  }
+	  else {
+		  String sqlupdate = "UPDATE AI SET COUNT = COUNT +1,POINTS = POINTS +3 WHERE ORIGINALFILE = '"+OriginalFile+"' AND FILENAME = '"+ClickFile+"'";
+		  int Insert = executeInsertSQL(conn, sqlupdate);
+	  }
+	  if(OtherFile1!="n/a")
+	  {
+		  String sqlSearchOtherFile1 = "SELECT * FROM  AI WHERE ORIGINALFILE = '"+OriginalFile+"' AND FILENAME = '"+OtherFile1+"'";
+		  List OtherFile01 = executeSQL(conn, sqlSearchOtherFile1, true);
+		  if (OtherFile01.isEmpty()) {
+			  String sqlinsert = "INSERT INTO AI(ORIGINALFILE,FILENAME,COUNT,POINTS) VALUES ('"+OriginalFile+"','"+OtherFile1+"',0,-1)";
+			  int Insert = executeInsertSQL(conn, sqlinsert);
+		  }
+		  else {
+			  String sqlupdate = "UPDATE AI SET POINTS = POINTS -1 WHERE ORIGINALFILE = '"+OriginalFile+"' AND FILENAME = '"+OtherFile1+"'";
+			  int Insert = executeInsertSQL(conn, sqlupdate);
+		  }
+	  }
+	  if(OtherFile2!="n/a")
+	  {
+		  String sqlSearchOtherFile2 = "SELECT * FROM  AI WHERE ORIGINALFILE = '"+OriginalFile+"' AND FILENAME = '"+OtherFile2+"'";
+		  List OtherFile02 = executeSQL(conn, sqlSearchOtherFile2, true);
+		  if (OtherFile02.isEmpty()) {
+			  String sqlinsert = "INSERT INTO AI(ORIGINALFILE,FILENAME,COUNT,POINTS) VALUES ('"+OriginalFile+"','"+OtherFile2+"',0,-1)";
+			  int Insert = executeInsertSQL(conn, sqlinsert);
+		  }
+		  else {
+			  String sqlupdate = "UPDATE AI SET POINTS = POINTS -1 WHERE ORIGINALFILE = '"+OriginalFile+"' AND FILENAME = '"+OtherFile2+"'";
+			  int Insert = executeInsertSQL(conn, sqlupdate);
+		  }
+	  }
+	}
+
+
 
 }
