@@ -52,7 +52,7 @@ public class AttachmentPopup extends Popup implements Constants {
 
     JFrame.setDefaultLookAndFeelDecorated(true);
     JDialog.setDefaultLookAndFeelDecorated(true);
-    String frameTitle = "¬Ý¹L "+ itemName +" ªº¤H¤]¬Ý¹L";
+    String frameTitle = "ï¿½Ý¹L "+ itemName +" ï¿½ï¿½ï¿½Hï¿½]ï¿½Ý¹L";
     JFrame frame = new JFrame(frameTitle);
     frame.setBounds(50, 50, 700, 300);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -150,7 +150,7 @@ public class AttachmentPopup extends Popup implements Constants {
     });
 
     JLabel description1 = new JLabel("(" + descriptions.get(0) + ")");
-    description1.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+    description1.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
     GridBagConstraints gbc_description1 = new GridBagConstraints();
     gbc_description1.gridx = 0;
     gbc_description1.gridy = 3;
@@ -158,7 +158,7 @@ public class AttachmentPopup extends Popup implements Constants {
     //gbc_description1.insets = new Insets(0, 0, 5, 5);
 
     JLabel description2 = new JLabel("(" + descriptions.get(1) + ")");
-    description2.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+    description2.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
     GridBagConstraints gbc_description2 = new GridBagConstraints();
     gbc_description2.gridx = 10;
     gbc_description2.gridy = 3;
@@ -166,31 +166,31 @@ public class AttachmentPopup extends Popup implements Constants {
     //gbc_description2.insets = new Insets(0, 0, 5, 5);
 
     JLabel description3 = new JLabel("(" + descriptions.get(2) + ")");
-    description3.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+    description3.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
     GridBagConstraints gbc_description3 = new GridBagConstraints();
     gbc_description3.gridx = 20;
     gbc_description3.gridy = 3;
     gbc_description3.gridwidth = 7;
     //gbc_description3.insets = new Insets(0, 0, 5, 5);
 
-    JLabel amount1 = new JLabel(viewerCounts.get(0) + " ¤H¤]¬Ý¹L");
-    amount1.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+    JLabel amount1 = new JLabel(viewerCounts.get(0) + " ï¿½Hï¿½]ï¿½Ý¹L");
+    amount1.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
     GridBagConstraints gbc_amount1 = new GridBagConstraints();
     gbc_amount1.gridx = 0;
     gbc_amount1.gridy = 5;
     gbc_amount1.gridwidth = 7;
     gbc_amount1.insets = new Insets(20, 0, 0, 0);
 
-    JLabel amount2 = new JLabel(viewerCounts.get(1) + " ¤H¤]¬Ý¹L");
-    amount2.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+    JLabel amount2 = new JLabel(viewerCounts.get(1) + " ï¿½Hï¿½]ï¿½Ý¹L");
+    amount2.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
     GridBagConstraints gbc_amount2 = new GridBagConstraints();
     gbc_amount2.gridx = 10;
     gbc_amount2.gridy = 5;
     gbc_amount2.gridwidth = 7;
     gbc_amount2.insets = new Insets(20, 0, 0, 0);
 
-    JLabel amount3 = new JLabel(/*¼Æ¶q+*/viewerCounts.get(2) + " ¤H¤]¬Ý¹L");
-    amount3.setFont(new Font("¼Ð·¢Åé", Font.PLAIN, 18));
+    JLabel amount3 = new JLabel(/*ï¿½Æ¶q+*/viewerCounts.get(2) + " ï¿½Hï¿½]ï¿½Ý¹L");
+    amount3.setFont(new Font("ï¿½Ð·ï¿½ï¿½ï¿½", Font.PLAIN, 18));
     GridBagConstraints gbc_amount3 = new GridBagConstraints();
     gbc_amount3.gridx = 20;
     gbc_amount3.gridy = 5;
@@ -242,7 +242,7 @@ public class AttachmentPopup extends Popup implements Constants {
           
           Container cp=frame.getContentPane();
 		  cp.setLayout(null);
-		  JOptionPane.showMessageDialog(frame,"¤U¸ü¦¨¥\¦Ü "+DOWNLOADFILEPATH);
+		  JOptionPane.showMessageDialog(frame,"ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "+DOWNLOADFILEPATH);
         }
 
         System.out.println("Done!");

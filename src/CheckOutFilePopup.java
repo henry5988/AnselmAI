@@ -8,6 +8,7 @@ import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -21,6 +22,12 @@ public class CheckOutFilePopup extends FileSuggestionPopup{
     if(checkEventType(req, CHECKOUTFILEEVENTTYPE, CHECKOUTFILEACTIONCODE))
       return super.doAction(session, node, req);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
+  }
+
+  @Override
+  protected void writeToFile(List<List<String>> infoList, String fileName, String folderName)
+      throws IOException {
+
   }
 
 }
