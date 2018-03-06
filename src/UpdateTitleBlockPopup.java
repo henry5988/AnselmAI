@@ -18,13 +18,21 @@ import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
 import com.agile.px.IUpdateEventInfo;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class UpdateTitleBlockPopup extends FileSuggestionPopup {
 
+
+  @Override
+  protected void writeToFile(List<List<String>> infoList, String fileName, String folderName)
+      throws IOException {
+
+  }
 
   @Override
   protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo info)

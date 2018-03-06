@@ -89,13 +89,13 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
   @Override
   protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
-<<
+
     IFileEventInfo info = (IFileEventInfo) req;
     LinkedList lists = new LinkedList();
     String eventName = "Get File";
     setFileEventName(eventName);
     out("Getting attachment file advice...");
-===
+
 
 	    Connection conn = getConnection(USERNAME, PASSWORD, URL);
 		Connection conn2 = getConnection(USERNAME2, PASSWORD2, URL2);
@@ -113,7 +113,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
 	    }
 	    return lists;
   }
->>
+
 
   protected List getAttachmentAdvice(Connection conn, Connection conn2, IEventDirtyFile file,
   IAgileSession session, IItem item) throws APIException, SQLException{
