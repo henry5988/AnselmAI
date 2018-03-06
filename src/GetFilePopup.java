@@ -4,6 +4,7 @@ import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,10 +22,29 @@ public class GetFilePopup extends FileSuggestionPopup {
   @Override
   protected void writeToFile(List<List<String>> infoList, String fileName, String folderName)
       throws IOException {
+    // locate output file
     File f = new File(GETFILEFILE);
     if(!f.exists())
       f.createNewFile();
-
+    // open file streams
+    FileOutputStream fos = new FileOutputStream(f);
+    // print visited file name, then next line
+    fos.write((fileName + "\n").getBytes());
+    for(List l : infoList) {
+      for(Object o : l) {
+        // if printing last element, add new line character at the end
+        if(l.indexOf(o) == l.size()-1){
+          fos.write((o.toString() + "\n").getBytes());
+        }else{
+        // print image source
+        // print file suggestion names
+        // print number of visits for the names
+          fos.write(o.toString().getBytes());
+        }
+      }
+    }
+    // close file streams
+    fos.close();
   }
 
 }
