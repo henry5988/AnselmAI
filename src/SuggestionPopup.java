@@ -6,6 +6,7 @@ import com.agile.api.APIException;
 import com.agile.api.AgileSessionFactory;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
+import com.agile.api.IFileFolder;
 import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.ITable;
@@ -14,6 +15,7 @@ import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -34,10 +36,59 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     this.actionCode = actionCode;
   }
 
-  Popup p;
-
   @Override
-  public abstract EventActionResult doAction(IAgileSession session, INode node, IEventInfo req);
+  public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
+    try {
+      //session = connect();
+      Connection conn = null;
+      conn = getConnection(USERNAME, PASSWORD, URL);
+
+      IFileEventInfo info = (IFileEventInfo) req;
+      IItem obj = (IItem) info.getDataObject();
+      conn.close();
+      LinkedList list = getItemAdvice(session, obj, info);
+    
+     // out("List: " + list.toString());
+      List<List<String>> infoList = convertObjectToInfo(list);
+      if (list.size() < 3) {
+     //   out("list has fewer than 3 items, does nothing");
+        while(((List) infoList.get(1)).size() < 3){
+          infoList.get(1).add("n/a");
+          infoList.get(2).add(NOPATH);
+          infoList.get(3).add("n/a");
+          infoList.get(4).add("n/a");
+          infoList.get(5).add("n/a");
+        }
+      }
+    //  out("convert Object to String info...");
+      String fileName = getDownloadedFileName(info);
+      String folderName = getDownloadedFolderName(info);
+      writeToFile(infoList, fileName, folderName);
+      //Popup.frame(session, infoList, fileName,folderName);
+    } catch (SQLException | APIException | ClassNotFoundException e) {
+    //  out("Error occured", "err");
+      e.getMessage();
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // out("JFrame info printed");
+    return null;
+  }
+
+  protected abstract void writeToFile(List<List<String>> infoList, String fileName,
+      String folderName) throws IOException;
+
+
+  private String getDownloadedFileName(IFileEventInfo info) throws APIException {
+    IEventDirtyFile[] files = info.getFiles(); 
+    return files[0].getFilename();
+  }
+  private String getDownloadedFolderName(IFileEventInfo info) throws APIException {
+	    IEventDirtyFile[] files = info.getFiles();
+	    return files[0].getFileFolder().toString();
+	  }
+
 
   protected List<List<String>> convertObjectToInfo(List l)
       throws APIException {
@@ -47,8 +98,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     ItemInfoConverter converter = new ItemInfoConverter();
     LinkedList names = new LinkedList();
     LinkedList descriptions = new LinkedList();
-    out("List of objects to convert: " + list);
-    out("Setting name type array...");
+  //  out("List of objects to convert: " + list);
+   // out("Setting name type array...");
     names.add("names");
     descriptions.add("descriptions");
     LinkedList images = new LinkedList();
@@ -56,26 +107,26 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     images.push("images2");
     images.push("images1");
     images.push("images");
-    out("converter variables defined");
+ //   out("converter variables defined");
     while (!list.isEmpty()) {
-      out("converting " + ((IAgileObject) list.peekLast()).getName());
+  //    out("converting " + ((IAgileObject) list.peekLast()).getName());
       converter.setConverterAtt("name");
-      out("extracting name...");
+  //    out("extracting name...");
       names.add(converter.convert((IAgileObject) list.peekLast()));
-      out("extracting description...");
+   //   out("extracting description...");
       converter.setConverterAtt("description");
       descriptions.add(converter.convert((IAgileObject) list.peekLast()));
-      out("extracting images...");
+  //    out("extracting images...");
       converter.setConverterAtt("image");
       list.removeLast();
     }
-    out("adding names...");
+ //   out("adding names...");
     infoList.add(names);
-    out("adding descriptions...");
+  //  out("adding descriptions...");
     infoList.add(descriptions);
-    out("adding images...");
+ //   out("adding images...");
     infoList.add(images);
-    out("info list: " + infoList.toString());
+  //  out("info list: " + infoList.toString());
     infoList = (LinkedList) converter
         .orderLists(infoList, new String[]{"names", "images", "descriptions", "viewerCounts"});
     return infoList;

@@ -50,6 +50,14 @@ public class HF {
     out("ResultSet exhausted.");
     return list;
   }
+  
+  public static int executeInsertSQL(Connection conn, String sql) throws SQLException {
+	    Statement stmt = conn.createStatement();
+	    out("Executing statement...");
+	    int rs = stmt.executeUpdate(sql);
+		return rs;
+	    
+	  }
 
   public static LinkedList executeSQL(Connection conn, String sql, boolean removeDup) throws SQLException{
     LinkedList list;
