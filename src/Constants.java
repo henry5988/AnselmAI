@@ -8,10 +8,14 @@ interface Constants{
   String USERNAME2 = "agile02";
   String PASSWORD2 = "tartan";
   String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST +":1521:agile9";
+
   // admin client credentials
   String ADMINUSERNAME = "admin";
   String ADMINPASSWORD = "agile936d";
   String CLIENTURL = "http://" + LOCALHOST + ":7001/Agile";
+
+  // Output File Path
+  String GETFILEFILE = "C:\\serverTest.txt";
 
   // image path constants
   String NOPATH = "C:\\demo\\images\\noLogo.png";

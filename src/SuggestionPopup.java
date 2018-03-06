@@ -15,6 +15,7 @@ import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -62,7 +63,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     //  out("convert Object to String info...");
       String fileName = getDownloadedFileName(info);
       String folderName = getDownloadedFolderName(info);
-      Popup.frame(session, infoList, fileName,folderName);
+      writeToFile(infoList, fileName, folderName);
+      //Popup.frame(session, infoList, fileName,folderName);
     } catch (SQLException | APIException | ClassNotFoundException e) {
     //  out("Error occured", "err");
       e.getMessage();
@@ -71,6 +73,10 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
    // out("JFrame info printed");
     return null;
   }
+
+  protected abstract void writeToFile(List<List<String>> infoList, String fileName,
+      String folderName) throws IOException;
+
 
   private String getDownloadedFileName(IFileEventInfo info) throws APIException {
     IEventDirtyFile[] files = info.getFiles(); 
