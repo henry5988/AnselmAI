@@ -11,7 +11,7 @@ interface Constants{
 
   // admin client credentials
   String ADMINUSERNAME = "admin";
-  String ADMINPASSWORD = "agile936d";
+  String ADMINPASSWORD = "agile936";
   String CLIENTURL = "http://" + LOCALHOST + ":7001/Agile";
 
   // Output File Path

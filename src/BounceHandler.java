@@ -38,7 +38,7 @@ public class BounceHandler implements HttpHandler {
     String response = "";
     if (isEventTriggered()) {
       response += EchoGetHandler
-          .readFile("C:\\Users\\Riekon\\socket\\web\\bounce.html", Charset.defaultCharset());
+          .readFile("C:\\bounce.html", Charset.defaultCharset());
       for (String key : parameters.keySet())
         response += " = " + parameters.get(key) + "\n";
       OutputStream os = he.getResponseBody();

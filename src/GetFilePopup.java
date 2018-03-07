@@ -6,6 +6,9 @@ import com.agile.px.IEventInfo;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class GetFilePopup extends FileSuggestionPopup {
@@ -20,11 +23,12 @@ public class GetFilePopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList, String fileName, String folderName)
+  protected void writeToFile(List<List<String>> infoList, String fileName)
       throws IOException {
     // locate output file
     File f = new File(GETFILEFILE);
     if(!f.exists())
+      Files.createDirectories(Paths.get(f.getPath()).getParent());
       f.createNewFile();
     // open file streams
     FileOutputStream fos = new FileOutputStream(f);

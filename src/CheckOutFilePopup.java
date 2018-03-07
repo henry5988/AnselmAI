@@ -25,7 +25,7 @@ public class CheckOutFilePopup extends FileSuggestionPopup{
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList, String fileName, String folderName)
+  protected void writeToFile(List<List<String>> infoList, String fileName)
       throws IOException {
 
   }

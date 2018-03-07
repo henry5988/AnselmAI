@@ -21,7 +21,7 @@ import org.apache.commons.io.FileUtils;
 class ThreadedEchoServer {
 
 
-  static final int PORT = 1978;
+  static final int PORT = 1705;
   private static BufferedReader in;
   private static PrintWriter out;
   private static Socket sock;
@@ -39,8 +39,6 @@ class ThreadedEchoServer {
     server.setExecutor(null);
     server.start();
     System.out.println("Server starts...");
-    ServerSocket serverSocket = null;
-    Socket socket = null;
 
 //    try {
 //      serverSocket = new ServerSocket(PORT+1);

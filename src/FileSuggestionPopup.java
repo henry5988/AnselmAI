@@ -22,6 +22,7 @@ import com.agile.px.EventActionResult;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -76,10 +77,13 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
       }
       out("convert Object to String info...");
       String fileName = getDownloadedFileName(info);
+      writeToFile(infoList, fileName);
       //p.frame(session, infoList, fileName);
     } catch (SQLException | APIException | ClassNotFoundException e) {
       out("Error occured", "err");
       e.getMessage();
+      e.printStackTrace();
+    } catch (IOException e) {
       e.printStackTrace();
     }
     out("JFrame info printed");

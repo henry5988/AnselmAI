@@ -41,7 +41,7 @@ public class EchoGetHandler implements HttpHandler {
     //response +="<body>";
     //response+= "<body><a id=\"link\" href=\"http://192.168.1.119:1978/echoGet/1\"></a>";
     //response += "<h1>"+readFile("C://serverTest.txt", Charset.defaultCharset())+"</h1></body>";
-    response += readFile("C:\\Users\\Riekon\\socket\\web\\popup.html", Charset.defaultCharset());
+    response += readFile("C:\\popup.html", Charset.defaultCharset());
     for (String key : parameters.keySet())
       response += key + " = " + parameters.get(key) + "\n";
     OutputStream os = he.getResponseBody();

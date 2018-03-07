@@ -63,7 +63,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     //  out("convert Object to String info...");
       String fileName = getDownloadedFileName(info);
       String folderName = getDownloadedFolderName(info);
-      writeToFile(infoList, fileName, folderName);
+      writeToFile(infoList, fileName);
       //Popup.frame(session, infoList, fileName,folderName);
     } catch (SQLException | APIException | ClassNotFoundException e) {
     //  out("Error occured", "err");
@@ -76,8 +76,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     return null;
   }
 
-  protected abstract void writeToFile(List<List<String>> infoList, String fileName,
-      String folderName) throws IOException;
+  protected abstract void writeToFile(List<List<String>> infoList, String fileName) throws IOException;
 
 
   private String getDownloadedFileName(IFileEventInfo info) throws APIException {
