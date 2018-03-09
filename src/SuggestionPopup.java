@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
-
+  String output_path = "";
   private String actionCode;
 
   String getActionCode() {
