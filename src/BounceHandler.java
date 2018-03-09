@@ -20,8 +20,8 @@ public class BounceHandler implements HttpHandler {
 
   private final static String FILE_TO_SEND = "C:\\serverSource\\serverTest.txt";
   private final static String SAVED_FILE = "C:\\serverSource\\saved.txt";
-  private static File NEWFILE = new File(FILE_TO_SEND);
-  private static File OLDFILE = new File(SAVED_FILE);
+  static File NEWFILE = new File(FILE_TO_SEND);
+  static File OLDFILE = new File(SAVED_FILE);
 
   @Override
 
@@ -62,7 +62,7 @@ public class BounceHandler implements HttpHandler {
   }
 
 
-  private static void copyFileUsingStream(File source, File dest) throws IOException {
+  static void copyFileUsingStream(File source, File dest) throws IOException {
     InputStream is = null;
     OutputStream os = null;
     try {

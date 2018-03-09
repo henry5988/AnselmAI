@@ -29,22 +29,22 @@ public class EchoGetHandler implements HttpHandler {
     parseQuery(query, parameters);
 
     // parse file to response
-
-
-    // send response
-    Headers h = he.getResponseHeaders();
-    h.set("Content-Type", "text/html");
     String response = "";
-    //response += "<script>window.open(window.location.href, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')</script>";
-    he.getResponseHeaders();
-    he.sendResponseHeaders(200, (long) response.length());
-    //response +="<body>";
-    //response+= "<body><a id=\"link\" href=\"http://192.168.1.119:1978/echoGet/1\"></a>";
-    //response += "<h1>"+readFile("C://serverTest.txt", Charset.defaultCharset())+"</h1></body>";
-    response += readFile("C:\\popup.html", Charset.defaultCharset());
-    for (String key : parameters.keySet())
-      response += key + " = " + parameters.get(key) + "\n";
-    OutputStream os = he.getResponseBody();
+    if(BounceHandler.isEventTriggered()) {
+      // send response
+      Headers h = he.getResponseHeaders();
+      h.set("Content-Type", "text/html");
+
+      //response += "<script>window.open(window.location.href, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')</script>";
+      he.getResponseHeaders();
+      he.sendResponseHeaders(200, (long) response.length());
+      //response +="<body>";
+      //response+= "<body><a id=\"link\" href=\"http://192.168.1.119:1978/echoGet/1\"></a>";
+      //response += "<h1>"+readFile("C://serverTest.txt", Charset.defaultCharset())+"</h1></body>";
+      response += readFile("C:\\documentPopup.html", Charset.forName("UTF-8"));
+      for (String key : parameters.keySet())
+        response += key + " = " + parameters.get(key) + "\n";
+      OutputStream os = he.getResponseBody();
 
       System.out.println("Get request...");
       os.write(response.getBytes());
@@ -54,7 +54,14 @@ public class EchoGetHandler implements HttpHandler {
       writer.print(response);
       writer.flush();
 
-    os.close();
+      os.close();
+    }else{
+      System.out.println("Empty response");
+      he.sendResponseHeaders(204, response.length());
+    }
+    //overwrite old file
+    System.out.println("overwriting old file..");
+    BounceHandler.copyFileUsingStream(BounceHandler.NEWFILE, BounceHandler.OLDFILE);
   }
 
   public static void parseQuery(String query, Map<String,

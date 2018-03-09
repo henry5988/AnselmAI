@@ -42,7 +42,7 @@ public class Client {
       throws IOException, ScriptException, URISyntaxException, InterruptedException {
     Desktop current = Desktop.getDesktop();
 
-    String url = "http://" + SERVER + ":" + SOCKET_PORT + "/bounce";
+    String url = "http://" + SERVER + ":" + SOCKET_PORT + "/echoGet";
     //current.browse(URI.create(url));
     while(true) {
 
@@ -64,10 +64,12 @@ public class Client {
 
       if(responseCode == 200) {
         //TODO Need to let client browse bounce page
-        try (PrintWriter out = new PrintWriter("bounce.html")) {
+        try (PrintWriter out = new PrintWriter("documentPopup.html")) {
           out.println(response.toString());
+          out.flush();
+          out.close();
         }
-        File f = new File("bounce.html");
+        File f = new File("documentPopup.html");
 //        if( Desktop.isDesktopSupported() ) {
 //          Thread t = new Thread();
 //          t.start();
@@ -76,11 +78,11 @@ public class Client {
 //            } catch (IOException e1) {
 //              e1.printStackTrace();
 //            }
-          Thread.sleep(5000);
+          //Thread.sleep(5000);
 //          t.join();
 //        }
         if(f.delete()){
-          System.out.println("bounce html deleted after opening");
+          System.out.println("documentPopup html deleted after opening");
         }
       }
       //print result
