@@ -6,6 +6,6 @@ public class BOMPopupHandler implements HttpHandler {
 
   @Override
   public void handle(HttpExchange httpExchange) throws IOException {
-    
+
   }
 }
