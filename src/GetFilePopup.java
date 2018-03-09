@@ -1,3 +1,4 @@
+import com.agile.api.APIException;
 import com.agile.api.IAgileSession;
 import com.agile.api.INode;
 import com.agile.px.ActionResult;
@@ -14,9 +15,14 @@ import java.util.List;
 public class GetFilePopup extends FileSuggestionPopup {
 
 
-
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
+    try {
+      String username = session.getCurrentUser().getName();
+      output_path = "C:\\serverSource\\" + username + "\\getFilePopup.txt";
+    } catch (APIException e) {
+      System.err.println(e.getMessage());
+    }
     if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
       return super.doAction(session, node, req);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
@@ -26,10 +32,11 @@ public class GetFilePopup extends FileSuggestionPopup {
   protected void writeToFile(List<List<String>> infoList, String fileName)
       throws IOException {
     // locate output file
-    File f = new File(GETFILEFILE);
-    if(!f.exists())
+    File f = new File(output_path);
+    if(!f.exists()) {
       Files.createDirectories(Paths.get(f.getPath()).getParent());
       f.createNewFile();
+    }
     // open file streams
     FileOutputStream fos = new FileOutputStream(f);
     // print visited file name, then next line
