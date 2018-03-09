@@ -19,7 +19,7 @@ public class GetFilePopup extends FileSuggestionPopup {
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     try {
       String username = session.getCurrentUser().getName();
-      output_path = "C:\\serverSource\\" + username + "\\serverTest.txt";
+      output_path = "C:\\serverSource\\" + username + "\\getFilePopup.txt";
     } catch (APIException e) {
       System.err.println(e.getMessage());
     }
