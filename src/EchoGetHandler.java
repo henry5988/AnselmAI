@@ -49,10 +49,10 @@ public class EchoGetHandler implements HttpHandler {
       System.out.println("Get request...");
       os.write(response.getBytes());
       //System.out.println("response: " + response);
-      System.out.println("overwriting old file..");
-      PrintWriter writer = new PrintWriter(new File(Client.SAVED_FILE));
-      writer.print(response);
-      writer.flush();
+//      System.out.println("overwriting old file..");
+//      PrintWriter writer = new PrintWriter(new File(Client.SAVED_FILE));
+//      writer.print(response);
+//      writer.flush();
 
       os.close();
     }else{

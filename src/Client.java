@@ -14,6 +14,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -64,12 +67,18 @@ public class Client {
 
       if(responseCode == 200) {
         //TODO Need to let client browse bounce page
-        try (PrintWriter out = new PrintWriter("documentPopup.html")) {
-          out.println(response.toString());
-          out.flush();
-          out.close();
-        }
+//        try (PrintWriter out = new PrintWriter("documentPopup.html")) {
+//          out.println(response.toString());
+//          out.flush();
+//          out.close();
+//        }
         File f = new File("documentPopup.html");
+        if(!f.exists()) f.createNewFile();
+        Path path = Paths.get("documentPopup.html");
+        byte[] strToBytes = response.toString().getBytes();
+
+        Files.write(path, strToBytes);
+        //File f = new File("documentPopup.html");
 //        if( Desktop.isDesktopSupported() ) {
 //          Thread t = new Thread();
 //          t.start();
