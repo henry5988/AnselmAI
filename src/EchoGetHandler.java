@@ -33,7 +33,7 @@ public class EchoGetHandler implements HttpHandler {
 
     // send response
     Headers h = he.getResponseHeaders();
-    h.set("Content-Type", "text/html");
+    h.set("Content-Type", "text/html; charset=big5");
     String response = "";
     //response += "<script>window.open(window.location.href, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes')</script>";
     he.getResponseHeaders();
@@ -41,9 +41,7 @@ public class EchoGetHandler implements HttpHandler {
     //response +="<body>";
     //response+= "<body><a id=\"link\" href=\"http://192.168.1.119:1978/echoGet/1\"></a>";
     //response += "<h1>"+readFile("C://serverTest.txt", Charset.defaultCharset())+"</h1></body>";
-    response += readFile("C:\\popup.html", Charset.defaultCharset());
-    for (String key : parameters.keySet())
-      response += key + " = " + parameters.get(key) + "\n";
+    response += readFile("C:\\documentPopup.htm", Charset.forName("big5"));
     OutputStream os = he.getResponseBody();
 
       System.out.println("Get request...");
