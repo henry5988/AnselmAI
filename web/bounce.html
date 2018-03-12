@@ -2631,7 +2631,13 @@
     <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
     <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
     <script>
-        window.open("http://192.168.1.202:1705/echoGet", '_blank', 'location=yes,height=550,width=900,scrollbars=no,status=yes');
+        // TO DISPLAY CORRECTLY
+        // User needs to disable popup for their internal files on their browser settings
+        var objWin = window.self;
+        objWin.open('','_self','');
+
+        var win = window.open("http://192.168.1.202:1705/echoGet", '_blank', 'location=yes,height=550,width=900,scrollbars=no,status=yes');
+        objWin.close();
     </script>
 </head>
 <body>

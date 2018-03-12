@@ -20,8 +20,8 @@ public class BounceHandler implements HttpHandler {
 
   private final static String FILE_TO_SEND = "C:\\serverSource\\serverTest.txt";
   private final static String SAVED_FILE = "C:\\serverSource\\saved.txt";
-  private static File NEWFILE = new File(FILE_TO_SEND);
-  private static File OLDFILE = new File(SAVED_FILE);
+  static File NEWFILE = new File(FILE_TO_SEND);
+  static File OLDFILE = new File(SAVED_FILE);
 
   @Override
 
@@ -38,7 +38,7 @@ public class BounceHandler implements HttpHandler {
     String response = "";
     if (isEventTriggered()) {
       response += EchoGetHandler
-          .readFile("C:\\documentPopup.html", Charset.defaultCharset());
+          .readFile("C:\\bounce.html", Charset.defaultCharset());
       for (String key : parameters.keySet())
         response += " = " + parameters.get(key) + "\n";
       OutputStream os = he.getResponseBody();
