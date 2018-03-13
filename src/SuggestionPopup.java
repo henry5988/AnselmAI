@@ -48,7 +48,6 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       IItem obj = (IItem) info.getDataObject();
       conn.close();
       LinkedList list = getItemAdvice(session, obj, info);
-    
      // out("List: " + list.toString());
       List<List<String>> infoList = convertObjectToInfo(list);
       if (list.size() < 3) {
