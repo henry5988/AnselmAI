@@ -40,6 +40,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     try {
       //session = connect();
+      String username = session.getCurrentUser().getName();
       Connection conn = null;
       conn = getConnection(USERNAME, PASSWORD, URL);
 
@@ -74,6 +75,18 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     }
     // out("JFrame info printed");
     return null;
+  }
+
+  protected boolean checkEventType(IEventInfo req, int eventType, String actionCode){
+    try {
+      //   out("Event type: " + req.getEventType());
+      setActionCode(String.valueOf(actionCode));
+      if(req.getEventType() == eventType)
+        return true;
+    } catch (APIException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
   protected abstract void writeToFile(List<List<String>> infoList, String fileName) throws IOException;

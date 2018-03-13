@@ -17,12 +17,7 @@ public class GetFilePopup extends FileSuggestionPopup {
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
-    try {
-      String username = session.getCurrentUser().getName();
-      output_path = "C:\\serverSource\\serverTest.txt";
-    } catch (APIException e) {
-      System.err.println(e.getMessage());
-    }
+      output_path = "C:\\serverSource\\documentPopup.txt";
     if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
       return super.doAction(session, node, req);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));

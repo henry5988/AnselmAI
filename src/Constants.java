@@ -44,8 +44,10 @@ interface Constants{
   // utility constants
   int GETFILEEVENTTYPE = 2000011562;
   int CHECKOUTFILEEVENTTYPE = 2000011559;
+  int BOMEVENTTYPE = 00000000; //TODO find code for BOM Event Type
   String GETFILEACTIONCODE = "15";
   String CHECKOUTFILEACTIONCODE = "22";
+  String BOMACTIONCODE="temp"; //TODO find code for BOM Action Code
 
   // switches
   Boolean LOCALPATH = true;

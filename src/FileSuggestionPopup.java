@@ -285,17 +285,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
     return countOccurance(fileList, file, 0);
   }
 
-  protected boolean checkEventType(IEventInfo req, int eventType, String actionCode){
-    try {
-   //   out("Event type: " + req.getEventType());
-      setActionCode(String.valueOf(actionCode));
-      if(req.getEventType() == eventType)
-        return true;
-    } catch (APIException e) {
-      e.printStackTrace();
-    }
-    return false;
-  }
+
 
   protected boolean checkFilePrivilege(IAgileSession session, Object item) throws APIException {
     IUser user = session.getCurrentUser();
