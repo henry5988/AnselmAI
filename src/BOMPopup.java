@@ -28,12 +28,22 @@ public class BOMPopup extends SuggestionPopup {
   @Override
   protected void writeToFile(List<List<String>> infoList, String fileName) throws IOException {
     File f = new File(output_path);
+    File exist = new File(EXIST);
+    if(!exist.exists()){
+      Files.createDirectories(Paths.get(exist.getPath()).getParent());
+      exist.createNewFile();
+    }
     if(!f.exists()){
       Files.createDirectories(Paths.get(f.getPath()).getParent());
       f.createNewFile();
     }
+
+    FileWriter existWriter = new FileWriter(exist);
+    existWriter.write("BOMPopup\n" + System.currentTimeMillis());
     FileWriter fw = new FileWriter(f);
     fw.write("BOMPopup test string"); //TODO BOM data function logic
+    existWriter.close();
+    fw.close();
   }
 
   @Override

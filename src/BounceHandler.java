@@ -12,11 +12,12 @@ import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
-public class BounceHandler implements HttpHandler {
+public class BounceHandler implements HttpHandler, Constants {
 
   private final static String FILE_TO_SEND = "C:\\serverSource\\serverTest.txt";
   private final static String SAVED_FILE = "C:\\serverSource\\saved.txt";
@@ -32,11 +33,13 @@ public class BounceHandler implements HttpHandler {
     String query = requestedUri.getRawQuery();
     EchoGetHandler.parseQuery(query, parameters);
 
+
     // send response
     Headers h = he.getResponseHeaders();
     h.set("Content-Type", "text/html");
     String response = "";
     if (isEventTriggered()) {
+      Files.delete(Paths.get(EXIST));
       response += EchoGetHandler
           .readFile("C:\\bounce.html", Charset.defaultCharset());
       for (String key : parameters.keySet())
@@ -58,7 +61,8 @@ public class BounceHandler implements HttpHandler {
   // isEventTriggered
   // return yes if theres a targeted event trigger
   static boolean isEventTriggered() throws IOException {
-    return !FileUtils.contentEquals(OLDFILE, NEWFILE);
+    File exist = new File(EXIST);
+    return exist.exists();
   }
 
 

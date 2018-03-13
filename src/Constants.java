@@ -15,7 +15,7 @@ interface Constants{
   String CLIENTURL = "http://" + LOCALHOST + ":7001/Agile";
 
   // Output File Path
-
+  String EXIST = "C:\\serverSource\\exist.txt";
 
   // image path constants
   String NOPATH = "C:\\demo\\images\\noLogo.png";

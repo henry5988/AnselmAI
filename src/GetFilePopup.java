@@ -6,6 +6,7 @@ import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,10 +29,18 @@ public class GetFilePopup extends FileSuggestionPopup {
       throws IOException {
     // locate output file
     File f = new File(output_path);
+    File exist = new File(EXIST);
     if(!f.exists()) {
       Files.createDirectories(Paths.get(f.getPath()).getParent());
       f.createNewFile();
     }
+    if(!exist.exists()){
+      Files.createDirectories(Paths.get(exist.getPath()).getParent());
+      exist.createNewFile();
+    }
+    FileWriter existWriter = new FileWriter(exist);
+    existWriter.write("GetFilePopup\n" + System.currentTimeMillis());
+    existWriter.close();
     // open file streams
     FileOutputStream fos = new FileOutputStream(f);
     // print visited file name, then next line

@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EchoGetHandler implements HttpHandler {
+public class EchoGetHandler implements HttpHandler, Constants {
 
   @Override
 
@@ -51,7 +51,6 @@ public class EchoGetHandler implements HttpHandler {
       PrintWriter writer = new PrintWriter(new File(Client.SAVED_FILE));
       writer.print(response);
       writer.flush();
-
     os.close();
   }
 
