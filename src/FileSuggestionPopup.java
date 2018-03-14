@@ -76,8 +76,8 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
         }
       }
       out("convert Object to String info...");
-      String fileName = getDownloadedFileName(info);
-      writeToFile(infoList, fileName);
+
+      writeToFile(infoList);
       //p.frame(session, infoList, fileName);
     } catch (SQLException | APIException | ClassNotFoundException e) {
       out("Error occured", "err");
@@ -345,9 +345,5 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
 
   }
 
-  private String getDownloadedFileName(IFileEventInfo info) throws APIException {
-    IEventDirtyFile[] files = info.getFiles();
-    return files[0].getFilename();
-  }
 
 }

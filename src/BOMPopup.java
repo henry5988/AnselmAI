@@ -31,15 +31,8 @@ public class BOMPopup extends SuggestionPopup {
     return "All Normal";
   }
 
-
-  private String checkBOMIntegrity() {
-  // method that checks for quantity column of the BOM table
-    String result = "";
-    return result;
-  }
-
   @Override
-  protected void writeToFile(List<List<String>> infoList, String fileName) throws IOException {
+  protected void writeToFile(List<List<String>> infoList) throws IOException {
     File f = new File(output_path);
     File exist = new File(EXIST);
     if(!exist.exists()){
@@ -57,11 +50,6 @@ public class BOMPopup extends SuggestionPopup {
     fw.write("bomPopup test string"); //TODO BOM data function logic
     existWriter.close();
     fw.close();
-  }
-
-  @Override
-  protected void writeToFile(List<List<String>> infoList) throws IOException {
-
   }
 
   @Override

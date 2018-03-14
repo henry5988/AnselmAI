@@ -18,6 +18,9 @@ import java.util.List;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
+
+  private IAgileSession session;
+  private IEventInfo eventInfo;
   String output_path = "";
   private String actionCode;
   private boolean fieldCheck; // this boolean has to be set at the beginning of doAction
@@ -88,7 +91,6 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     return false;
   }
 
-  protected abstract void writeToFile(List<List<String>> infoList, String fileName) throws IOException;
   protected abstract void writeToFile(List<List<String>> infoList) throws IOException;
 
   private String getDownloadedFileName(IFileEventInfo info) throws APIException {
@@ -117,6 +119,22 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   }
 
   protected abstract IItem getTargetItem(IEventInfo req) throws APIException;
+
+  public IAgileSession getSession() {
+    return session;
+  }
+
+  public void setSession(IAgileSession session) {
+    this.session = session;
+  }
+
+  public IEventInfo getEventInfo() {
+    return eventInfo;
+  }
+
+  public void setEventInfo(IEventInfo eventInfo) {
+    this.eventInfo = eventInfo;
+  }
 }
 
 

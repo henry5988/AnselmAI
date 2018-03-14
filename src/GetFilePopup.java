@@ -1,9 +1,12 @@
+import com.agile.api.APIException;
 import com.agile.api.IAgileSession;
 import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
+import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
+import com.agile.px.IFileEventInfo;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -17,6 +20,8 @@ public class GetFilePopup extends FileSuggestionPopup {
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
+    setSession(session);
+    setEventInfo(req);
     setFieldCheck(false);
       output_path = "C:\\serverSource\\documentPopup.txt";
     if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
@@ -30,9 +35,17 @@ public class GetFilePopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList, String fileName)
+  protected void writeToFile(List<List<String>> infoList)
       throws IOException {
     // locate output file
+    IEventInfo req = getEventInfo();
+    IFileEventInfo info = (IFileEventInfo) req;
+    String fileName = null;
+    try {
+      fileName = getDownloadedFileName(info);
+    } catch (APIException e) {
+      e.printStackTrace();
+    }
     File f = new File(output_path);
     File exist = new File(EXIST);
     if(!f.exists()) {
@@ -68,13 +81,13 @@ public class GetFilePopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList) throws IOException {
-
-  }
-
-  @Override
   protected IItem getTargetItem(IEventInfo req) {
     return null;
   }
+  private String getDownloadedFileName(IFileEventInfo info) throws APIException {
+    IEventDirtyFile[] files = info.getFiles();
+    return files[0].getFilename();
+  }
+
 
 }

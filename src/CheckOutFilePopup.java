@@ -2,6 +2,7 @@ import static com.HF.out;
 
 import com.agile.api.APIException;
 import com.agile.api.IAgileSession;
+import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.ISubscription;
 import com.agile.px.ActionResult;
@@ -25,6 +26,20 @@ public class CheckOutFilePopup extends FileSuggestionPopup{
   }
 
   @Override
+  protected String checksField() {
+    return null;
+  }
+
+  @Override
+  protected void writeToFile(List<List<String>> infoList) throws IOException {
+
+  }
+
+  @Override
+  protected IItem getTargetItem(IEventInfo req) throws APIException {
+    return null;
+  }
+
   protected void writeToFile(List<List<String>> infoList, String fileName)
       throws IOException {
 

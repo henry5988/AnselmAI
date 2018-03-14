@@ -29,8 +29,12 @@ public class UpdateTitleBlockPopup extends FileSuggestionPopup {
 
 
   @Override
-  protected void writeToFile(List<List<String>> infoList, String fileName)
-      throws IOException {
+  protected String checksField() {
+    return null;
+  }
+
+  @Override
+  protected void writeToFile(List<List<String>> infoList) throws IOException {
 
   }
 
@@ -84,5 +88,10 @@ public class UpdateTitleBlockPopup extends FileSuggestionPopup {
     }
     out("Got recently visited items!");
     return items;
+  }
+
+  @Override
+  protected IItem getTargetItem(IEventInfo req) throws APIException {
+    return null;
   }
 }

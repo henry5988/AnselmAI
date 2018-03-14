@@ -58,6 +58,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
     String responseHTML;
     String content = readFile(EXIST, Charset.defaultCharset());
     responseHTML = "C:\\" + content.substring(0, content.indexOf("\n")) + ".htm";
+    System.out.println(responseHTML);
     return responseHTML;
   }
 
