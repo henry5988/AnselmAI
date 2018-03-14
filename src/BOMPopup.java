@@ -34,6 +34,11 @@ public class BOMPopup extends SuggestionPopup {
 
   }
 
+  @Override
+  protected String checksField() {
+    return null;
+  }
+
 
   private String checkBOMIntegrity() {
   // method that checks for quantity column of the BOM table
@@ -78,5 +83,10 @@ public class BOMPopup extends SuggestionPopup {
       throws SQLException, APIException, ClassNotFoundException {
     List itemList = new LinkedList();
     return (LinkedList) itemList;
+  }
+
+  @Override
+  protected IItem getTargetItem() {
+    return null;
   }
 }

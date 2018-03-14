@@ -32,8 +32,6 @@ public class BounceHandler implements HttpHandler, Constants {
     URI requestedUri = he.getRequestURI();
     String query = requestedUri.getRawQuery();
     EchoGetHandler.parseQuery(query, parameters);
-
-
     // send response
     Headers h = he.getResponseHeaders();
     h.set("Content-Type", "text/html");
