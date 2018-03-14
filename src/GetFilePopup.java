@@ -1,4 +1,3 @@
-import com.agile.api.APIException;
 import com.agile.api.IAgileSession;
 import com.agile.api.IItem;
 import com.agile.api.INode;
@@ -10,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -75,7 +73,7 @@ public class GetFilePopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected IItem getTargetItem() {
+  protected IItem getTargetItem(IEventInfo req) {
     return null;
   }
 

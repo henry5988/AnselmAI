@@ -1,11 +1,12 @@
 import com.agile.api.APIException;
 import com.agile.api.IAgileSession;
+import com.agile.api.IDataObject;
 import com.agile.api.IItem;
 import com.agile.api.INode;
-import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import com.agile.px.IUpdateEventInfo;
+import com.agile.px.IUpdateTableEventInfo;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,24 +20,15 @@ public class BOMPopup extends SuggestionPopup {
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
+    setFieldCheck(true);
     output_path = "C:\\serverSource\\bomPopup.txt";
-    List infoList = new LinkedList();
-    List stringList = new LinkedList();
-    String resultString = checkBOMIntegrity();
-    stringList.add(resultString);
-    infoList.add(stringList);
-    try {
-      writeToFile(infoList);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "BOM Update info updated!"));
+    return super.doAction(session, node, req);
 
   }
 
   @Override
   protected String checksField() {
-    return null;
+    return "All Normal";
   }
 
 
@@ -86,7 +78,11 @@ public class BOMPopup extends SuggestionPopup {
   }
 
   @Override
-  protected IItem getTargetItem() {
-    return null;
+  protected IItem getTargetItem(IEventInfo req) throws APIException {
+    // get the target item
+    IUpdateTableEventInfo info = (IUpdateTableEventInfo) req;
+    IDataObject obj = info.getDataObject();
+    IItem item = (IItem) obj;
+    return item;
   }
 }

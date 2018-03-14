@@ -21,7 +21,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   String output_path = "";
   private String actionCode;
   private boolean fieldCheck; // this boolean has to be set at the beginning of doAction
-
+  String fieldCheckResponse = "";
   String getActionCode() {
     return actionCode;
   }
@@ -35,15 +35,16 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     try {
       //session = connect();
       String username = session.getCurrentUser().getName();
+
       Connection conn = null;
       conn = getConnection(USERNAME, PASSWORD, URL);
       // field checks
       if(isFieldCheck()){
-        String fieldCheckResponse = checksField();
+        fieldCheckResponse = checksField();
       }
 
       // get suggestions
-      IItem obj = getTargetItem();
+      IItem obj = getTargetItem(req);
       LinkedList list = getItemAdvice(session, obj, req);
      // out("List: " + list.toString());
       List<List<String>> infoList = convertObjectToInfo(list);
@@ -115,7 +116,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     this.fieldCheck = fieldcheck;
   }
 
-  protected abstract IItem getTargetItem();
+  protected abstract IItem getTargetItem(IEventInfo req) throws APIException;
 }
 
 
