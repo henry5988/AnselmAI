@@ -1,15 +1,10 @@
 import static com.HF.getConnection;
 import static com.HF.out;
-import static com.HF.removeNull;
 
 import com.agile.api.APIException;
-import com.agile.api.AgileSessionFactory;
-import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IFileFolder;
 import com.agile.api.IItem;
 import com.agile.api.INode;
-import com.agile.api.ITable;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
@@ -18,15 +13,14 @@ import com.agile.px.IFileEventInfo;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
   String output_path = "";
   private String actionCode;
+  private boolean fieldCheck; // this boolean has to be set at the beginning of doAction
 
   String getActionCode() {
     return actionCode;
@@ -43,28 +37,24 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       String username = session.getCurrentUser().getName();
       Connection conn = null;
       conn = getConnection(USERNAME, PASSWORD, URL);
+      // field checks
+      if(isFieldCheck()){
+        String fieldCheckResponse = checksField();
+      }
 
-      IFileEventInfo info = (IFileEventInfo) req;
-      IItem obj = (IItem) info.getDataObject();
-      conn.close();
-      LinkedList list = getItemAdvice(session, obj, info);
+      // get suggestions
+      IItem obj = getTargetItem();
+      LinkedList list = getItemAdvice(session, obj, req);
      // out("List: " + list.toString());
       List<List<String>> infoList = convertObjectToInfo(list);
       if (list.size() < 3) {
      //   out("list has fewer than 3 items, does nothing");
         while(((List) infoList.get(1)).size() < 3){
-          infoList.get(1).add("n/a");
-          infoList.get(2).add(NOPATH);
-          infoList.get(3).add("n/a");
-          infoList.get(4).add("n/a");
-          infoList.get(5).add("n/a");
+          infoList = addEmptyInfoToList(infoList);
         }
       }
     //  out("convert Object to String info...");
-      String fileName = getDownloadedFileName(info);
-      String folderName = getDownloadedFolderName(info);
-      writeToFile(infoList, fileName);
-      //Popup.frame(session, infoList, fileName,folderName);
+      writeToFile(infoList);
     } catch (SQLException | APIException | ClassNotFoundException e) {
     //  out("Error occured", "err");
       e.getMessage();
@@ -75,6 +65,15 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     // out("JFrame info printed");
     return null;
   }
+
+  protected List addEmptyInfoToList(List<List<String>> infoList) {
+    for(int i=0; i<infoList.size(); i++){
+      infoList.get(i).add("n/a");
+    }
+    return infoList;
+  }
+
+  protected abstract String checksField();
 
   protected boolean checkEventType(IEventInfo req, int eventType, String actionCode){
     try {
@@ -107,6 +106,16 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 
   protected abstract LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException;
+
+  public boolean isFieldCheck() {
+    return fieldCheck;
+  }
+
+  public void setFieldCheck(boolean fieldcheck) {
+    this.fieldCheck = fieldcheck;
+  }
+
+  protected abstract IItem getTargetItem();
 }
 
 
