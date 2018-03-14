@@ -5,6 +5,7 @@ import com.agile.api.INode;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
+import com.agile.px.IUpdateEventInfo;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,10 +20,25 @@ public class BOMPopup extends SuggestionPopup {
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     output_path = "C:\\serverSource\\bomPopup.txt";
+    List infoList = new LinkedList();
+    List stringList = new LinkedList();
+    String resultString = checkBOMIntegrity();
+    stringList.add(resultString);
+    infoList.add(stringList);
+    try {
+      writeToFile(infoList);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "BOM Update info updated!"));
 
-    if(checkEventType(req, BOMEVENTTYPE, BOMACTIONCODE))
-      return super.doAction(session, node, req);
-    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
+  }
+
+
+  private String checkBOMIntegrity() {
+  // method that checks for quantity column of the BOM table
+    String result = "";
+    return result;
   }
 
   @Override
@@ -39,11 +55,16 @@ public class BOMPopup extends SuggestionPopup {
     }
 
     FileWriter existWriter = new FileWriter(exist);
-    existWriter.write("BOMPopup\n" + System.currentTimeMillis());
+    existWriter.write("bomPopup\n" + System.currentTimeMillis());
     FileWriter fw = new FileWriter(f);
-    fw.write("BOMPopup test string"); //TODO BOM data function logic
+    fw.write("bomPopup test string"); //TODO BOM data function logic
     existWriter.close();
     fw.close();
+  }
+
+  @Override
+  protected void writeToFile(List<List<String>> infoList) throws IOException {
+
   }
 
   @Override

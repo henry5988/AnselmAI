@@ -89,7 +89,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   }
 
   protected abstract void writeToFile(List<List<String>> infoList, String fileName) throws IOException;
-
+  protected abstract void writeToFile(List<List<String>> infoList) throws IOException;
 
   private String getDownloadedFileName(IFileEventInfo info) throws APIException {
     IEventDirtyFile[] files = info.getFiles(); 

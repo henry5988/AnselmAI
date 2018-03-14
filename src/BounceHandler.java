@@ -40,6 +40,9 @@ public class BounceHandler implements HttpHandler, Constants {
     String response = "";
     if (isEventTriggered()) {
       Files.delete(Paths.get(EXIST));
+      if(Files.exists(Paths.get(EXIST))){
+        System.out.println("exist file did not get deleted");
+      }
       response += EchoGetHandler
           .readFile("C:\\bounce.html", Charset.defaultCharset());
       for (String key : parameters.keySet())

@@ -41,7 +41,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
     //response +="<body>";
     //response+= "<body><a id=\"link\" href=\"http://192.168.1.119:1978/echoGet/1\"></a>";
     //response += "<h1>"+readFile("C://serverTest.txt", Charset.defaultCharset())+"</h1></body>";
-    response += readFile("C:\\documentPopup.htm", Charset.forName("big5"));
+    response += readFile(responseHTML(), Charset.forName("big5"));
     OutputStream os = he.getResponseBody();
 
       System.out.println("Get request...");
@@ -52,6 +52,13 @@ public class EchoGetHandler implements HttpHandler, Constants {
       writer.print(response);
       writer.flush();
     os.close();
+  }
+
+  private String responseHTML() throws IOException {
+    String responseHTML;
+    String content = readFile(EXIST, Charset.defaultCharset());
+    responseHTML = "C:\\" + content.substring(0, content.indexOf("\n")) + ".htm";
+    return responseHTML;
   }
 
   public static void parseQuery(String query, Map<String,
