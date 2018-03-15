@@ -18,7 +18,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
-
+  private boolean test;
   private IAgileSession session;
   private IEventInfo eventInfo;
   String output_path = "";
@@ -51,11 +51,13 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       LinkedList list = getItemAdvice(session, obj, req);
      // out("List: " + list.toString());
       List<List<String>> infoList = convertObjectToInfo(list);
+      if(!isTest()){
       if (list.size() < 3) {
      //   out("list has fewer than 3 items, does nothing");
-        while(((List) infoList.get(1)).size() < 3){
+        while(((List) infoList.get(0)).size() < 3 && infoList.get(0) != null){
           infoList = addEmptyInfoToList(infoList);
         }
+      }
       }
     //  out("convert Object to String info...");
       writeToFile(infoList);
@@ -134,6 +136,14 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 
   public void setEventInfo(IEventInfo eventInfo) {
     this.eventInfo = eventInfo;
+  }
+
+  public boolean isTest() {
+    return test;
+  }
+
+  public void setTest(boolean test) {
+    this.test = test;
   }
 }
 
