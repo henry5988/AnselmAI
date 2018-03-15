@@ -18,7 +18,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
-  private boolean test;
+  private boolean test = false;
   private IAgileSession session;
   private IEventInfo eventInfo;
   String output_path = "";
@@ -37,6 +37,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     try {
       //session = connect();
+      setSession(session);
+      setEventInfo(req);
       String username = session.getCurrentUser().getName();
 
       Connection conn = null;
