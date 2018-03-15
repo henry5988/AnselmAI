@@ -23,6 +23,7 @@ public class Client {
   public final static int SOCKET_PORT = 1705;      // you may change this
   //public final static String SERVER = "127.0.0.1"; //localhost
   public final static String SERVER = "192.168.1.202";  // server
+  //public final static String SERVER = "192.168.1.119"; // server2
   public final static String
       FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
   public final static String SAVED_FILE = "C:\\saved.txt";

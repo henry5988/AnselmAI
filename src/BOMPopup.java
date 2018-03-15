@@ -20,6 +20,7 @@ public class BOMPopup extends SuggestionPopup {
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
+    System.out.println("BOMPopup()...");
     setFieldCheck(true);
     output_path = "C:\\serverSource\\bomPopup.txt";
     return super.doAction(session, node, req);

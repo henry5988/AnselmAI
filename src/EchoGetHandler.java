@@ -57,8 +57,13 @@ public class EchoGetHandler implements HttpHandler, Constants {
   private String responseHTML() throws IOException {
     String responseHTML;
     String content = readFile(EXIST, Charset.defaultCharset());
+    System.out.println(content);
     responseHTML = "C:\\" + content.substring(0, content.indexOf("\n")) + ".htm";
     System.out.println(responseHTML);
+    Files.delete(Paths.get(EXIST));
+    if(Files.exists(Paths.get(EXIST))){
+      System.out.println("exist file did not get deleted");
+    }
     return responseHTML;
   }
 
