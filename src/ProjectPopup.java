@@ -8,6 +8,7 @@ import com.agile.api.ProjectConstants;
 import com.agile.px.EventActionResult;
 import com.agile.px.ICreateEventInfo;
 import com.agile.px.IEventInfo;
+import com.agile.px.ISaveAsEventInfo;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,11 +18,12 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class projectPopup extends SuggestionPopup{
+public class ProjectPopup extends SuggestionPopup{
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     setTest(true);
     setFieldCheck(false);
+    output_path = "C:\\serverSource\\createProject.txt";
     return super.doAction(session, node, req);
   }
 
@@ -47,7 +49,7 @@ public class projectPopup extends SuggestionPopup{
     FileWriter existWriter = new FileWriter(exist);
     existWriter.write("createProject\n" + System.currentTimeMillis());
     FileWriter fw = new FileWriter(f);
-    fw.write("createProject test string"); //TODO BOM data function logic
+    fw.write("createProject test string"); //TODO createProject logic
     existWriter.close();
     fw.close();
   }
@@ -65,7 +67,8 @@ public class projectPopup extends SuggestionPopup{
 
   @Override
   protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
-    ICreateEventInfo info = (ICreateEventInfo) req;
+    ISaveAsEventInfo info = (ISaveAsEventInfo) req;
+    //ICreateEventInfo info = (ICreateEventInfo) req;
     String projectName = info.getNewNumber();
     IAgileSession session = getSession();
     IProject project = (IProject) session.getObject(ProjectConstants.CLASS_PROJECT_BASE_CLASS, projectName);
