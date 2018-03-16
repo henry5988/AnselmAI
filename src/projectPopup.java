@@ -54,7 +54,7 @@ public class projectPopup extends SuggestionPopup{
 
   @Override
   protected List<List<String>> convertObjectToInfo(List l) throws APIException {
-    return null;
+    return new LinkedList<>();
   }
 
   @Override
