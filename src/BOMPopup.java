@@ -1,6 +1,7 @@
 import com.agile.api.APIException;
 import com.agile.api.APINameConstants;
 import com.agile.api.CommonConstants;
+import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IDataObject;
 import com.agile.api.IItem;
@@ -98,7 +99,7 @@ public class BOMPopup extends SuggestionPopup {
   }
 
   @Override
-  protected IItem getTargetItem(IEventInfo req) throws APIException {
+  protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
     // get the target item
     IUpdateTableEventInfo info = (IUpdateTableEventInfo) req;
     IDataObject obj = info.getDataObject();

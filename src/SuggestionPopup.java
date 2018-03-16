@@ -2,6 +2,7 @@ import static com.HF.getConnection;
 import static com.HF.out;
 
 import com.agile.api.APIException;
+import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IItem;
 import com.agile.api.INode;
@@ -49,7 +50,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       }
 
       // get suggestions
-      IItem obj = getTargetItem(req);
+      IItem obj = (IItem) getTargetItem(req);
       LinkedList list = getItemAdvice(session, obj, req);
      // out("List: " + list.toString());
       List<List<String>> infoList = convertObjectToInfo(list);
@@ -122,7 +123,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     this.fieldCheck = fieldcheck;
   }
 
-  protected abstract IItem getTargetItem(IEventInfo req) throws APIException;
+  protected abstract IAgileObject getTargetItem(IEventInfo req) throws APIException;
 
   public IAgileSession getSession() {
     return session;

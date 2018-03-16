@@ -1,4 +1,5 @@
 import com.agile.api.APIException;
+import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IItem;
 import com.agile.api.INode;
@@ -63,11 +64,11 @@ public class projectPopup extends SuggestionPopup{
   }
 
   @Override
-  protected IItem getTargetItem(IEventInfo req) throws APIException {
+  protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
     ICreateEventInfo info = (ICreateEventInfo) req;
     String projectName = info.getNewNumber();
     IAgileSession session = getSession();
     IProject project = (IProject) session.getObject(ProjectConstants.CLASS_PROJECT_BASE_CLASS, projectName);
-    return null;
+    return project;
   }
 }
