@@ -47,10 +47,10 @@ public class EchoGetHandler implements HttpHandler, Constants {
       System.out.println("Get request...");
       os.write(response.getBytes());
       //System.out.println("response: " + response);
-      System.out.println("overwriting old file..");
-      PrintWriter writer = new PrintWriter(new File(Client.SAVED_FILE));
-      writer.print(response);
-      writer.flush();
+      //System.out.println("overwriting old file..");
+      //PrintWriter writer = new PrintWriter(new File(Client.SAVED_FILE));
+      //writer.print(response);
+      //writer.flush();
     os.close();
   }
 
@@ -59,6 +59,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
     String content = readFile(EXIST, Charset.defaultCharset());
     System.out.println(content);
     responseHTML = "C:\\" + content.substring(0, content.indexOf("\n")) + ".htm";
+    System.out.println(responseHTML);
     System.out.println(responseHTML);
     Files.delete(Paths.get(EXIST));
     if(Files.exists(Paths.get(EXIST))){
