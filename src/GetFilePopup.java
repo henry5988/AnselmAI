@@ -23,6 +23,7 @@ public class GetFilePopup extends FileSuggestionPopup {
     setSession(session);
     setEventInfo(req);
     setFieldCheck(false);
+    setTest(true);
       output_path = "C:\\serverSource\\documentPopup.txt";
     if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
       return super.doAction(session, node, req);
@@ -57,7 +58,7 @@ public class GetFilePopup extends FileSuggestionPopup {
       exist.createNewFile();
     }
     FileWriter existWriter = new FileWriter(exist);
-    existWriter.write("GetFilePopup\n" + System.currentTimeMillis());
+    existWriter.write("createDocumentPopup\n" + System.currentTimeMillis());
     existWriter.close();
     // open file streams
     FileOutputStream fos = new FileOutputStream(f);
