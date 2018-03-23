@@ -4,8 +4,8 @@ import static com.HF.out;
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IItem;
 import com.agile.api.INode;
+import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
@@ -36,25 +36,31 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
+    String returnString = "";
     try {
       //session = connect();
       setSession(session);
       setEventInfo(req);
       String username = session.getCurrentUser().getName();
-
       Connection conn = null;
       conn = getConnection(USERNAME, PASSWORD, URL);
       // field checks
+      System.out.println("isFieldCheck()...");
       if(isFieldCheck()){
+        System.out.println("field check: true");
         fieldCheckResponse = checksField();
       }
-
       // get suggestions
-      IItem obj = (IItem) getTargetItem(req);
+      System.out.println("getTargetItem()...");
+      IAgileObject obj = (IAgileObject) getTargetItem(req);
+      System.out.println("getItemAdvice()...");
       LinkedList list = getItemAdvice(session, obj, req);
      // out("List: " + list.toString());
+      System.out.println("convertObjectToInfo()...");
       List<List<String>> infoList = convertObjectToInfo(list);
+      System.out.println("isTest()...");
       if(!isTest()){
+        System.out.println("isTest: false");
       if (list.size() < 3) {
      //   out("list has fewer than 3 items, does nothing");
         while(((List) infoList.get(0)).size() < 3 && infoList.get(0) != null){
@@ -63,7 +69,11 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       }
       }
     //  out("convert Object to String info...");
+      System.out.println("writeToFile()...");
       writeToFile(infoList);
+
+      returnString = req.getEventHandlerName() + " " + obj.getName();
+
     } catch (SQLException | APIException | ClassNotFoundException e) {
     //  out("Error occured", "err");
       e.getMessage();
@@ -72,7 +82,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       e.printStackTrace();
     }
     // out("JFrame info printed");
-    return null;
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, returnString));
   }
 
   protected List addEmptyInfoToList(List<List<String>> infoList) {
@@ -112,7 +122,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       throws APIException;
 
 
-  protected abstract LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
+  protected abstract LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException;
 
   public boolean isFieldCheck() {

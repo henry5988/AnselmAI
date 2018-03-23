@@ -4,14 +4,11 @@ import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IChange;
 import com.agile.api.IDataObject;
-import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
-import com.agile.px.IFileEventInfo;
 import com.agile.px.IWFChangeStatusEventInfo;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -81,7 +78,7 @@ public class ChangeStatusPopup extends SuggestionPopup{
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
+  protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
     List itemList = new LinkedList();
     itemList.add(null);

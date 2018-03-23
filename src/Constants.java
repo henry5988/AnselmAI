@@ -10,7 +10,7 @@ interface Constants{
   String LOCALHOST2 = "aidb";
   String USERNAME2 = "aidbUser";
   String PASSWORD2 = "tartan";
-  String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST +":1521:agile9";
+  String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST2 +":1521:agile9";
 
   // admin client credentials
   String ADMINUSERNAME = "admin";

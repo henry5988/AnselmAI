@@ -1,12 +1,10 @@
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.IProject;
 import com.agile.api.ProjectConstants;
 import com.agile.px.EventActionResult;
-import com.agile.px.ICreateEventInfo;
 import com.agile.px.IEventInfo;
 import com.agile.px.ISaveAsEventInfo;
 import java.io.File;
@@ -60,7 +58,7 @@ public class ProjectPopup extends SuggestionPopup{
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
+  protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
     return null;
   }
