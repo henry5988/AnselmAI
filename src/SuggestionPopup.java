@@ -38,9 +38,6 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     String returnString = "";
     try {
-      //session = connect();
-      setSession(session);
-      setEventInfo(req);
       String username = session.getCurrentUser().getName();
       Connection conn = null;
       conn = getConnection(USERNAME, PASSWORD, URL);
