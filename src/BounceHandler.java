@@ -52,8 +52,8 @@ public class BounceHandler implements HttpHandler, Constants {
       he.sendResponseHeaders(204, response.length());
     }
     //overwrite old file
-    System.out.println("overwriting old file..");
-    copyFileUsingStream(NEWFILE, OLDFILE);
+//    System.out.println("overwriting old file..");
+//    copyFileUsingStream(NEWFILE, OLDFILE);
   }
 
   // isEventTriggered
