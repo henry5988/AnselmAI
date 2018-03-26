@@ -40,7 +40,8 @@ public class BOMPopup extends SuggestionPopup {
     setFieldCheck(true);
     setSession(session);
     setEventInfo(req);
-    output_path = "C:\\serverSource\\bomPopup.txt";
+    setOutput_path("C:\\serverSource\\bomPopup.txt");
+    init(getSession(), getEventInfo(), getOutput_path(), isFieldCheck(), isTest());
     return super.doAction(session, node, req);
 
   }
@@ -67,7 +68,7 @@ public class BOMPopup extends SuggestionPopup {
 
   @Override
   protected void writeToFile(List<List<String>> infoList) throws IOException {
-    File f = new File(output_path);
+    File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
       Files.createDirectories(Paths.get(exist.getPath()).getParent());
@@ -133,7 +134,6 @@ public class BOMPopup extends SuggestionPopup {
     // get the target item
     IUpdateTableEventInfo info = (IUpdateTableEventInfo) req;
     IDataObject obj = info.getDataObject();
-    obj.getTable();
     return obj;
   }
 }

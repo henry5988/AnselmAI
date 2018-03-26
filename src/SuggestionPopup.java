@@ -22,7 +22,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   private boolean test = false;
   private IAgileSession session;
   private IEventInfo eventInfo;
-  String output_path = "";
+  private String output_path;
   private String actionCode;
   private boolean fieldCheck; // this boolean has to be set at the beginning of doAction
   String fieldCheckResponse = "";
@@ -84,6 +84,15 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     // out("JFrame info printed");
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, returnString));
   }
+
+  protected void init(IAgileSession session, IEventInfo req, String output_path,
+      boolean fieldCheck, boolean test){
+    setSession(session);
+    setEventInfo(req);
+    setOutput_path(output_path);
+    setFieldCheck(fieldCheck);
+    setTest(test);
+  };
 
   protected List addEmptyInfoToList(List<List<String>> infoList) {
     for(int i=0; i<infoList.size(); i++){
@@ -157,6 +166,14 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 
   public void setTest(boolean test) {
     this.test = test;
+  }
+
+  public String getOutput_path() {
+    return output_path;
+  }
+
+  public void setOutput_path(String output_path) {
+    this.output_path = output_path;
   }
 }
 
