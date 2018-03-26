@@ -43,7 +43,7 @@ public class CreateItem extends SuggestionPopup {
     // 4. convertObjectToInfo()
     // 5. writeToFile()
     // 詳細method解釋請看下方function implementation註解
-    
+
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "CreateItem() Event")); // 根據此Event Class來定義回傳字串
   }
 

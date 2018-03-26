@@ -34,9 +34,7 @@ class ThreadedEchoServer {
     server.createContext("/", new RootHandler());
     server.createContext("/echoHeader", new EchoHeaderHandler());
     server.createContext("/echoGet", new EchoGetHandler());
-    server.createContext("/echoPost", new EchoPostHandler());
     server.createContext("/bounce", new BounceHandler());
-    server.createContext("/bomPopup", new BOMPopupHandler());
 
     server.setExecutor(null);
     server.start();
