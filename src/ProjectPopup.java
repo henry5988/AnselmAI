@@ -48,7 +48,7 @@ public class ProjectPopup extends SuggestionPopup{
     }
 
     FileWriter existWriter = new FileWriter(exist);
-    existWriter.write("createProject\n" + System.currentTimeMillis());
+    existWriter.write(String.format("createProject%n" + System.currentTimeMillis()));
     FileWriter fw = new FileWriter(f);
     fw.write("createProject test string"); //TODO createProject logic
     existWriter.close();

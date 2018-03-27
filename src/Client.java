@@ -25,9 +25,7 @@ public class Client {
   public final static String SERVER = "192.168.1.111";  // shinih server
   //public final static String SERVER = "192.168.1.122"; // server2
   //public final static String SERVER = "192.168.1.127"; // local server
-  public final static String
-      FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
-  public final static String SAVED_FILE = "C:\\saved.txt";
+   public final static String SAVED_FILE = "C:\\saved.txt";
   // might have error for no user privilege need, follow https://answers.microsoft.com/en-us/insider/forum/insider_wintp-insider_files/error-0x80070522-build-10074-a-required-privilege/516f87a8-80a6-4acb-a278-8866b2080460
   // for possible solution
   public final static int FILE_SIZE = 6022386; // file size temporary hard coded
@@ -74,7 +72,7 @@ public class Client {
 //          Thread t = new Thread();
 //          t.start();
 //            try {
-        Desktop.getDesktop().browse(URI.create("http://192.168.1.122:1705/bounce"));
+        Desktop.getDesktop().browse(URI.create("http://192.168.1.111:1705/bounce"));
 //            } catch (IOException e1) {
 //              e1.printStackTrace();
 //            }

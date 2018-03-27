@@ -68,8 +68,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     //  out("convert Object to String info...");
       System.out.println("writeToFile()...");
       writeToFile(infoList);
-
-      returnString = req.getEventHandlerName() + " " + obj.getName();
+      System.out.println("Composing returnString");
+      returnString = req.getEventHandlerName() + "!";
 
     } catch (SQLException | APIException | ClassNotFoundException e) {
     //  out("Error occured", "err");
