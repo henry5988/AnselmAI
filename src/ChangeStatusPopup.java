@@ -25,7 +25,7 @@ public class ChangeStatusPopup extends SuggestionPopup{
     setEventInfo(req);
     setTest(true);
     setFieldCheck(true);
-    output_path = "C:\\serverSource\\changeStatusPopup.txt";
+    setOutput_path("C:\\serverSource\\ChangeStatus.txt");
     return super.doAction(session, node, req);
   }
 
@@ -51,7 +51,7 @@ public class ChangeStatusPopup extends SuggestionPopup{
 
   @Override
   protected void writeToFile(List<List<String>> infoList) throws IOException {
-    File f = new File(output_path);
+    File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
       Files.createDirectories(Paths.get(exist.getPath()).getParent());
