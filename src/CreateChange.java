@@ -20,7 +20,7 @@ public class CreateChange extends SuggestionPopup{
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     setTest(true);
     setFieldCheck(false); // set true in real case
-    output_path = "C:\\serverSource\\createChange.txt";
+    setOutput_path("C:\\serverSource\\createChange.txt");
     return super.doAction(session, node, req);
   }
 
@@ -31,7 +31,7 @@ public class CreateChange extends SuggestionPopup{
 
   @Override
   protected void writeToFile(List<List<String>> infoList) throws IOException {
-    File f = new File(output_path);
+    File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
       Files.createDirectories(Paths.get(exist.getPath()).getParent());

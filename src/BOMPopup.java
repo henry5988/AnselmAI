@@ -80,7 +80,7 @@ public class BOMPopup extends SuggestionPopup {
     }
 
     FileWriter existWriter = new FileWriter(exist);
-    existWriter.write("bomPopup\n" + System.currentTimeMillis());
+    existWriter.write(String.format("bomPopup%n") + System.currentTimeMillis());
     FileWriter fw = new FileWriter(f);
     StringBuilder line = new StringBuilder();
     for(int i=0; i<infoList.size(); i++){

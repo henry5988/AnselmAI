@@ -21,7 +21,7 @@ public class ProjectPopup extends SuggestionPopup{
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     setTest(true);
     setFieldCheck(false);
-    output_path = "C:\\serverSource\\createProject.txt";
+    setOutput_path("C:\\serverSource\\createProject.txt");
     return super.doAction(session, node, req);
   }
 
@@ -33,7 +33,7 @@ public class ProjectPopup extends SuggestionPopup{
 
   @Override
   protected void writeToFile(List<List<String>> infoList) throws IOException {
-    File f = new File(output_path);
+    File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
       Files.createDirectories(Paths.get(exist.getPath()).getParent());
