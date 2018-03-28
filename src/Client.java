@@ -22,7 +22,7 @@ public class Client {
 
   public final static int SOCKET_PORT = 1705;      // you may change this
   //public final static String SERVER = "127.0.0.1"; //localhost
-  public final static String SERVER = "192.168.1.111";  // shinih server
+  public final static String SERVER = "192.168.1.118";  // shinih server
   //public final static String SERVER = "192.168.1.122"; // server2
   //public final static String SERVER = "192.168.1.127"; // local server
    public final static String SAVED_FILE = "C:\\saved.txt";
@@ -72,7 +72,7 @@ public class Client {
 //          Thread t = new Thread();
 //          t.start();
 //            try {
-        Desktop.getDesktop().browse(URI.create("http://192.168.1.111:1705/bounce"));
+        Desktop.getDesktop().browse(URI.create("http://192.168.1.118:1705/bounce"));
 //            } catch (IOException e1) {
 //              e1.printStackTrace();
 //            }
