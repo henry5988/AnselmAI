@@ -11,7 +11,11 @@ import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -130,6 +134,26 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 
   protected abstract LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException;
+
+  protected static void writeToFileTemp(String output_path, String eventTypeString, String contentString) throws IOException {
+    File f = new File(output_path);
+    File exist = new File(EXIST);
+    if(!exist.exists()){
+      Files.createDirectories(Paths.get(exist.getPath()).getParent());
+      exist.createNewFile();
+    }
+    if(!f.exists()){
+      Files.createDirectories(Paths.get(f.getPath()).getParent());
+      f.createNewFile();
+    }
+
+    FileWriter existWriter = new FileWriter(exist);
+    existWriter.write(eventTypeString + String.format("%n" + System.currentTimeMillis()));
+    FileWriter fw = new FileWriter(f);
+    fw.write(contentString); //TODO createProject logic
+    existWriter.close();
+    fw.close();
+  }
 
   public boolean isFieldCheck() {
     return fieldCheck;
