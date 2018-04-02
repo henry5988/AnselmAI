@@ -11,7 +11,11 @@ import com.agile.px.IEventAction;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -38,9 +42,6 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
     String returnString = "";
     try {
-      //session = connect();
-      setSession(session);
-      setEventInfo(req);
       String username = session.getCurrentUser().getName();
       Connection conn = null;
       conn = getConnection(USERNAME, PASSWORD, URL);
@@ -54,7 +55,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       System.out.println("getTargetItem()...");
       IAgileObject obj = (IAgileObject) getTargetItem(req);
       System.out.println("getItemAdvice()...");
-      LinkedList list = getItemAdvice(session, obj, req);
+      List list = getItemAdvice(session, obj, req);
      // out("List: " + list.toString());
       System.out.println("convertObjectToInfo()...");
       List<List<String>> infoList = convertObjectToInfo(list);
@@ -63,7 +64,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
         System.out.println("isTest: false");
       if (list.size() < 3) {
      //   out("list has fewer than 3 items, does nothing");
-        while(((List) infoList.get(0)).size() < 3 && infoList.get(0) != null){
+        while( infoList.size() < 3 && infoList.get(0) != null){
           infoList = addEmptyInfoToList(infoList);
         }
       }
@@ -71,8 +72,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     //  out("convert Object to String info...");
       System.out.println("writeToFile()...");
       writeToFile(infoList);
-
-      returnString = req.getEventHandlerName() + " " + obj.getName();
+      System.out.println("Composing returnString");
+      returnString = req.getEventHandlerName() + "!";
 
     } catch (SQLException | APIException | ClassNotFoundException e) {
     //  out("Error occured", "err");
@@ -95,8 +96,11 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   };
 
   protected List addEmptyInfoToList(List<List<String>> infoList) {
-    for(int i=0; i<infoList.size(); i++){
-      infoList.get(i).add("n/a");
+    while(infoList.size()<3){
+      infoList.add(new LinkedList<>());
+      for (int i = 0; i<infoList.get(0).size(); i++){
+        infoList.get(infoList.size()-1).add("n/a");
+      }
     }
     return infoList;
   }
@@ -131,8 +135,28 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       throws APIException;
 
 
-  protected abstract LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
+  protected abstract List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException;
+
+  protected static void writeToFileTemp(String output_path, String eventTypeString, String contentString) throws IOException {
+    File f = new File(output_path);
+    File exist = new File(EXIST);
+    if(!exist.exists()){
+      Files.createDirectories(Paths.get(exist.getPath()).getParent());
+      exist.createNewFile();
+    }
+    if(!f.exists()){
+      Files.createDirectories(Paths.get(f.getPath()).getParent());
+      f.createNewFile();
+    }
+
+    FileWriter existWriter = new FileWriter(exist);
+    existWriter.write(eventTypeString + String.format("%n" + System.currentTimeMillis()));
+    FileWriter fw = new FileWriter(f);
+    fw.write(contentString); //TODO createProject logic
+    existWriter.close();
+    fw.close();
+  }
 
   public boolean isFieldCheck() {
     return fieldCheck;

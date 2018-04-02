@@ -23,8 +23,8 @@ public class Client {
   public final static int SOCKET_PORT = 1705;      // you may change this
   //public final static String SERVER = "127.0.0.1"; //localhost
   //public final static String SERVER = "192.168.1.202";  // server
-  public final static String SERVER = "192.168.1.122"; // server2
-  //public final static String SERVER = "192.168.1.127"; // local server
+  //public final static String SERVER = "192.168.1.122"; // server2
+  public final static String SERVER = "192.168.1.127"; // local server
   public final static String
       FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
   public final static String SAVED_FILE = "C:\\saved.txt";
@@ -74,7 +74,7 @@ public class Client {
 //          Thread t = new Thread();
 //          t.start();
 //            try {
-        Desktop.getDesktop().browse(URI.create("http://192.168.1.122:1705/bounce"));
+        Desktop.getDesktop().browse(URI.create("http://192.168.1.127:1705/bounce"));
 //            } catch (IOException e1) {
 //              e1.printStackTrace();
 //            }
@@ -87,6 +87,7 @@ public class Client {
       }
       //print result
       System.out.println(response.toString());
+      con.disconnect();
 //      int bytesRead = -1;
 //      int current;
 //      byte[] mybytearray;
@@ -134,6 +135,7 @@ public class Client {
 //      //System.out.println(executePost("http://" + SERVER + ":" + SOCKET_PORT + "/socket/web/index.html", ""));
 //
 //      System.out.println("Done.");
+      //Thread.sleep(2000);
     }
   }
 

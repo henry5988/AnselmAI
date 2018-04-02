@@ -14,6 +14,9 @@ import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
 import com.agile.api.TableTypeConstants;
 import com.agile.px.EventActionResult;
+import com.agile.px.IEventDirtyRow;
+import com.agile.px.IEventDirtyRowUpdate;
+import com.agile.px.IEventDirtyTable;
 import com.agile.px.IEventInfo;
 import com.agile.px.IUpdateTableEventInfo;
 import java.io.File;
@@ -36,7 +39,7 @@ public class BOMPopup extends SuggestionPopup {
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     System.out.println("BOMPopup()...");
-    setTest(true);
+    setTest(false);
     setFieldCheck(true);
     setSession(session);
     setEventInfo(req);
@@ -81,59 +84,81 @@ public class BOMPopup extends SuggestionPopup {
 
     FileWriter existWriter = new FileWriter(exist);
     existWriter.write(String.format("bomPopup%n") + System.currentTimeMillis());
+    existWriter.close();
     FileWriter fw = new FileWriter(f);
     StringBuilder line = new StringBuilder();
     for(int i=0; i<infoList.size(); i++){
       for(int j = 0; j< infoList.get(i).size(); j++){
-        line.append(infoList.get(i).get(j));
+        line.append(infoList.get(i).get(j) + String.format("%n"));
       }
     }
     fw.write(line.toString()); //TODO BOM data function logic
-    existWriter.close();
+
     fw.close();
   }
 
   @Override
   protected List<List<String>> convertObjectToInfo(List l) throws APIException {
+
     List<List<String>> info = new LinkedList();
     for(int i=0; i<l.size(); i++){
       List itemInfo = new LinkedList();
       Map.Entry entry = (Entry) l.get(i);
-      itemInfo.add((String) entry.getKey());
+      IItem item = (IItem) entry.getKey();
+      itemInfo.add(item.getName());
+      itemInfo.add(item.getValue(ItemConstants.ATT_TITLE_BLOCK_DESCRIPTION));
+      String itemQty = "n/a";
+      IItem target = (IItem) getTargetItem(getEventInfo());
+      ITable bom = target.getTable(ItemConstants.TABLE_BOM);
+      Iterator it = bom.getTableIterator();
+      while(it.hasNext()){
+        IRow row = (IRow) it.next();
+        if(row.getReferent().getName().equals(item.getName())){
+          itemQty = (String) row.getValue(ItemConstants.ATT_BOM_QTY);
+        }
+      }
+      itemInfo.add(itemQty);
       info.add(itemInfo);
     }
     return info;
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
+  protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
     // get the item
     HashMap altItemOccurance = new HashMap();
     Connection conn = getConnection(USERNAME, PASSWORD, URL);
-    List itemList = new LinkedList();
-    IItem item = (IItem) obj;
+    List itemList;
+    IUpdateTableEventInfo updateBOMEvent = (IUpdateTableEventInfo) getEventInfo();
+    IEventDirtyTable table = updateBOMEvent.getTable();
+    Iterator it = table.iterator();
+    IEventDirtyRowUpdate rowUpdate = (IEventDirtyRowUpdate) it.next();
+    IItem item = (IItem) rowUpdate.getReferent();
     String itemName = item.getName();
     System.out.println("Item name: " + itemName);
     String sql = "select FIND_NUMBER from BOM where ITEM_NUMBER = '" + itemName + "'";
     LinkedList findNumberList = executeSQL(conn, sql, true);
-
+    System.out.println("Find Number: " + (findNumberList.get(0) == null? "null": findNumberList.get(0)));
     String findNumber = (String) findNumberList.get(0);
     sql = "select ITEM_NUMBER from BOM where FIND_NUMBER = '" + findNumber + "'";
     LinkedList altItems = executeSQL(conn, sql, false);
+    System.out.println("altItems: " + altItems.toString());
     for(int i = 0; i<altItems.size(); i++) {
       if(!altItemOccurance.containsKey(altItems.get(i)))
-        altItemOccurance.put(altItems.get(i), Collections.frequency(altItems, altItems.get(i)));
+        altItemOccurance.put(getSession().getObject(ItemConstants.CLASS_ITEM_BASE_CLASS, altItems.get(i)), Collections.frequency(altItems, altItems.get(i)));
     }
     itemList = extractTop(altItemOccurance, 3);
-    return (LinkedList) itemList;
+    System.out.println("returned: " + itemList.toString());
+    return itemList;
   }
 
   @Override
   protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
     // get the target item
     IUpdateTableEventInfo info = (IUpdateTableEventInfo) req;
-    IDataObject obj = info.getDataObject();
+    IEventDirtyTable table = (IEventDirtyTable) info.getTable();
+    IDataObject obj = (IDataObject) info.getDataObject();
     return obj;
   }
 }

@@ -58,7 +58,7 @@ public class ProjectPopup extends SuggestionPopup{
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
+  protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
     return null;
   }

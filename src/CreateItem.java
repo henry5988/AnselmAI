@@ -4,6 +4,7 @@ import com.agile.api.IAgileSession;
 import com.agile.api.INode;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
+import com.agile.px.ICreateEventInfo;
 import com.agile.px.IEventInfo;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -55,7 +56,8 @@ public class CreateItem extends SuggestionPopup {
    * */
   @Override
   protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
-    return null;
+    ICreateEventInfo info = (ICreateEventInfo) req;
+    return info.getDataObject();
   }
 
   /*
@@ -78,7 +80,7 @@ public class CreateItem extends SuggestionPopup {
   @Override
   protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
-    return null;
+    return new LinkedList();
   }
 
   /*
@@ -89,7 +91,7 @@ public class CreateItem extends SuggestionPopup {
    * */
   @Override
   protected List<List<String>> convertObjectToInfo(List l) throws APIException {
-    return null;
+    return new LinkedList<>();
   }
 
   /*
@@ -100,6 +102,6 @@ public class CreateItem extends SuggestionPopup {
   * */
   @Override
   protected void writeToFile(List<List<String>> infoList) throws IOException {
-
+    SuggestionPopup.writeToFileTemp(getOutput_path(),"createPartPopup", "Create Part Test String");
   }
 }
