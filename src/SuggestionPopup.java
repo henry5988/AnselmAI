@@ -20,9 +20,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.Action;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
+  static final Object NO_EVENT = null;
   private boolean test = false;
   private IAgileSession session;
   private IEventInfo eventInfo;
@@ -54,11 +56,14 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       // get suggestions
       System.out.println("getTargetItem()...");
       IAgileObject obj = (IAgileObject) getTargetItem(req);
+      if(obj == null){return new EventActionResult(req, new ActionResult(ActionResult.STRING, "No Event"));}
       System.out.println("getItemAdvice()...");
       List list = getItemAdvice(session, obj, req);
+      if(list == null){return new EventActionResult(req, new ActionResult(ActionResult.STRING, "No Event"));}
      // out("List: " + list.toString());
       System.out.println("convertObjectToInfo()...");
       List<List<String>> infoList = convertObjectToInfo(list);
+      if(infoList == null){return new EventActionResult(req, new ActionResult(ActionResult.STRING, "No Event"));}
       System.out.println("isTest()...");
       if(!isTest()){
         System.out.println("isTest: false");
@@ -68,6 +73,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
           infoList = addEmptyInfoToList(infoList);
         }
       }
+
       }
     //  out("convert Object to String info...");
       System.out.println("writeToFile()...");

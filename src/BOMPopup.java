@@ -11,6 +11,7 @@ import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.IRow;
 import com.agile.api.ITable;
+import com.agile.api.ITwoWayIterator;
 import com.agile.api.ItemConstants;
 import com.agile.api.TableTypeConstants;
 import com.agile.px.EventActionResult;
@@ -141,6 +142,7 @@ public class BOMPopup extends SuggestionPopup {
     LinkedList findNumberList = executeSQL(conn, sql, true);
     System.out.println("Find Number: " + (findNumberList.get(0) == null? "null": findNumberList.get(0)));
     String findNumber = (String) findNumberList.get(0);
+    if(findNumber.equals("0")) return null;
     sql = "select ITEM_NUMBER from BOM where FIND_NUMBER = '" + findNumber + "'";
     LinkedList altItems = executeSQL(conn, sql, false);
     System.out.println("altItems: " + altItems.toString());
@@ -157,8 +159,8 @@ public class BOMPopup extends SuggestionPopup {
   protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
     // get the target item
     IUpdateTableEventInfo info = (IUpdateTableEventInfo) req;
-    IEventDirtyTable table = (IEventDirtyTable) info.getTable();
-    IDataObject obj = (IDataObject) info.getDataObject();
+    IEventDirtyTable table = info.getTable();
+    IDataObject obj = info.getDataObject();
     return obj;
   }
 }
