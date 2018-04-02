@@ -8,16 +8,9 @@ import static com.HF.removeNull;
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IDataObject;
 import com.agile.api.IItem;
-import com.agile.api.INode;
-import com.agile.api.IUser;
 import com.agile.api.ItemConstants;
-import com.agile.api.UserConstants;
-import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
-import com.agile.px.IFileEventInfo;
-import com.agile.px.IUpdateEventInfo;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -39,7 +32,7 @@ public class UpdateTitleBlockPopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo info)
+  protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo info)
       throws SQLException, APIException {
     // Tells what documents people have looked at this document
     // get connection
@@ -51,7 +44,7 @@ public class UpdateTitleBlockPopup extends FileSuggestionPopup {
     }
     out("Executing SQL statement...");
     //String sql = "SELECT ITEM.ITEM_NUMBER from ITEM where ITEM.CLASS=9000";
-    IItem item = obj;
+    IItem item = (IItem) obj;
     String itemNum = item.getObjectId().toString();
     LinkedList<IItem> items = new LinkedList();
     // select who have viewed the doc from database recently

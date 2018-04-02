@@ -24,7 +24,7 @@ public class GetFilePopup extends FileSuggestionPopup {
     setEventInfo(req);
     setFieldCheck(false);
     setTest(true);
-      output_path = "C:\\serverSource\\documentPopup.txt";
+    setOutput_path("C:\\serverSource\\documentPopup.txt");
     if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
       return super.doAction(session, node, req);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
@@ -47,7 +47,7 @@ public class GetFilePopup extends FileSuggestionPopup {
     } catch (APIException e) {
       e.printStackTrace();
     }
-    File f = new File(output_path);
+    File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!f.exists()) {
       Files.createDirectories(Paths.get(f.getPath()).getParent());

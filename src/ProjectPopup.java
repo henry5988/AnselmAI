@@ -1,12 +1,10 @@
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.IProject;
 import com.agile.api.ProjectConstants;
 import com.agile.px.EventActionResult;
-import com.agile.px.ICreateEventInfo;
 import com.agile.px.IEventInfo;
 import com.agile.px.ISaveAsEventInfo;
 import java.io.File;
@@ -23,7 +21,7 @@ public class ProjectPopup extends SuggestionPopup{
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     setTest(true);
     setFieldCheck(false);
-    output_path = "C:\\serverSource\\createProject.txt";
+    setOutput_path("C:\\serverSource\\createProject.txt");
     return super.doAction(session, node, req);
   }
 
@@ -35,7 +33,7 @@ public class ProjectPopup extends SuggestionPopup{
 
   @Override
   protected void writeToFile(List<List<String>> infoList) throws IOException {
-    File f = new File(output_path);
+    File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
       Files.createDirectories(Paths.get(exist.getPath()).getParent());
@@ -60,7 +58,7 @@ public class ProjectPopup extends SuggestionPopup{
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
+  protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
     return null;
   }

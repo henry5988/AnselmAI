@@ -7,14 +7,10 @@ import static com.HF.out;
 import static com.HF.removeNull;
 
 import com.agile.api.APIException;
-import com.agile.api.FolderConstants;
+import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IAttachmentFile;
-import com.agile.api.IFileFolder;
-import com.agile.api.IFolder;
 import com.agile.api.IItem;
 import com.agile.api.INode;
-import com.agile.api.ITable;
 import com.agile.api.IUser;
 import com.agile.api.ItemConstants;
 import com.agile.api.UserConstants;
@@ -91,7 +87,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IItem obj, IEventInfo req)
+  protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
 
     IFileEventInfo info = (IFileEventInfo) req;
@@ -110,7 +106,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
    //   out("New dirty file");
    //   out("Getting related file from " + files[i].getFilename());
 	    	setTargetFile(files[i].getFilename());
-	    	lists.addAll(getAttachmentAdvice(conn,conn2, files[i], session,obj)); // gets file list that contains filename and viewer count
+	    	lists.addAll(getAttachmentAdvice(conn,conn2, files[i], session, (IItem)obj)); // gets file list that contains filename and viewer count
 	    }
 	    if (lists.contains(null)) {
 	    	removeNull(lists);
