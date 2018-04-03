@@ -50,7 +50,7 @@ public class ChangeStatusPopup extends SuggestionPopup{
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList) throws IOException {
+  protected void writeToFile(List<List> infoList) throws IOException {
     File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
@@ -71,8 +71,8 @@ public class ChangeStatusPopup extends SuggestionPopup{
   }
 
   @Override
-  protected List<List<String>> convertObjectToInfo(List l) throws APIException {
-    List<List<String>> info = new LinkedList();
+  protected List<List> convertObjectToInfo(List l) throws APIException {
+    List<List> info = new LinkedList();
     info.add(null);
     return info;
   }

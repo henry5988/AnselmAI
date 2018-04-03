@@ -1,8 +1,8 @@
-import static com.HF.countOccurance;
 import static com.HF.executeSQL;
 import static com.HF.extractTop;
 import static com.HF.getConnection;
 
+import com.HF;
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
@@ -11,11 +11,8 @@ import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.IRow;
 import com.agile.api.ITable;
-import com.agile.api.ITwoWayIterator;
 import com.agile.api.ItemConstants;
-import com.agile.api.TableTypeConstants;
 import com.agile.px.EventActionResult;
-import com.agile.px.IEventDirtyRow;
 import com.agile.px.IEventDirtyRowUpdate;
 import com.agile.px.IEventDirtyTable;
 import com.agile.px.IEventInfo;
@@ -46,6 +43,8 @@ public class BOMPopup extends SuggestionPopup {
     setEventInfo(req);
     setOutput_path("C:\\serverSource\\bomPopup.txt");
     init(getSession(), getEventInfo(), getOutput_path(), isFieldCheck(), isTest());
+    setHtmlTemplate("C:\\BOMPopup.htm");
+    setHtmlOutput("C:\\serverSource\\BOMPopup.htm");
     return super.doAction(session, node, req);
 
   }
@@ -71,7 +70,7 @@ public class BOMPopup extends SuggestionPopup {
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList) throws IOException {
+  protected void writeToFile(List<List> infoList) throws IOException {
     File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
@@ -99,9 +98,9 @@ public class BOMPopup extends SuggestionPopup {
   }
 
   @Override
-  protected List<List<String>> convertObjectToInfo(List l) throws APIException {
+  protected List<List> convertObjectToInfo(List l) throws APIException {
 
-    List<List<String>> info = new LinkedList();
+    List<List> info = new LinkedList();
     for(int i=0; i<l.size(); i++){
       List itemInfo = new LinkedList();
       Map.Entry entry = (Entry) l.get(i);
@@ -121,6 +120,7 @@ public class BOMPopup extends SuggestionPopup {
       itemInfo.add(itemQty);
       info.add(itemInfo);
     }
+    info = HF.transposeMatrix(info);
     return info;
   }
 

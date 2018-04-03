@@ -90,7 +90,7 @@ public class CreateItem extends SuggestionPopup {
    * output: 推薦object的訊息字串的2維陣列
    * */
   @Override
-  protected List<List<String>> convertObjectToInfo(List l) throws APIException {
+  protected List<List> convertObjectToInfo(List l) throws APIException {
     return new LinkedList<>();
   }
 
@@ -101,7 +101,7 @@ public class CreateItem extends SuggestionPopup {
   * output: 無
   * */
   @Override
-  protected void writeToFile(List<List<String>> infoList) throws IOException {
+  protected void writeToFile(List<List> infoList) throws IOException {
     SuggestionPopup.writeToFileTemp(getOutput_path(),"createPartPopup", "Create Part Test String");
   }
 }

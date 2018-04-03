@@ -61,7 +61,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
       LinkedList list = getItemAdvice(session, obj, info);
       out("List size: " + list.size());
       out("List: " + list.toString());
-      List<List<String>> infoList = convertObjectToInfo(list);
+      List<List> infoList = convertObjectToInfo(list);
       if (list.size() < 3) {
         out("list has fewer than 3 items, does nothing");
         while(((List) infoList.get(1)).size() < 3){
@@ -206,7 +206,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
   }
 
   @Override
-  protected List<List<String>> convertObjectToInfo(List l)
+  protected List<List> convertObjectToInfo(List l)
       throws APIException {
     // convert attachment file object to printed info
     // need file name, description, image, and viewer count
@@ -268,7 +268,7 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
       e.printStackTrace();
     }
    // out("FileSuggestionPopup.convertObjectToInfo() ends...");
-    return (List<List<String>>) info;
+    return (List<List>) info;
   }
 
   protected String getImageSrc(String file) {

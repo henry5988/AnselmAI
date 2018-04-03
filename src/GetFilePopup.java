@@ -36,7 +36,7 @@ public class GetFilePopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList)
+  protected void writeToFile(List<List> infoList)
       throws IOException {
     // locate output file
     IEventInfo req = getEventInfo();

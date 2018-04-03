@@ -30,7 +30,7 @@ public class CreateChange extends SuggestionPopup{
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList) throws IOException {
+  protected void writeToFile(List<List> infoList) throws IOException {
     File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
@@ -51,7 +51,7 @@ public class CreateChange extends SuggestionPopup{
   }
 
   @Override
-  protected List<List<String>> convertObjectToInfo(List l) throws APIException {
+  protected List<List> convertObjectToInfo(List l) throws APIException {
     return null;
   }
 

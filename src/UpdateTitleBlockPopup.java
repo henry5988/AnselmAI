@@ -27,7 +27,7 @@ public class UpdateTitleBlockPopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected void writeToFile(List<List<String>> infoList) throws IOException {
+  protected void writeToFile(List<List> infoList) throws IOException {
 
   }
 

@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.Action;
 import javax.swing.JFrame;
 
 public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
@@ -31,6 +30,8 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   private String output_path;
   private String actionCode;
   private boolean fieldCheck; // this boolean has to be set at the beginning of doAction
+  private String htmlTemplate; // directory for html templates
+  private String htmlOutput; // directory for modified html
   String fieldCheckResponse = "";
   String getActionCode() {
     return actionCode;
@@ -62,7 +63,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       if(list == null){return new EventActionResult(req, new ActionResult(ActionResult.STRING, "No Event"));}
      // out("List: " + list.toString());
       System.out.println("convertObjectToInfo()...");
-      List<List<String>> infoList = convertObjectToInfo(list);
+      List<List> infoList = convertObjectToInfo(list);
       if(infoList == null){return new EventActionResult(req, new ActionResult(ActionResult.STRING, "No Event"));}
       System.out.println("isTest()...");
       if(!isTest()){
@@ -78,6 +79,11 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     //  out("convert Object to String info...");
       System.out.println("writeToFile()...");
       writeToFile(infoList);
+
+      System.out.println("Updating BOM HTML for client...");
+      UpdateHTML htmlMaker = new UpdateHTML(getOutput_path(), getHtmlTemplate(), getHtmlOutput());
+      htmlMaker.update();
+
       System.out.println("Composing returnString");
       returnString = req.getEventHandlerName() + "!";
 
@@ -101,7 +107,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     setTest(test);
   };
 
-  protected List addEmptyInfoToList(List<List<String>> infoList) {
+  protected List addEmptyInfoToList(List<List> infoList) {
     while(infoList.size()<3){
       infoList.add(new LinkedList<>());
       for (int i = 0; i<infoList.get(0).size(); i++){
@@ -125,7 +131,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     return false;
   }
 
-  protected abstract void writeToFile(List<List<String>> infoList) throws IOException;
+  protected abstract void writeToFile(List<List> infoList) throws IOException;
 
   private String getDownloadedFileName(IFileEventInfo info) throws APIException {
     IEventDirtyFile[] files = info.getFiles(); 
@@ -137,7 +143,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 	  }
 
 
-  protected abstract List<List<String>> convertObjectToInfo(List l)
+  protected abstract List<List> convertObjectToInfo(List l)
       throws APIException;
 
 
@@ -204,6 +210,22 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 
   public void setOutput_path(String output_path) {
     this.output_path = output_path;
+  }
+
+  public String getHtmlTemplate() {
+    return htmlTemplate;
+  }
+
+  public void setHtmlTemplate(String htmlTemplate) {
+    this.htmlTemplate = htmlTemplate;
+  }
+
+  public String getHtmlOutput() {
+    return htmlOutput;
+  }
+
+  public void setHtmlOutput(String htmlOutput) {
+    this.htmlOutput = htmlOutput;
   }
 }
 
