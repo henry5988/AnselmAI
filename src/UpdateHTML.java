@@ -40,7 +40,7 @@ public class UpdateHTML {
 			 StringBuffer sb = new StringBuffer();
 			 
 			 //輸出網頁名稱與編碼設定
-			 BufferedWriter fw  = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "Big5"));
+			 BufferedWriter fw  = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "big5"));
 	
 
 			 while ((line = br_data.readLine()) != null) { //逐行讀取txt檔，該行的內容存進line
@@ -71,11 +71,14 @@ public class UpdateHTML {
 			 fr_html.close();
 			 br_html.close();
 			 } catch (FileNotFoundException e) {
-				 e.printStackTrace();
+				 System.err.println("FileNotFoundException in UpdateHTML()");
+				 System.err.println(e.getMessage());
 			 } catch (UnsupportedEncodingException e) {
-				 e.printStackTrace();
+				 System.err.println("UnsupportedEncodingException in UpdateHTML(); Current Encoding set to: big5");
+				 System.err.println(e.getMessage());
 			 } catch (IOException e) {
-				 e.printStackTrace();
+				 System.err.println("IOException in UpdateHTML()");
+				 System.err.println(e.getMessage());
 			 }
 		 }
 
