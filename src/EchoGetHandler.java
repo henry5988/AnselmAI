@@ -58,7 +58,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
     String responseHTML;
     String content = readFile(EXIST, Charset.defaultCharset());
     System.out.println(content);
-    responseHTML = "C:\\" + content.substring(0, content.indexOf(String.format("%n"))) + ".htm";
+    responseHTML = "C:\\serverSource\\" + content.substring(0, content.indexOf(String.format("%n"))) + ".htm";
     System.out.println(responseHTML);
     System.out.println(responseHTML);
     Files.delete(Paths.get(EXIST));
