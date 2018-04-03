@@ -10,6 +10,12 @@ public class UpdateHTML {
 	   private String templateDirectory;
 	   private String outputDirectory;
 
+	   UpdateHTML(String txt, String template, String output){
+	   	setTxtDirectory(txt);
+	   	setTemplateDirectory(template);
+	   	setOutputDirectory(output);
+		 }
+
 		 public void update(final String[] args) throws Exception {
 		
 			 String line;
