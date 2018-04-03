@@ -1,8 +1,11 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class UpdateHTML {
@@ -16,7 +19,7 @@ public class UpdateHTML {
 	   	setOutputDirectory(output);
 		 }
 
-		 public void update(final String[] args) throws Exception {
+		 public void update(){
 		
 			 String line;
 			 String html = "";
@@ -25,7 +28,10 @@ public class UpdateHTML {
 			 int i = 0;
 			 
 			 String data_path = getTxtDirectory();//資料文件路徑
-			 FileReader fr_data= new FileReader(data_path);
+			 FileReader fr_data= null;
+			 try {
+				 fr_data = new FileReader(data_path);
+
 			 BufferedReader br_data = new BufferedReader(fr_data);
 			
 			 String html_path = getTemplateDirectory();//網頁文件路徑
@@ -34,7 +40,7 @@ public class UpdateHTML {
 			 StringBuffer sb = new StringBuffer();
 			 
 			 //輸出網頁名稱與編碼設定
-			 BufferedWriter fw  = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "UTF8"));
+			 BufferedWriter fw  = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "Big5"));
 	
 
 			 while ((line = br_data.readLine()) != null) { //逐行讀取txt檔，該行的內容存進line
@@ -64,8 +70,14 @@ public class UpdateHTML {
 			 br_data.close();
 			 fr_html.close();
 			 br_html.close();
-			 
-			  }
+			 } catch (FileNotFoundException e) {
+				 e.printStackTrace();
+			 } catch (UnsupportedEncodingException e) {
+				 e.printStackTrace();
+			 } catch (IOException e) {
+				 e.printStackTrace();
+			 }
+		 }
 
 	public String getTxtDirectory() {
 		return txtDirectory;
