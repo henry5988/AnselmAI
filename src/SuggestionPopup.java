@@ -64,6 +64,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
      // out("List: " + list.toString());
       System.out.println("convertObjectToInfo()...");
       List<List> infoList = convertObjectToInfo(list);
+      System.out.println("Info: " + infoList.toString());
       if(infoList == null){return new EventActionResult(req, new ActionResult(ActionResult.STRING, "No Event"));}
       System.out.println("isTest()...");
       if(!isTest()){
@@ -73,6 +74,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
         while( infoList.size() < 3 && infoList.get(0) != null){
           infoList = addEmptyInfoToList(infoList);
         }
+        System.out.println("Adjusted Info: " + infoList.toString());
       }
 
       }

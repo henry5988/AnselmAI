@@ -71,6 +71,9 @@ public class BOMPopup extends SuggestionPopup {
 
   @Override
   protected void writeToFile(List<List> infoList) throws IOException {
+    System.out.println("Matrix Transpose...");
+    infoList = HF.transposeMatrix(infoList);
+    System.out.println("Transpose Complete!");
     File f = new File(getOutput_path());
     File exist = new File(EXIST);
     if(!exist.exists()){
@@ -120,7 +123,6 @@ public class BOMPopup extends SuggestionPopup {
       itemInfo.add(itemQty);
       info.add(itemInfo);
     }
-    info = HF.transposeMatrix(info);
     return info;
   }
 
