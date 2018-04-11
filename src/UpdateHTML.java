@@ -24,7 +24,7 @@ public class UpdateHTML {
 
     String line;
     String html = "";
-    String[] tempArray = new String[10];
+    String[] tempArray = new String[20];
     int br_data_line = 0;
     int i = 0;
 
@@ -44,13 +44,14 @@ public class UpdateHTML {
       BufferedWriter fw = new BufferedWriter(
           new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "big5"));
 
-      while ((line = br_data.readLine()) != null) { //逐行讀取txt檔，該行的內容存進line
+      while ((line = br_data.readLine())!=null) { //逐行讀取txt檔，該行的內容存進line
         tempArray[br_data_line] = line;
+        System.out.println("token: " + tempArray[br_data_line]);
         br_data_line++;
       }
-
+      System.out.println("Token number:" + String.valueOf(br_data_line-1));
       while ((line = br_html.readLine()) != null) {//逐行讀取html，該行的內容存進line
-        if (line.indexOf("{(anselmai)}") != -1) { //判斷該行是否含有關鍵字
+        if (line.contains("{(anselmai)}")) { //判斷該行是否含有關鍵字
           if (tempArray[i].equals("{(anselmai)}")) {
             tempArray[i] = "";
             html += line.replace("{(anselmai)}", tempArray[i]) + String.format("%n");

@@ -32,7 +32,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
   private boolean fieldCheck; // this boolean has to be set at the beginning of doAction
   private String htmlTemplate; // directory for html templates
   private String htmlOutput; // directory for modified html
-  String fieldCheckResponse = "";
+  private String fieldCheckResponse;
   String getActionCode() {
     return actionCode;
   }
@@ -52,7 +52,9 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       System.out.println("isFieldCheck()...");
       if(isFieldCheck()){
         System.out.println("field check: true");
-        fieldCheckResponse = checksField();
+        setFieldCheckResponse(checksField());
+      }else{
+        setFieldCheckResponse("");
       }
       // get suggestions
       System.out.println("getTargetItem()...");
@@ -82,8 +84,9 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       System.out.println("writeToFile()...");
       writeToFile(infoList);
 
-      System.out.println("Updating BOM HTML for client...");
+      System.out.println("Creating BOM HTML for client...");
       UpdateHTML htmlMaker = new UpdateHTML(getOutput_path(), getHtmlTemplate(), getHtmlOutput());
+      System.out.println("HTML Updating..");
       htmlMaker.update();
 
       System.out.println("Composing returnString");
@@ -228,6 +231,14 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
 
   public void setHtmlOutput(String htmlOutput) {
     this.htmlOutput = htmlOutput;
+  }
+
+  public String getFieldCheckResponse() {
+    return fieldCheckResponse;
+  }
+
+  public void setFieldCheckResponse(String fieldCheckResponse) {
+    this.fieldCheckResponse = fieldCheckResponse;
   }
 }
 

@@ -42,9 +42,9 @@ public class BOMPopup extends SuggestionPopup {
     setSession(session);
     setEventInfo(req);
     setOutput_path("C:\\serverSource\\bomPopup.txt");
-    init(getSession(), getEventInfo(), getOutput_path(), isFieldCheck(), isTest());
     setHtmlTemplate("C:\\BOMPopup.htm");
     setHtmlOutput("C:\\serverSource\\BOMPopup.htm");
+    init(getSession(), getEventInfo(), getOutput_path(), isFieldCheck(), isTest());
     return super.doAction(session, node, req);
 
   }
@@ -60,17 +60,18 @@ public class BOMPopup extends SuggestionPopup {
       ITable table = item.getTable(ItemConstants.TABLE_BOM);
       Iterator it = table.iterator();
       IRow row = (IRow) it.next();
-      int cost = (int) row.getValue(2000019494); // base number for cost column in BOM table
-      if(cost <= 0) resultString += "cost of " + row.getReferent().getName() + " is not valid.";
-      if(resultString.equals("Result: ")) return "Column fields are correct.";
+      int cost = (int) row.getValue(ItemConstants.ATT_PAGE_TWO_TEXT02); // base number for cost column in BOM table; can be any other text field
+      if(cost <= 0) resultString += "cost of " + row.getReferent().getName() + " is not valid." + String.format("%n");
+
     } catch (APIException e) {
       System.err.println(e.getMessage());
     }
-    return resultString;
+    if(resultString.equals("Result: ")) return "Column fields are correct.";
+    else return resultString;
   }
 
   @Override
-  protected void writeToFile(List<List> infoList) throws IOException {
+  protected void writeToFile(List<List> infoList) throws IOException{
     System.out.println("Matrix Transpose...");
     infoList = HF.transposeMatrix(infoList);
     System.out.println("Transpose Complete!");
@@ -90,13 +91,22 @@ public class BOMPopup extends SuggestionPopup {
     existWriter.close();
     FileWriter fw = new FileWriter(f);
     StringBuilder line = new StringBuilder();
+    System.out.println(getFieldCheckResponse()+String.format("%n"));
+    line.append(getFieldCheckResponse());
+    line.append(String.format("%n"));
+    try {
+      System.out.println(getTargetItem(getEventInfo()).getName()+String.format("%n"));
+      line.append(getTargetItem(getEventInfo()).getName());
+      line.append(String.format("%n"));
+    }catch(APIException e){
+      System.err.println(e.getMessage());
+    }
     for(int i=0; i<infoList.size(); i++){
       for(int j = 0; j< infoList.get(i).size(); j++){
         line.append(infoList.get(i).get(j) + String.format("%n"));
       }
     }
     fw.write(line.toString()); //TODO BOM data function logic
-
     fw.close();
   }
 

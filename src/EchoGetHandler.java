@@ -60,7 +60,6 @@ public class EchoGetHandler implements HttpHandler, Constants {
     System.out.println(content);
     responseHTML = "C:\\serverSource\\" + content.substring(0, content.indexOf(String.format("%n"))) + ".htm";
     System.out.println(responseHTML);
-    System.out.println(responseHTML);
     Files.delete(Paths.get(EXIST));
     if(Files.exists(Paths.get(EXIST))){
       System.out.println("exist file did not get deleted");
@@ -68,8 +67,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
     return responseHTML;
   }
 
-  public static void parseQuery(String query, Map<String,
-      Object> parameters) throws UnsupportedEncodingException {
+  public static void parseQuery(String query, Map<String, Object> parameters) throws UnsupportedEncodingException {
 
     if (query != null) {
       String pairs[] = query.split("[&]");
