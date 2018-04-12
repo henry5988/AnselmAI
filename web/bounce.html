@@ -2634,10 +2634,9 @@
         // TO DISPLAY CORRECTLY
         // User needs to disable popup for their internal files on their browser settings
         var objWin = window.self;
-        objWin.open('','_self','');
+        objWin.open('','_self','').focus();
 
-        var win = window.open("http://192.168.1.115:1705/echoGet", '_blank', 'location=yes,height=550,width=900,scrollbars=yes,status=yes');
-        window.setTimeout(function(){},3000);
+        var win = window.open("http://192.168.1.115:1705/echoGet", '_blank', 'location=no,height=550,width=900,scrollbars=yes,status=no, toolbar=no').focus();
         objWin.close();
     </script>
 </head>

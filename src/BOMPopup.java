@@ -98,7 +98,7 @@ public class BOMPopup extends SuggestionPopup {
     }
 
     FileWriter existWriter = new FileWriter(exist);
-    existWriter.write(String.format("bomPopup%n") + getHtmlOutput());
+    existWriter.write(getHtmlOutput());
     existWriter.close();
     FileWriter fw = new FileWriter(f);
     StringBuilder line = new StringBuilder();
@@ -175,6 +175,7 @@ public class BOMPopup extends SuggestionPopup {
     }
     itemList = extractTop(altItemOccurance, 3);
     System.out.println("returned: " + itemList.toString());
+    conn.close();
     return itemList;
   }
 

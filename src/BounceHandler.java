@@ -27,27 +27,36 @@ public class BounceHandler implements HttpHandler, Constants {
   @Override
 
   public void handle(HttpExchange he) throws IOException {
-    //System.out.println("BounceHandler()...");
     // parse request
+    String username ="serverSource";
     Map<String, Object> parameters = new HashMap<String, Object>();
+    Headers headers = he.getRequestHeaders();
     URI requestedUri = he.getRequestURI();
     String query = requestedUri.getRawQuery();
+    System.out.println("query: " + query);
+    if(headers.containsKey("Username")) {
+      username = headers.get("Username").get(0);
+    }
+    if (query!=null){
+      username = query.substring(query.indexOf('=')+1,query.length());
+    }
+    System.out.println("username: " + username);
+
     EchoGetHandler.parseQuery(query, parameters);
-    Headers headers = he.getRequestHeaders();
-    System.out.println("username: " + headers.get("Username").get(0));
     // send response
     Headers h = he.getResponseHeaders();
     h.set("Content-Type", "text/html");
     String response = "";
-    if (isEventTriggered(headers.get("Username").get(0))) {
-      System.out.println("Event Triggered");
+    if (isEventTriggered(username)) {
+
       response += EchoGetHandler
-          .readFile("C:\\bounce.html", Charset.defaultCharset());
+          .readFile("C:\\bounce.html", Charset.forName("UTF8"));
+      for (String key : parameters.keySet())
+        response += " = " + parameters.get(key) + "\n";
       OutputStream os = he.getResponseBody();
       he.sendResponseHeaders(200, response.length());
       System.out.println("Bounce request...");
       os.write(response.getBytes());
-      System.out.println(response);
       os.close();
     } else {
       System.out.println("Empty response");
@@ -61,8 +70,9 @@ public class BounceHandler implements HttpHandler, Constants {
   // isEventTriggered
   // return yes if theres a targeted event trigger
   static boolean isEventTriggered(String username) throws IOException {
-    String existFile = SuggestionPopup.replaceServerSource(username, EXIST);
-    File exist = new File(existFile);
+    String existPath = SuggestionPopup.replaceServerSource(username, EXIST);
+    System.out.println("Exist Path: " + existPath);
+    File exist = new File(existPath);
     return exist.exists();
   }
 

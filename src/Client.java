@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,9 +76,8 @@ public class Client {
       in.close();
 
       if(responseCode == 200) {
-        Desktop.getDesktop().browse(URI.create("http://192.168.1.115:1705/bounce"));
-//
-          Thread.sleep(5000);
+        Desktop.getDesktop().browse(URI.create(url+"?username="+username));
+        Thread.sleep(5000);
       }
       //print result
       System.out.println(response.toString());

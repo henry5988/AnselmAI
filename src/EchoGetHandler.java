@@ -21,7 +21,6 @@ public class EchoGetHandler implements HttpHandler, Constants {
   @Override
 
   public void handle(HttpExchange he) throws IOException {
-    System.out.println("EchoGetHandler()...");
     int count = 0;
     // parse request
     Map<String, Object> parameters = new HashMap<String, Object>();
@@ -57,15 +56,15 @@ public class EchoGetHandler implements HttpHandler, Constants {
 
   private String responseHTML() throws IOException {
     String responseHTML;
-    File newEvent = getLatestFilefromDir("C:\\");
-    System.out.println("Last Updated file: " + newEvent);
-    String newEventExist = newEvent.getPath()+"\\exist.txt";
-    String content = readFile(newEventExist, Charset.defaultCharset());
+    File file = getLatestFilefromDir("C:\\");
+    System.out.println("Latest File: " + file.getPath());
+    String existFile = file.getPath()+"\\exist.txt";
+    String content = readFile(existFile, Charset.defaultCharset());
     System.out.println(content);
-    responseHTML = content.substring(content.indexOf(String.format("%n")), content.indexOf(content.length()-1));
+    responseHTML = content;
     System.out.println(responseHTML);
-    Files.delete(Paths.get(newEventExist));
-    if(Files.exists(Paths.get(newEventExist))){
+    Files.delete(Paths.get(existFile));
+    if(Files.exists(Paths.get(existFile))){
       System.out.println("exist file did not get deleted");
     }
     return responseHTML;
