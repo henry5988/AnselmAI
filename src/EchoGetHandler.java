@@ -21,6 +21,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
   @Override
 
   public void handle(HttpExchange he) throws IOException {
+    System.out.println("EchoGetHandler()...");
     int count = 0;
     // parse request
     Map<String, Object> parameters = new HashMap<String, Object>();
@@ -58,7 +59,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
     String responseHTML;
     String content = readFile(EXIST, Charset.defaultCharset());
     System.out.println(content);
-    responseHTML = "C:\\serverSource\\" + content.substring(0, content.indexOf(String.format("%n"))) + ".htm";
+    responseHTML = content.substring(content.indexOf(String.format("%n")), content.indexOf(content.length()-1));
     System.out.println(responseHTML);
     Files.delete(Paths.get(EXIST));
     if(Files.exists(Paths.get(EXIST))){

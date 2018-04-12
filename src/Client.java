@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -44,6 +45,14 @@ public class Client {
       throws IOException, ScriptException, URISyntaxException, InterruptedException {
     Desktop current = Desktop.getDesktop();
 
+    //get username
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("Please enter your username:");
+    String username = scanner.nextLine();
+    System.out.println("username: " + username);
+    //TODO implement a username checking mechanic
+    scanner.close();
+
     String url = "http://" + SERVER + ":" + SOCKET_PORT + "/bounce";
     //current.browse(URI.create(url));
     while(true) {
@@ -51,6 +60,7 @@ public class Client {
       URL obj = new URL(url);
       HttpURLConnection con = (HttpURLConnection) obj.openConnection();
       con.setRequestMethod("GET");
+      con.addRequestProperty("username", username);
       int responseCode = con.getResponseCode();
       System.out.println("\nSending 'GET' request to URL : " + url);
       System.out.println("Response Code : " + responseCode);
@@ -88,54 +98,7 @@ public class Client {
       //print result
       System.out.println(response.toString());
       con.disconnect();
-//      int bytesRead = -1;
-//      int current;
-//      byte[] mybytearray;
-//
-//      try {
-//        sock = new Socket(SERVER, SOCKET_PORT);
-//        System.out.println("Connecting...");
-//        // receive file
-//        do {
-//          mybytearray = new byte[FILE_SIZE];
-//          is = sock.getInputStream();
-//          in = new BufferedReader(new InputStreamReader(is));
-//          out = new PrintWriter(sock.getOutputStream(), true);
-//          fos = new FileOutputStream(FILE_TO_RECEIVED);
-//          bos = new BufferedOutputStream(fos);
-//          System.out.println("Receiving file");
-//          bytesRead = is.read(mybytearray, 0, mybytearray.length);
-//        } while (!isFileReceived(bytesRead));
-//
-//        System.out.println("File Received!");
-//        current = bytesRead;
-//        do {
-//          bytesRead =
-//              is.read(mybytearray, current, (mybytearray.length - current));
-//          if (bytesRead >= 0)
-//            current += bytesRead;
-//        } while (bytesRead > -1);
-//        bos.write(mybytearray, 0, current);
-//        bos.flush();
-//        System.out.println("File " + FILE_TO_RECEIVED + " downloaded (" + current + " bytes read)");
-//      } catch (UnknownHostException e) {
-//        System.out.println("Unknown Host: " + SERVER);
-//        System.exit(1);
-//      } catch (IOException e) {
-//        System.out.println("No I/O");
-//        System.exit(1);
-//      } finally {
-//        closeStreams();
-//      }
-//      File htmlFile = new File("http://"+SERVER+":"+ SOCKET_PORT);
-//      System.out.println("Opening Popup Window...");
-//      //Desktop.getDesktop().browse(htmlFile.toURI());
-//     // File f = new File("http://" + SERVER + ":" + SOCKET_PORT + "/socket/web/index.html");
-//      Desktop.getDesktop().browse(URI.create("http://" + SERVER + ":" + SOCKET_PORT + "/echoGet"));
-//      //System.out.println(executePost("http://" + SERVER + ":" + SOCKET_PORT + "/socket/web/index.html", ""));
-//
-//      System.out.println("Done.");
-      //Thread.sleep(2000);
+
     }
   }
 
@@ -197,5 +160,4 @@ public class Client {
       }
     }
   }
-
 }

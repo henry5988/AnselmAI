@@ -5,6 +5,7 @@ import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.INode;
+import com.agile.api.IUser;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventAction;
@@ -173,6 +174,11 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     fw.write(contentString); //TODO createProject logic
     existWriter.close();
     fw.close();
+  }
+
+  protected static String replaceServerSource(String username, String templateString) {
+    templateString = templateString.replace("serverSource", username);
+    return templateString;
   }
 
   public boolean isFieldCheck() {

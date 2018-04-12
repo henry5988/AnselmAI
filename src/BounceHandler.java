@@ -27,17 +27,19 @@ public class BounceHandler implements HttpHandler, Constants {
   @Override
 
   public void handle(HttpExchange he) throws IOException {
+    //System.out.println("BounceHandler()...");
     // parse request
     Map<String, Object> parameters = new HashMap<String, Object>();
     URI requestedUri = he.getRequestURI();
     String query = requestedUri.getRawQuery();
     EchoGetHandler.parseQuery(query, parameters);
+    Headers headers = he.getRequestHeaders();
+    System.out.println("username: " + headers.get("Username").get(0));
     // send response
     Headers h = he.getResponseHeaders();
     h.set("Content-Type", "text/html");
     String response = "";
-    if (isEventTriggered()) {
-
+    if (isEventTriggered(headers.get("Username").get(0))) {
       response += EchoGetHandler
           .readFile("C:\\bounce.html", Charset.defaultCharset());
       for (String key : parameters.keySet())
@@ -58,8 +60,9 @@ public class BounceHandler implements HttpHandler, Constants {
 
   // isEventTriggered
   // return yes if theres a targeted event trigger
-  static boolean isEventTriggered() throws IOException {
-    File exist = new File(EXIST);
+  static boolean isEventTriggered(String username) throws IOException {
+    String existFile = SuggestionPopup.replaceServerSource(username, EXIST);
+    File exist = new File(existFile);
     return exist.exists();
   }
 

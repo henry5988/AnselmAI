@@ -41,9 +41,14 @@ public class BOMPopup extends SuggestionPopup {
     setFieldCheck(true);
     setSession(session);
     setEventInfo(req);
-    setOutput_path("C:\\serverSource\\bomPopup.txt");
+    try {
+      setOutput_path(replaceServerSource(getSession().getCurrentUser().getName(), BOMPOPUP_OUTPUT_PATH));
+      setHtmlOutput(replaceServerSource(getSession().getCurrentUser().getName(), BOMPOPUP_HTML_OUTPUT));
+    } catch (APIException e) {
+      System.err.println("Error in BOMPopup.doAction(): " + e.getMessage());
+    }
     setHtmlTemplate("C:\\BOMPopup.htm");
-    setHtmlOutput("C:\\serverSource\\BOMPopup.htm");
+
     init(getSession(), getEventInfo(), getOutput_path(), isFieldCheck(), isTest());
     return super.doAction(session, node, req);
 
@@ -76,7 +81,13 @@ public class BOMPopup extends SuggestionPopup {
     infoList = HF.transposeMatrix(infoList);
     System.out.println("Transpose Complete!");
     File f = new File(getOutput_path());
-    File exist = new File(EXIST);
+    String existFile = null;
+    try {
+      existFile = replaceServerSource(getSession().getCurrentUser().getName(), EXIST);
+    } catch (APIException e) {
+      System.err.println("Error in BOMPopup.writeToFile(): " + e.getMessage());
+    }
+    File exist = new File(existFile);
     if(!exist.exists()){
       Files.createDirectories(Paths.get(exist.getPath()).getParent());
       exist.createNewFile();
@@ -87,7 +98,7 @@ public class BOMPopup extends SuggestionPopup {
     }
 
     FileWriter existWriter = new FileWriter(exist);
-    existWriter.write(String.format("bomPopup%n") + System.currentTimeMillis());
+    existWriter.write(String.format("bomPopup%n") + getHtmlOutput());
     existWriter.close();
     FileWriter fw = new FileWriter(f);
     StringBuilder line = new StringBuilder();
