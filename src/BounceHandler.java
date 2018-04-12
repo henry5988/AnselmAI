@@ -40,14 +40,14 @@ public class BounceHandler implements HttpHandler, Constants {
     h.set("Content-Type", "text/html");
     String response = "";
     if (isEventTriggered(headers.get("Username").get(0))) {
+      System.out.println("Event Triggered");
       response += EchoGetHandler
           .readFile("C:\\bounce.html", Charset.defaultCharset());
-      for (String key : parameters.keySet())
-        response += " = " + parameters.get(key) + "\n";
       OutputStream os = he.getResponseBody();
       he.sendResponseHeaders(200, response.length());
       System.out.println("Bounce request...");
       os.write(response.getBytes());
+      System.out.println(response);
       os.close();
     } else {
       System.out.println("Empty response");

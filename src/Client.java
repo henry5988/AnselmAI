@@ -75,25 +75,9 @@ public class Client {
       in.close();
 
       if(responseCode == 200) {
-        //TODO Need to let client browse bounce page
-        try (PrintWriter out = new PrintWriter("bounce.html")) {
-          out.println(response.toString());
-        }
-        File f = new File("bounce.html");
-//        if( Desktop.isDesktopSupported() ) {
-//          Thread t = new Thread();
-//          t.start();
-//            try {
-        Desktop.getDesktop().browse(URI.create("http://"+SERVER+":1705/bounce"));
-//            } catch (IOException e1) {
-//              e1.printStackTrace();
-//            }
+        Desktop.getDesktop().browse(URI.create("http://192.168.1.115:1705/bounce"));
+//
           Thread.sleep(5000);
-//          t.join();
-//        }
-        if(f.delete()){
-          System.out.println("bounce html deleted after opening");
-        }
       }
       //print result
       System.out.println(response.toString());
