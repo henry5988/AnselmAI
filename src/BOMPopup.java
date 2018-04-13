@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.apache.commons.dbutils.DbUtils;
 
 public class BOMPopup extends SuggestionPopup {
 
@@ -149,25 +150,37 @@ public class BOMPopup extends SuggestionPopup {
 
   @Override
   protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
-      throws SQLException, APIException, ClassNotFoundException {
+      throws APIException, ClassNotFoundException {
     // get the item
     HashMap altItemOccurance = new HashMap();
-    Connection conn = getConnection(USERNAME, PASSWORD, URL);
-    List itemList;
-    IUpdateTableEventInfo updateBOMEvent = (IUpdateTableEventInfo) getEventInfo();
-    IEventDirtyTable table = updateBOMEvent.getTable();
-    Iterator it = table.iterator();
-    IEventDirtyRowUpdate rowUpdate = (IEventDirtyRowUpdate) it.next();
-    IItem item = (IItem) rowUpdate.getReferent();
-    String itemName = item.getName();
-    System.out.println("Item name: " + itemName);
-    String sql = "select FIND_NUMBER from BOM where ITEM_NUMBER = '" + itemName + "'";
-    LinkedList findNumberList = executeSQL(conn, sql, true);
-    System.out.println("Find Number: " + (findNumberList.get(0) == null? "null": findNumberList.get(0)));
-    String findNumber = (String) findNumberList.get(0);
-    if(findNumber.equals("0")) return null;
-    sql = "select ITEM_NUMBER from BOM where FIND_NUMBER = '" + findNumber + "'";
-    LinkedList altItems = executeSQL(conn, sql, false);
+    LinkedList altItems = null;
+    List itemList = null;
+    Connection conn = null;
+    try {
+      conn = getConnection(USERNAME, PASSWORD, URL);
+
+      IUpdateTableEventInfo updateBOMEvent = (IUpdateTableEventInfo) getEventInfo();
+      IEventDirtyTable table = updateBOMEvent.getTable();
+      Iterator it = table.iterator();
+      IEventDirtyRowUpdate rowUpdate = (IEventDirtyRowUpdate) it.next();
+      IItem item = (IItem) rowUpdate.getReferent();
+      String itemName = item.getName();
+      System.out.println("Item name: " + itemName);
+      String sql = "select FIND_NUMBER from BOM where ITEM_NUMBER = '" + itemName + "'";
+      LinkedList findNumberList = executeSQL(conn, sql, true);
+      System.out.println(
+          "Find Number: " + (findNumberList.get(0) == null ? "null" : findNumberList.get(0)));
+      String findNumber = (String) findNumberList.get(0);
+      if (findNumber.equals("0"))
+        return null;
+      sql = "select ITEM_NUMBER from BOM where FIND_NUMBER = '" + findNumber + "'";
+
+      altItems = executeSQL(conn, sql, false);
+    }catch(SQLException e){
+      System.err.println("SQLException in BOMPopup.getItemAdvice(): " + e.getMessage());
+    }finally {
+      DbUtils.closeQuietly(conn);
+    }
     System.out.println("altItems: " + altItems.toString());
     for(int i = 0; i<altItems.size(); i++) {
       if(!altItemOccurance.containsKey(altItems.get(i)))
@@ -175,7 +188,6 @@ public class BOMPopup extends SuggestionPopup {
     }
     itemList = extractTop(altItemOccurance, 3);
     System.out.println("returned: " + itemList.toString());
-    conn.close();
     return itemList;
   }
 

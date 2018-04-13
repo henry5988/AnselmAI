@@ -47,8 +47,6 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     String returnString = "";
     try {
       String username = session.getCurrentUser().getName();
-      Connection conn = null;
-      conn = getConnection(USERNAME, PASSWORD, URL);
       // field checks
       System.out.println("isFieldCheck()...");
       if(isFieldCheck()){
