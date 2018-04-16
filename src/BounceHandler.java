@@ -49,10 +49,15 @@ public class BounceHandler implements HttpHandler, Constants {
     String response = "";
     if (isEventTriggered(username)) {
 
-      response += EchoGetHandler
-          .readFile("C:\\bounce.html", Charset.forName("UTF8"));
-      for (String key : parameters.keySet())
-        response += " = " + parameters.get(key) + "\n";
+      //response += EchoGetHandler.readFile("C:\\bounce.html", Charset.forName("UTF8"));
+      response += "<!DOCTYPE HTML><html><head><script>var objWin=window.self; objWin.open('','_self', '').focus(); popup(\"http://192.168.1.115:1705/echoGet?username="+username+"\"); objWin.close();function popup(mylink) {\n"
+          + "                if (! window.focus)return true;\n"
+          + "                var href;\n"
+          + "                if (typeof(mylink) == 'string') href=mylink;\n"
+          + "                else href=mylink.href;\n"
+          + "                window.open(href, '_blank', 'location=no,height=550,width=900,scrollbars=yes,status=no, toolbar=no');\n"
+          + "                return false;\n"
+          + "            } </script></head><body></body></html>";
       OutputStream os = he.getResponseBody();
       he.sendResponseHeaders(200, response.length());
       System.out.println("Bounce request...");

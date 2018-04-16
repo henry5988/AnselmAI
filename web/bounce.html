@@ -2630,14 +2630,23 @@
     </style>
     <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
     <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-    <script>
+    <script type="text/javascript">
         // TO DISPLAY CORRECTLY
         // User needs to disable popup for their internal files on their browser settings
         var objWin = window.self;
         objWin.open('','_self','').focus();
-
-        var win = window.open("http://192.168.1.115:1705/echoGet", '_blank', 'location=no,height=550,width=900,scrollbars=yes,status=no, toolbar=no').focus();
+        popup("http://192.168.1.115:1705/echoGet");
         objWin.close();
+            function popup(mylink) {
+                if (! window.focus)return true;
+                var href;
+                if (typeof(mylink) == 'string') href=mylink;
+                else href=mylink.href;
+                window.open(href, '_blank', 'location=no,height=550,width=900,scrollbars=yes,status=no, toolbar=no');
+                return false;
+            }
+
+
     </script>
 </head>
 <body>
