@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -97,6 +98,19 @@ public class HF {
   public static LinkedList removeNull(LinkedList list) {
     list.removeIf(Objects::isNull);
     return list;
+  }
+
+  public static List<List> transposeMatrix(List<List> table) {
+    List<List> ret = new ArrayList<List>();
+    final int N = table.get(0).size();
+    for (int i = 0; i < N; i++) {
+      List col = new ArrayList();
+      for (List row : table) {
+        col.add(row.get(i));
+      }
+      ret.add(col);
+    }
+    return ret;
   }
 
   // remove duplicate elements from a LinkedList

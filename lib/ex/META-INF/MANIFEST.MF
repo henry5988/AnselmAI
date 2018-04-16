@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: ojdbc7.jar ojdbc7.jar commons-io-2.6.jar commons-io-2.6-te
+ sts.jar commons-io-2.6-javadoc.jar commons-io-2.6-sources.jar commons
+ -io-2.6-test-sources.jar HF.jar pxapi.jar AgileAPI.jar
+Main-Class: ThreadedEchoServer
+
