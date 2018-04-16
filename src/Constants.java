@@ -20,9 +20,14 @@ interface Constants{
 
   // Output File Path
   String EXIST = "C:\\serverSource\\exist.txt";
+  // BOMPopup
   String BOMPOPUP_OUTPUT_PATH = "C:\\serverSource\\bomPupup.txt";
   String BOMPOPUP_HTML_TEMPLATE = "C:\\BOMPopup.htm";
   String BOMPOPUP_HTML_OUTPUT = "C:\\serverSource\\BOMPopup.htm";
+  // ProjectPopup
+  String PROJECTPOPUP_OUTPUT_PATH = "C:\\serverSource\\createProject.txt";
+  String PROJECTPOPUP_HTML_TEMPLATE = "C:\\createProject.htm";
+  String PROJECTPOPUP_HTML_OUTPUT = "C:\\serverSource\\createProject.htm";
 
   // image path constants
   String NOPATH = "C:\\demo\\images\\noLogo.png";
