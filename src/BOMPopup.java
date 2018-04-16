@@ -38,21 +38,8 @@ public class BOMPopup extends SuggestionPopup {
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     System.out.println("BOMPopup()...");
-    setTest(false);
-    setFieldCheck(true);
-    setSession(session);
-    setEventInfo(req);
-    try {
-      setOutput_path(replaceServerSource(getSession().getCurrentUser().getName(), BOMPOPUP_OUTPUT_PATH));
-      setHtmlOutput(replaceServerSource(getSession().getCurrentUser().getName(), BOMPOPUP_HTML_OUTPUT));
-    } catch (APIException e) {
-      System.err.println("Error in BOMPopup.doAction(): " + e.getMessage());
-    }
-    setHtmlTemplate("C:\\BOMPopup.htm");
-
-    init(getSession(), getEventInfo(), getOutput_path(), isFieldCheck(), isTest());
+    init(session, req, BOMPOPUP_OUTPUT_PATH, BOMPOPUP_HTML_OUTPUT, BOMPOPUP_HTML_TEMPLATE, true, false);
     return super.doAction(session, node, req);
-
   }
 
   @Override

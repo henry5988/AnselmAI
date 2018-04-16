@@ -102,14 +102,20 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, returnString));
   }
 
-  protected void init(IAgileSession session, IEventInfo req, String output_path,
+  protected void init(IAgileSession session, IEventInfo req, String output_path, String html_output, String html_template,
       boolean fieldCheck, boolean test){
     setSession(session);
     setEventInfo(req);
-    setOutput_path(output_path);
+    try {
+      setOutput_path(replaceServerSource(getSession().getCurrentUser().getName(), output_path));
+      setHtmlOutput(replaceServerSource(getSession().getCurrentUser().getName(), html_output));
+      setHtmlTemplate(html_template);
+    }catch(APIException e){
+      System.err.println("Error in init(): " + e.getMessage());
+    }
     setFieldCheck(fieldCheck);
     setTest(test);
-  };
+  }
 
   protected List addEmptyInfoToList(List<List> infoList) {
     while(infoList.size()<3){
@@ -134,6 +140,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     }
     return false;
   }
+
 
   protected abstract void writeToFile(List<List> infoList) throws IOException;
 
