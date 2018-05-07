@@ -2,6 +2,7 @@ import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.INode;
+import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.ICreateEventInfo;
 import com.agile.px.IEventInfo;
@@ -18,10 +19,13 @@ public class CreateChange extends SuggestionPopup{
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
-    setTest(true);
-    setFieldCheck(false); // set true in real case
-    setOutput_path("C:\\serverSource\\createChange.txt");
-    return super.doAction(session, node, req);
+    String source = "C:\\serverSource\\";
+    String output_path = source + "createChange.txt";
+    String output_html = source + "createChange.htm";
+    String output_template = source + "createChange.html";
+    init(session, req,output_path, output_html, output_template, false, false);
+    super.doAction(session, node, req);
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "CreateChange"));
   }
 
   @Override
@@ -31,23 +35,6 @@ public class CreateChange extends SuggestionPopup{
 
   @Override
   protected void writeToFile(List<List> infoList) throws IOException {
-    File f = new File(getOutput_path());
-    File exist = new File(EXIST);
-    if(!exist.exists()){
-      Files.createDirectories(Paths.get(exist.getPath()).getParent());
-      exist.createNewFile();
-    }
-    if(!f.exists()){
-      Files.createDirectories(Paths.get(f.getPath()).getParent());
-      f.createNewFile();
-    }
-
-    FileWriter existWriter = new FileWriter(exist);
-    existWriter.write("createChangePopup\n" + System.currentTimeMillis());
-    FileWriter fw = new FileWriter(f);
-    fw.write("createChangePopup test string"); //TODO BOM data function logic
-    existWriter.close();
-    fw.close();
   }
 
   @Override
