@@ -35,28 +35,31 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
   }
 
   @Override
+  protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
+    return null;
+  }
+
+  @Override
   protected String checksField() {
     return null;
   }
 
   @Override
   protected void writeToFile(List<List> infoList) throws IOException {
-
+    // write getFieldCheckResponse() to file
   }
 
   @Override
   protected List<List> convertObjectToInfo(List l) throws APIException {
+    // no use
     return null;
   }
 
   @Override
   protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
+    // no item suggestion in this class
     return null;
   }
 
-  @Override
-  protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
-    return null;
-  }
 }
