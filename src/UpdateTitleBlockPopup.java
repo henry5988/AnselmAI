@@ -9,7 +9,10 @@ import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
 import com.agile.api.IItem;
+import com.agile.api.INode;
 import com.agile.api.ItemConstants;
+import com.agile.px.ActionResult;
+import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,8 +21,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class UpdateTitleBlockPopup extends FileSuggestionPopup {
+public class UpdateTitleBlockPopup extends SuggestionPopup {
 
+  @Override
+  public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
+    String source = "C:\\serverSource\\";
+    String output_path = source + "updateTitleBlockPopup.txt";
+    String output_html = source + "updateTitleBlockPopup.htm";
+    String output_template = source + "updateTitleBlockPopup.html";
+    init(session, req, output_path, output_html, output_template, true, true);
+    super.doAction(session, node, req);
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "UpdateTitleBlockPopup"));
+  }
 
   @Override
   protected String checksField() {
@@ -32,59 +45,18 @@ public class UpdateTitleBlockPopup extends FileSuggestionPopup {
   }
 
   @Override
-  protected LinkedList getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo info)
-      throws SQLException, APIException {
-    // Tells what documents people have looked at this document
-    // get connection
-    Connection conn = null;
-    try {
-      conn = getConnection(USERNAME, PASSWORD, URL);
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    out("Executing SQL statement...");
-    //String sql = "SELECT ITEM.ITEM_NUMBER from ITEM where ITEM.CLASS=9000";
-    IItem item = (IItem) obj;
-    String itemNum = item.getObjectId().toString();
-    LinkedList<IItem> items = new LinkedList();
-    // select who have viewed the doc from database recently
-    out("item ID: " + itemNum);
-    String sql =
-        "SELECT USER_NAME FROM ITEM_HISTORY where ITEM = '" + itemNum + "' ORDER��BY TIMESTAMP DESC";
-    
-    LinkedList<String> userNameSet = executeSQL(conn, sql);
-    LinkedList<String> uniqueUserSet = removeDup(userNameSet);
-    LinkedList<String> userSet = new LinkedList<String>();
-    
-    while (uniqueUserSet.isEmpty() == false) {
-    	
-    	out("scanning user item history for " + uniqueUserSet.peek());
-    	userSet.add(getWordInParen(uniqueUserSet.peek()));
-    	sql = "SELECT * FROM (SELECT ITEM FROM ITEM_HISTORY where USER_NAME = '" + uniqueUserSet.pop()
-	    	+ "' ORDER BY TIMESTAMP DESC) WHERE ROWNUM <= 10";
-    	LinkedList<String> recentlyVisited = executeSQL(conn, sql);
-    	recentlyVisited = removeDup(recentlyVisited);
-    	out("Recently visited items id: " + recentlyVisited);
-    	while (recentlyVisited.isEmpty() == false) {
-    		Integer id = Integer.parseInt(recentlyVisited.pop());
-    		item = (IItem) session.getObject(ItemConstants.CLASS_ITEM_BASE_CLASS, id);
-    		items.add(item);
-    		if (items.contains(null)) {
-    			out("Culling null items");
-    			removeNull(items);
-    		}
-	    out("Got object: " + items.peekLast().getName());
-    	}
-    	while (items.size() < 3) {
-    		items.add(item);
-    	}
-    }
-    out("Got recently visited items!");
-    return items;
+  protected List<List> convertObjectToInfo(List l) throws APIException {
+    return null;
   }
 
   @Override
-  protected IItem getTargetItem(IEventInfo req) throws APIException {
+  protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
+      throws SQLException, APIException, ClassNotFoundException {
+    return null;
+  }
+
+  @Override
+  protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
     return null;
   }
 }
