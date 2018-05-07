@@ -32,10 +32,11 @@ public class CreateItem extends SuggestionPopup {
   * */
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
-    setOutput_path("C:\\serverSource\\createItem.txt"); // 推薦資料output路徑
-    setFieldCheck(false); // 是否有欄位檢查機制，如果是需要檢查欄位的event，請調整為true
-    setTest(true); // 是否跳過抓取資料邏輯，此功能是為了可以讓demo視窗跳出，開發後期完成抓資料邏輯，再設為false
-    init(session, req, getOutput_path(), getHtmlOutput(), getHtmlTemplate(), isFieldCheck(), isTest()); // 初始class設定，通過傳遞Session, EventInfo, output_path, 欄位檢查flag和跳過邏輯測試flag來執行此Event
+    String source = "C:\\serveSource\\"; // 資料路徑
+    String output_path = "createPart.txt"; // 推薦資料文件
+    String output_html = "createPart.htm"; // 推薦html
+    String output_template = "createPart.html"; // 推薦範本html
+    init(session, req, output_path, output_html, output_template, false, true); // 初始class設定，通過傳遞Session, EventInfo, output_path, 欄位檢查flag和跳過邏輯測試flag來執行此Event
     super.doAction(session, node, req); // parent class的doAction()程式
     // super程式執行順序為
     // 1. checksField()
@@ -68,6 +69,7 @@ public class CreateItem extends SuggestionPopup {
   * */
   @Override
   protected String checksField() {
+    // 檢測有沒有欄位錯誤
     return null;
   }
 

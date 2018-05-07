@@ -5,6 +5,7 @@ import com.agile.api.IAgileSession;
 import com.agile.api.IChange;
 import com.agile.api.IDataObject;
 import com.agile.api.INode;
+import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import com.agile.px.IWFChangeStatusEventInfo;
@@ -21,12 +22,13 @@ public class ChangeStatusPopup extends SuggestionPopup{
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
-    setSession(session);
-    setEventInfo(req);
-    setTest(true);
-    setFieldCheck(true);
-    setOutput_path("C:\\serverSource\\changeStatusPopup.txt");
-    return super.doAction(session, node, req);
+    String source = "C:\\serverSource\\";
+    String output_path = source + "changeStatusPopup.txt";
+    String output_html = source + "changeStatusPopup.htm";
+    String output_template = source + "changeStatusPopup.html";
+    init(session, req, output_path, output_html, output_template, true, true);
+    super.doAction(session, node, req);
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "ChangeStatusPopup"));
   }
 
   @Override
