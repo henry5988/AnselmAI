@@ -38,6 +38,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
     return actionCode;
   }
 
+
   void setActionCode(String actionCode) {
     this.actionCode = actionCode;
   }

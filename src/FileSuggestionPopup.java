@@ -111,6 +111,8 @@ public abstract class FileSuggestionPopup extends SuggestionPopup {
 	    if (lists.contains(null)) {
 	    	removeNull(lists);
 	    }
+	    conn.close();
+	    conn2.close();
 	    return lists;
   }
 

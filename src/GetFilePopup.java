@@ -20,18 +20,13 @@ public class GetFilePopup extends FileSuggestionPopup {
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
-    setSession(session);
-    setEventInfo(req);
-    setFieldCheck(false);
-    setTest(true);
-    setOutput_path("C:\\serverSource\\documentPopup.txt");
-    if(checkEventType(req, GETFILEEVENTTYPE, GETFILEACTIONCODE))
-      return super.doAction(session, node, req);
-    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Not applicable event"));
+    init(session, req, "C:\\serverSource\\documentPopup.txt", "C:\\serverSource\\createDocumentPopup.htm", "C:\\serverSource\\createDocumentPopup.html", false, true);
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Get File Popup"));
   }
 
   @Override
   protected String checksField() {
+    // no field checking in this class
     return null;
   }
 
