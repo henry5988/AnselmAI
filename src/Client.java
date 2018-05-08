@@ -1,3 +1,4 @@
+import com.HF;
 import java.awt.Desktop;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -15,18 +16,24 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-public class Client {
+public class Client implements Constants {
 
   public final static int SOCKET_PORT = 1705;      // you may change this
   //public final static String SERVER = "127.0.0.1"; //localhost
   //public final static String SERVER = "192.168.1.202";  // server
   //public final static String SERVER = "192.168.1.122"; // server2
-  public final static String SERVER = "192.168.1.115"; // local server;
+  public final static String SERVER = "192.168.1.126"; // local server;
   public final static String
       FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
   public final static String SAVED_FILE = "C:\\saved.txt";
@@ -43,19 +50,45 @@ public class Client {
   private static InputStream is;
 
   public static void main (String[] args )
-      throws IOException, ScriptException, URISyntaxException, InterruptedException {
-    Desktop current = Desktop.getDesktop();
+      throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+    Date dt = new Date();
+
+    SimpleDateFormat sdf =
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    String currentTime = sdf.format(dt);
 
     //get username
     Scanner scanner = new Scanner(System.in);
+    String sql;
+    PreparedStatement statement;
     System.out.println("Please enter your username:");
     String username = scanner.nextLine();
     System.out.println("username: " + username);
     //TODO implement a username checking mechanic
+    Connection conn = HF.getMySQLConnection("root", "tartan", Constants.MYSQLURL);
+    sql = "SELECT * FROM userlogins WHERE username = ?";
+    statement = conn.prepareStatement(sql);
+    statement.setString(1, username);
+    ResultSet r = statement.executeQuery();
+    if(!r.next()){
+      sql = "INSERT INTO userlogins (username, last_updated) VALUES (?, ?)";
+      statement = conn.prepareStatement(sql);
+      statement.setString(1, username);
+      statement.setString(2, currentTime);
+      System.out.println("INSERT: " + sql);
+      statement.executeUpdate();
+    }else{
+      sql = "UPDATE userlogins SET last_updated = ? WHERE username = ?";
+      System.out.println("UPDATE: " + sql);
+      statement = conn.prepareStatement(sql);
+      statement.setString(1, currentTime);
+      statement.setString(2, username);
+      statement.executeUpdate();
+    }
     scanner.close();
-
+    conn.close();
     String url = "http://" + SERVER + ":" + SOCKET_PORT + "/bounce";
-    //current.browse(URI.create(url));
     while(true) {
 
       URL obj = new URL(url);

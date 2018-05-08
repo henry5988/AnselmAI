@@ -11,7 +11,8 @@ interface Constants{
   String USERNAME2 = "aiUser";
   String PASSWORD2 = "tartan";
   String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST2 +":1521:agile9";
-
+  String MYSQLHOST = "LAPTOP-58ASB998";
+  String MYSQLURL = "jdbc:MySQL://localhost:3306/anselmai";
   // admin client credentials
   String ADMINUSERNAME = "admin";
   //String ADMINPASSWORD = "agile936d";
