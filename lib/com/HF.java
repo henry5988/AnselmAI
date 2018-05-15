@@ -2,6 +2,7 @@ package com;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Driver;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,6 +38,18 @@ public class HF {
     return conn;
   }
 
+  public static Connection getMySQLConnection(String username, String password, String url)
+      throws SQLException, ClassNotFoundException {
+    Connection conn;
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    Properties connectionProps = new Properties();
+    connectionProps.put("user", username);
+    connectionProps.put("password", password);
+    conn = DriverManager.getConnection(url, connectionProps);
+    out("Connection established");
+    return conn;
+  }
+
   public static LinkedList<String> executeSQL(Connection conn, String sql) throws SQLException {
     LinkedList list = new LinkedList();
     String result = "";
@@ -50,6 +63,15 @@ public class HF {
     }
     out("ResultSet exhausted.");
     return list;
+  }
+
+  public static boolean executeStatement(Connection conn, String sql) throws SQLException {
+    LinkedList list = new LinkedList();
+    String result = "";
+    Statement stmt = conn.createStatement();
+    out("Executing statement...");
+    boolean success = stmt.execute(sql);
+    return success;
   }
   
   public static int executeInsertSQL(Connection conn, String sql) throws SQLException {
