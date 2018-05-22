@@ -13,7 +13,7 @@ public class UpdateHTML {
   private String txtDirectory;
   private String templateDirectory;
   private String outputDirectory;
-
+  // TODO 需要將這些Parameter改成從資料庫取得資料
   UpdateHTML(String txt, String template, String output) {
     setTxtDirectory(txt);
     setTemplateDirectory(template);

@@ -136,6 +136,7 @@ public class BOMPopup extends SuggestionPopup {
   }
 
   @Override
+  //TODO getItemAdvice需要回饋機制
   protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws APIException, ClassNotFoundException {
     // get the item
@@ -161,7 +162,6 @@ public class BOMPopup extends SuggestionPopup {
       if (findNumber.equals("0"))
         return null;
       sql = "select ITEM_NUMBER from BOM where FIND_NUMBER = '" + findNumber + "'";
-
       altItems = executeSQL(conn, sql, false);
     }catch(SQLException e){
       System.err.println("SQLException in BOMPopup.getItemAdvice(): " + e.getMessage());
