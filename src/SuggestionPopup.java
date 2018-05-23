@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFrame;
 
-public abstract class SuggestionPopup extends JFrame implements IEventAction, Constants {
+public abstract class SuggestionPopup implements IEventAction, Constants {
   static final Object NO_EVENT = null;
   private boolean test = false;
   private IAgileSession session;
@@ -65,6 +65,7 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
      // out("List: " + list.toString());
       System.out.println("convertObjectToInfo()...");
       List<List> infoList = convertObjectToInfo(list);
+      if(!isTest()){
       System.out.println("Info: " + infoList.toString());
       if (list.size() < 3) {
      //   out("list has fewer than 3 items, does nothing");
@@ -81,6 +82,24 @@ public abstract class SuggestionPopup extends JFrame implements IEventAction, Co
       UpdateHTML htmlMaker = new UpdateHTML(getOutput_path(), getHtmlTemplate(), getHtmlOutput());
       System.out.println("HTML Updating..");
       htmlMaker.update();
+      }else{
+        setHtmlOutput(getHtmlTemplate());
+        System.out.println("Printing Test html...");
+        File exist = new File(replaceServerSource(getSession().getCurrentUser().getName(), EXIST));
+        File emptyOutput = new File(getOutput_path());
+        if(!emptyOutput.exists()){
+          Files.createDirectories(Paths.get(emptyOutput.getPath()).getParent());
+          emptyOutput.createNewFile();
+        }
+        if(!exist.exists()){
+          Files.createDirectories(Paths.get(exist.getPath()).getParent());
+          exist.createNewFile();
+        }
+        FileWriter existWriter = new FileWriter(exist);
+        existWriter.write(getHtmlTemplate());
+        existWriter.close();
+      }
+
 
       System.out.println("Composing returnString");
       returnString = req.getEventHandlerName() + "!";

@@ -58,7 +58,7 @@ public class EchoGetHandler implements HttpHandler, Constants {
     String responseHTML;
     //File file = getLatestFilefromDir("C:\\");
     System.out.println("Latest File: " + username);
-    String existFile = "C:\\"+username+"\\exist.txt";
+    String existFile = "C:\\anselmAIWeb\\"+username+"\\exist.txt";
     String content = readFile(existFile, Charset.defaultCharset());
     System.out.println(content);
     responseHTML = content;

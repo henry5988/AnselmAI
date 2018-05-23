@@ -1,7 +1,7 @@
 interface Constants{
   //database constants
   //String LOCALHOST = "agile936d";
-  String LOCALHOST = "win-ooi3viu801v";
+  String LOCALHOST = "agile936d";
   String USERNAME = "agile";
   String PASSWORD = "tartan";
   String URL = "jdbc:oracle:thin:@"+ LOCALHOST +":1521:agile9";
@@ -12,7 +12,7 @@ interface Constants{
   String PASSWORD2 = "tartan";
   String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST2 +":1521:agile9";
   String MYSQLHOST = "LAPTOP-58ASB998";
-  String MYSQLURL = "jdbc:MySQL://localhost:3306/anselmai";
+  String MYSQLURL = "jdbc:mariadb://localhost:3306/anselmai";
   // admin client credentials
   String ADMINUSERNAME = "admin";
   //String ADMINPASSWORD = "agile936d";
@@ -20,13 +20,13 @@ interface Constants{
   String CLIENTURL = "http://" + LOCALHOST + ":7001/Agile";
 
   // Output File Path
-  String EXIST = "C:\\serverSource\\exist.txt";
+  String EXIST = "C:\\anselmAIWeb\\serverSource\\exist.txt";
   // BOMPopup
-  String BOMPOPUP_OUTPUT_PATH = "C:\\serverSource\\bomPupup.txt";
-  String BOMPOPUP_HTML_TEMPLATE = "C:\\BOMPopup.htm";
-  String BOMPOPUP_HTML_OUTPUT = "C:\\serverSource\\BOMPopup.htm";
+  String BOMPOPUP_OUTPUT_PATH = "C:\\anselmAIWeb\\serverSource\\bomPupup.txt";
+  String BOMPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\BOMPopup.htm";
+  String BOMPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\BOMPopup.htm";
   // ProjectPopup
-  String PROJECTPOPUP_OUTPUT_PATH = "C:\\serverSource\\createProject.txt";
-  String PROJECTPOPUP_HTML_TEMPLATE = "C:\\createProject.htm";
-  String PROJECTPOPUP_HTML_OUTPUT = "C:\\serverSource\\createProject.htm";
+  String PROJECTPOPUP_OUTPUT_PATH = "C:\\anselmAIWeb\\serverSource\\createProject.txt";
+  String PROJECTPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\createProject.htm";
+  String PROJECTPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\createProject.htm";
 }

@@ -161,7 +161,9 @@ public class ProjectPopup extends SuggestionPopup{
   private String addMemberRecommendation(Map teamMembers, IDataObject referent)
       throws APIException {
     if(teamMembers.containsKey(referent)){
-      teamMembers.replace(referent, ((Integer)teamMembers.get(referent) + 1));
+      Integer v = (Integer) teamMembers.get(referent);
+      teamMembers.remove(referent);
+      teamMembers.put(referent, v+1);
     }else{
       teamMembers.put(referent, 1);
     }
