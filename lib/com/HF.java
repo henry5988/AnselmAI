@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 //Useful Functions for general purposes
-public class HF {
+public class HF{
   private static class EntryValueCompare implements Comparator<Entry<String, Integer>>{
     @Override
     public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
@@ -41,7 +41,7 @@ public class HF {
   public static Connection getMySQLConnection(String username, String password, String url)
       throws SQLException, ClassNotFoundException {
     Connection conn;
-    Class.forName("com.mysql.cj.jdbc.Driver");
+    Class.forName("org.mariadb.jdbc.Driver");
     Properties connectionProps = new Properties();
     connectionProps.put("user", username);
     connectionProps.put("password", password);
@@ -118,7 +118,11 @@ public class HF {
   // Lists
   // remove null elememts from a LinkedList
   public static LinkedList removeNull(LinkedList list) {
-    list.removeIf(Objects::isNull);
+    for(Object object:list){
+      if (object==null){
+        list.remove(object);
+      }
+    }
     return list;
   }
 
