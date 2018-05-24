@@ -66,7 +66,7 @@ public class Client implements Constants {
     String username = scanner.nextLine();
     System.out.println("username: " + username);
     //TODO implement a username checking mechanic
-    Connection conn = HF.getMySQLConnection("root", "tartan", Constants.MYSQLURL);
+    Connection conn = HF.getMySQLConnection(Constants.MYSQLUSERNAME, Constants.MYSQLPASSWORD, Constants.MYSQLURL);
     sql = "SELECT * FROM userlogins WHERE username = ?";
     statement = conn.prepareStatement(sql);
     statement.setString(1, username);
