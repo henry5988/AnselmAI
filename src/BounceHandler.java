@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
+//import org.apache.commons.io.FileUtils;
 
 public class BounceHandler implements HttpHandler, Constants {
 
@@ -50,7 +50,7 @@ public class BounceHandler implements HttpHandler, Constants {
     if (isEventTriggered(username)) {
 
       //response += EchoGetHandler.readFile("C:\\bounce.html", Charset.forName("UTF8"));
-      response += "<!DOCTYPE HTML><html><head><script>var objWin=window.self; objWin.open('','_self', '').focus(); popup(\"http://192.168.1.102:1705/echoGet?username="+username+"\"); objWin.close();function popup(mylink) {\n"
+      response += "<!DOCTYPE HTML><html><head><script>var objWin=window.self; objWin.open('','_self', '').focus(); popup(\"http://"+Constants.LOCALHOST+":1705/echoGet?username="+username+"\"); objWin.close();function popup(mylink) {\n"
           + "                if (! window.focus)return true;\n"
           + "                var href;\n"
           + "                if (typeof(mylink) == 'string') href=mylink;\n"

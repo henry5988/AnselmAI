@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class Server {
 
-  public final static int SOCKET_PORT = 13267;  // you may change this
+  public final static int SOCKET_PORT = 13268;  // you may change this
   public final static String FILE_TO_SEND = "C:/serverTest.pdf";  // you may change this
 
   public static void main (String [] args ) throws IOException {

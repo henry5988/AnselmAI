@@ -13,7 +13,7 @@ public class UpdateHTML {
   private String txtDirectory;
   private String templateDirectory;
   private String outputDirectory;
-  // TODO »İ­n±N³o¨ÇParameter§ï¦¨±q¸ê®Æ®w¨ú±o¸ê®Æ
+  // TODO éœ€è¦å°‡é€™äº›Parameteræ”¹æˆå¾è³‡æ–™åº«å–å¾—è³‡æ–™
   UpdateHTML(String txt, String template, String output) {
     setTxtDirectory(txt);
     setTemplateDirectory(template);
@@ -28,30 +28,30 @@ public class UpdateHTML {
     int br_data_line = 0;
     int i = 0;
 
-    String data_path = getTxtDirectory();//¸ê®Æ¤å¥ó¸ô®|
+    String data_path = getTxtDirectory();//è³‡æ–™æ–‡ä»¶è·¯å¾‘
     FileReader fr_data = null;
     try {
       fr_data = new FileReader(data_path);
 
       BufferedReader br_data = new BufferedReader(fr_data);
 
-      String html_path = getTemplateDirectory();//ºô­¶¤å¥ó¸ô®|
+      String html_path = getTemplateDirectory();//ç¶²é æ–‡ä»¶è·¯å¾‘
       FileReader fr_html = new FileReader(html_path);
       BufferedReader br_html = new BufferedReader(fr_html);
       StringBuffer sb = new StringBuffer();
 
-      //¿é¥Xºô­¶¦WºÙ»P½s½X³]©w
+      //è¼¸å‡ºç¶²é åç¨±èˆ‡ç·¨ç¢¼è¨­å®š
       BufferedWriter fw = new BufferedWriter(
           new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "big5"));
 
-      while ((line = br_data.readLine())!=null) { //³v¦æÅª¨útxtÀÉ¡A¸Ó¦æªº¤º®e¦s¶iline
+      while ((line = br_data.readLine())!=null) { //é€è¡Œè®€å–txtæª”ï¼Œè©²è¡Œçš„å…§å®¹å­˜é€²line
         tempArray[br_data_line] = line;
         System.out.println("token: " + tempArray[br_data_line]);
         br_data_line++;
       }
       System.out.println("Token number:" + String.valueOf(br_data_line-1));
-      while ((line = br_html.readLine()) != null) {//³v¦æÅª¨úhtml¡A¸Ó¦æªº¤º®e¦s¶iline
-        if (line.contains("{(anselmai)}")) { //§PÂ_¸Ó¦æ¬O§_§t¦³ÃöÁä¦r
+      while ((line = br_html.readLine()) != null) {//é€è¡Œè®€å–htmlï¼Œè©²è¡Œçš„å…§å®¹å­˜é€²line
+        if (line.contains("{(anselmai)}")) { //åˆ¤æ–·è©²è¡Œæ˜¯å¦å«æœ‰é—œéµå­—
           if (tempArray[i].equals("{(anselmai)}")) {
             tempArray[i] = "";
             html += line.replace("{(anselmai)}", tempArray[i]) + String.format("%n");
@@ -63,7 +63,7 @@ public class UpdateHTML {
           html += line + String.format("%n");
         }
       }
-      fw.write(html);//±N¼È¦s¤º®e¼g¶iÀÉ®×¤¤
+      fw.write(html);//å°‡æš«å­˜å…§å®¹å¯«é€²æª”æ¡ˆä¸­
       fw.close();
       fr_data.close();
       br_data.close();

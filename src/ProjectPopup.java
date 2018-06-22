@@ -17,6 +17,7 @@ import com.agile.api.ProgramConstants;
 import com.agile.api.ProjectConstants;
 import com.agile.api.QueryConstants;
 import com.agile.api.TableTypeConstants;
+import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import com.agile.px.ISaveAsEventInfo;
@@ -36,19 +37,18 @@ import java.util.Map.Entry;
 public class ProjectPopup extends SuggestionPopup{
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
-    setTest(true);
+	  System.out.println("-----Project Pop up Start-----");
+//    setTest(true);
     setFieldCheck(false);
     String userDir = null;
-    try {
-      userDir = "C:\\"+session.getCurrentUser().getName() + "\\";
-    } catch (APIException e) {
-      e.printStackTrace();
-    }
-    String output_path = userDir + "createProject.txt";
-    String output_html = userDir + "createProject.htm";
-    String output_template = userDir + "createProject.html";
-    init(session, req,output_path, output_html, output_template, false, false);
-    return super.doAction(session, node, req);
+    userDir = "C:\\anselmAIWeb\\serverSource\\";
+    String output_path = userDir + "test.txt";
+    String output_html = userDir + "test.htm";
+    String output_template = userDir + "test.html";
+    init(session, req,output_path, output_html, output_template, false, true);
+    super.doAction(session, node, req);
+    System.out.println("-----Project Pop up End-----");
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Project Pop up"));
   }
 
   @Override
@@ -88,6 +88,7 @@ public class ProjectPopup extends SuggestionPopup{
       throws SQLException, APIException, ClassNotFoundException {
     List suggestion = new LinkedList();
     List finalSuggestion = new LinkedList();
+    finalSuggestion.add("");finalSuggestion.add("");finalSuggestion.add("");
     String sql;
     List sqlResult;
     Map<IAgileObject, Integer> teamMembers  = new HashMap();
@@ -107,7 +108,7 @@ public class ProjectPopup extends SuggestionPopup{
     // 2. get project names created from the same template ID
     sql = "SELECT NAME FROM ACTIVITY WHERE CREATED_FROM_TEMPLATE='"+ templateID +"' AND SUBCLASS='"+18027+"'";
     sqlResult = executeSQL(conn, sql);
-
+   
     // D. get the team table for each project
     for(Object relatedProjectName : sqlResult){
       System.out.println("Related: " + relatedProjectName);
@@ -118,12 +119,13 @@ public class ProjectPopup extends SuggestionPopup{
       System.out.println("program name: " + relatedProject);
       ITable teamTable = relatedProject.getTable(ProgramConstants.TABLE_TEAM);
       // 2. tally the members from each table in a hashmap with number of appearances
+      
       for(Object r: teamTable){
+    	  
         IRow row = (IRow) r;
         System.out.println(addMemberRecommendation(teamMembers, row.getReferent()));
       }
     }
-
     // E. check top 3 member availability
     suggestion = extractTop(teamMembers, 3);
     // lower priority if a member is loaded
@@ -133,7 +135,7 @@ public class ProjectPopup extends SuggestionPopup{
       IUser member = (IUser) memberEntry.getKey();
       IQuery q = (IQuery) getSession().createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM_BASE_CLASS);
       q.setCaseSensitive(false);
-      q.setCriteria("[Team.Name] contains " + member.getName());
+      q.setCriteria("[Team.Name] contains '" + member.toString()+"'");
       ITable queryResult = q.execute();
       // if query result > limit of finalSuggestion, move suggestion down one spot and move others up
       finalSuggestion.add(2,memberEntryObj);
