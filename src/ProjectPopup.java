@@ -73,14 +73,28 @@ public class ProjectPopup extends SuggestionPopup{
     FileWriter existWriter = new FileWriter(exist);
     existWriter.write("createProject\n" + System.currentTimeMillis());
     FileWriter fw = new FileWriter(f);
-    fw.write("createProject test string"); //TODO createProject logic
+    if(!infoList.isEmpty()) {
+    	for(List list:infoList) {
+    		if(!list.isEmpty()) {
+    			for(Object o:list) {
+    				fw.write(o.toString()+"\r\n");
+    				fw.flush();
+    			}
+    		}
+    	}
+    }else {
+    	fw.write("empty");
+    }
     existWriter.close();
     fw.close();
   }
 
   @Override
   protected List<List> convertObjectToInfo(List l) throws APIException {
-    return new LinkedList<>();
+	  List<List> list = new LinkedList<>();
+	  list.add(l);
+	  
+    return list;
   }
 
   @Override

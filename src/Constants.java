@@ -1,8 +1,8 @@
 interface Constants{
   //database constants
   //String LOCALHOST = "agile936d";
-//  String LOCALHOST = "WIN-PLQBKCCHG6I";
-	String LOCALHOST = "192.168.88.125";
+  String LOCALHOST = "WIN-PLQBKCCHG6I";
+//	String LOCALHOST = "192.168.88.113";
   String USERNAME = "agile";
   String PASSWORD = "tartan";
   String URL = "jdbc:oracle:thin:@"+ LOCALHOST +":1521:agile9";
