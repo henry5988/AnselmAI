@@ -10,102 +10,103 @@ import java.util.ArrayList;
 
 public class UpdateHTML {
 
-  private String txtDirectory;
-  private String templateDirectory;
-  private String outputDirectory;
-  // TODO 需要將這些Parameter改成從資料庫取得資料
-  UpdateHTML(String txt, String template, String output) {
-    setTxtDirectory(txt);
-    setTemplateDirectory(template);
-    setOutputDirectory(output);
-  }
+	private String txtDirectory;
+	private String templateDirectory;
+	private String outputDirectory;
 
-  public void update() {
+	// TODO 需要將這些Parameter改成從資料庫取得資料
+	UpdateHTML(String txt, String template, String output) {
+		setTxtDirectory(txt);
+		setTemplateDirectory(template);
+		setOutputDirectory(output);
+	}
 
-    String line;
-    String html = "";
-    String[] tempArray = new String[20];
-    int br_data_line = 0;
-    int i = 0;
+	public void update() {
 
-    String data_path = getTxtDirectory();//資料文件路徑
-    FileReader fr_data = null;
-    try {
-      fr_data = new FileReader(data_path);
+		String line;
+		String html = "";
+		String[] tempArray = new String[20];
+		int br_data_line = 0;
+		int i = 0;
 
-      BufferedReader br_data = new BufferedReader(fr_data);
+		String data_path = getTxtDirectory();// 資料文件路徑
+		FileReader fr_data = null;
+		try {
+			fr_data = new FileReader(data_path);
 
-      String html_path = getTemplateDirectory();//網頁文件路徑
-      FileReader fr_html = new FileReader(html_path);
-      BufferedReader br_html = new BufferedReader(fr_html);
-      StringBuffer sb = new StringBuffer();
+			BufferedReader br_data = new BufferedReader(fr_data);
 
-      //輸出網頁名稱與編碼設定
-      BufferedWriter fw = new BufferedWriter(
-          new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "big5"));
+			String html_path = getTemplateDirectory();// 網頁文件路徑
+			FileReader fr_html = new FileReader(html_path);
+			BufferedReader br_html = new BufferedReader(fr_html);
+			StringBuffer sb = new StringBuffer();
 
-      while ((line = br_data.readLine())!=null) { //逐行讀取txt檔，該行的內容存進line
-        tempArray[br_data_line] = line;
-        System.out.println("token: " + tempArray[br_data_line]);
-        br_data_line++;
-      }
-      System.out.println("Token number:" + String.valueOf(br_data_line-1));
-      while ((line = br_html.readLine()) != null) {//逐行讀取html，該行的內容存進line
-        if (line.contains("{(anselmai)}")) { //判斷該行是否含有關鍵字
-          if (tempArray[i].equals("{(anselmai)}")) {
-            tempArray[i] = "";
-            html += line.replace("{(anselmai)}", tempArray[i]) + String.format("%n");
-          } else {
-            html += line.replace("{(anselmai)}", tempArray[i]) + String.format("%n");
-          }
-          i++;
-        } else {
-          html += line + String.format("%n");
-        }
-      }
-      fw.write(html);//將暫存內容寫進檔案中
-      fw.close();
-      fr_data.close();
-      br_data.close();
-      fr_html.close();
-      br_html.close();
-    } catch (FileNotFoundException e) {
-      System.err.println("FileNotFoundException in UpdateHTML()");
-      System.err.println(e.getMessage());
-    } catch (UnsupportedEncodingException e) {
-      System.err
-          .println("UnsupportedEncodingException in UpdateHTML(); Current Encoding set to: big5");
-      System.err.println(e.getMessage());
-    } catch (IOException e) {
-      System.err.println("IOException in UpdateHTML()");
-      System.err.println(e.getMessage());
-    }
-  }
+			// 輸出網頁名稱與編碼設定
+			BufferedWriter fw = new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(getOutputDirectory()), "big5"));
 
-  /*Getters and Setters*/
+			while ((line = br_data.readLine()) != null) { // 逐行讀取txt檔，該行的內容存進line
+				tempArray[br_data_line] = line;
+				System.out.println("token: " + tempArray[br_data_line]);
+				br_data_line++;
+			}
+			System.out.println("Token number:" + String.valueOf(br_data_line - 1));
+			while ((line = br_html.readLine()) != null) {// 逐行讀取html，該行的內容存進line
+				if (line.contains("{(anselmai)}")) { // 判斷該行是否含有關鍵字
+					if (tempArray[i] != null) {
+						if (tempArray[i].equals("{(anselmai)}")) {
+							tempArray[i] = "";
+							html += line.replace("{(anselmai)}", tempArray[i]) + String.format("%n");
+						} else {
+							html += line.replace("{(anselmai)}", tempArray[i]) + String.format("%n");
+						}
+						i++;
+					}
+				} else {
+					html += line + String.format("%n");
+				}
+			}
+			fw.write(html);// 將暫存內容寫進檔案中
+			fw.close();
+			fr_data.close();
+			br_data.close();
+			fr_html.close();
+			br_html.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("FileNotFoundException in UpdateHTML()");
+			System.err.println(e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("UnsupportedEncodingException in UpdateHTML(); Current Encoding set to: big5");
+			System.err.println(e.getMessage());
+		} catch (IOException e) {
+			System.err.println("IOException in UpdateHTML()");
+			System.err.println(e.getMessage());
+		}
+	}
 
-  public String getTxtDirectory() {
-    return txtDirectory;
-  }
+	/* Getters and Setters */
 
-  public void setTxtDirectory(String txtDirectory) {
-    this.txtDirectory = txtDirectory;
-  }
+	public String getTxtDirectory() {
+		return txtDirectory;
+	}
 
-  public String getTemplateDirectory() {
-    return templateDirectory;
-  }
+	public void setTxtDirectory(String txtDirectory) {
+		this.txtDirectory = txtDirectory;
+	}
 
-  public void setTemplateDirectory(String templateDirectory) {
-    this.templateDirectory = templateDirectory;
-  }
+	public String getTemplateDirectory() {
+		return templateDirectory;
+	}
 
-  public String getOutputDirectory() {
-    return outputDirectory;
-  }
+	public void setTemplateDirectory(String templateDirectory) {
+		this.templateDirectory = templateDirectory;
+	}
 
-  public void setOutputDirectory(String outputDirectory) {
-    this.outputDirectory = outputDirectory;
-  }
+	public String getOutputDirectory() {
+		return outputDirectory;
+	}
+
+	public void setOutputDirectory(String outputDirectory) {
+		this.outputDirectory = outputDirectory;
+	}
 }
-

@@ -42,10 +42,10 @@ public class ProjectPopup extends SuggestionPopup{
     setFieldCheck(false);
     String userDir = null;
     userDir = "C:\\anselmAIWeb\\serverSource\\";
-    String output_path = userDir + "test.txt";
-    String output_html = userDir + "test.htm";
-    String output_template = userDir + "test.html";
-    init(session, req,output_path, output_html, output_template, false, true);
+    String output_path = userDir + "creatProjectPopup(HR).txt";
+    String output_html = userDir + "creatProjectPopup(HR).htm";
+    String output_template = userDir + "creatProjectPopup(HR).html";
+    init(session, req,output_path, output_html, output_template, false, false);
     super.doAction(session, node, req);
     System.out.println("-----Project Pop up End-----");
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Project Pop up"));
@@ -88,7 +88,7 @@ public class ProjectPopup extends SuggestionPopup{
       throws SQLException, APIException, ClassNotFoundException {
     List suggestion = new LinkedList();
     List finalSuggestion = new LinkedList();
-    finalSuggestion.add("");finalSuggestion.add("");finalSuggestion.add("");
+//    finalSuggestion.add("");finalSuggestion.add("");finalSuggestion.add("");
     String sql;
     List sqlResult;
     Map<IAgileObject, Integer> teamMembers  = new HashMap();
@@ -117,8 +117,27 @@ public class ProjectPopup extends SuggestionPopup{
       sqlResult = executeSQL(conn, sql);
       IProgram relatedProject = (IProgram) session.getObject(IProgram.OBJECT_TYPE, sqlResult.get(0).toString());
       System.out.println("program name: " + relatedProject);
+      finalSuggestion.add(relatedProjectName);
+      
+      // 2. Get actual duration of project
+      String actualDuration = "";
+      String estimatedDuration = "";
+      int error = 0;
+      String errorDuration = "";
+      if("Complete".equals(relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_STATUS).toString())) {
+    	  actualDuration = relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ACTUAL_DURATION).toString();
+    	  estimatedDuration = relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ESTIMATED_DURATION).toString();
+    	  double estimatedDrationD = Double.valueOf(estimatedDuration);
+    	  double actualDurationD = Double.valueOf(actualDuration);
+    	  error = (int)(estimatedDrationD)-(int)(actualDurationD);
+    	  if(error>0)errorDuration = "提早"+error+"天";
+    	  else errorDuration = "延遲"+String.valueOf(error).substring(1,String.valueOf(error).length())+"天";
+    	  System.out.println("Error duration: "+errorDuration);
+      }
+      finalSuggestion.add(estimatedDuration);
+      finalSuggestion.add(errorDuration);
       ITable teamTable = relatedProject.getTable(ProgramConstants.TABLE_TEAM);
-      // 2. tally the members from each table in a hashmap with number of appearances
+      // 3. all the members from each table in a hashmap with number of appearances
       
       for(Object r: teamTable){
     	  
@@ -127,24 +146,24 @@ public class ProjectPopup extends SuggestionPopup{
       }
     }
     // E. check top 3 member availability
-    suggestion = extractTop(teamMembers, 3);
+//    suggestion = extractTop(teamMembers, 3);
     // lower priority if a member is loaded
-    for(Object memberEntryObj: suggestion){
-      // query for programs that the member is in and is in progress
-      Entry memberEntry = (Entry) memberEntryObj;
-      IUser member = (IUser) memberEntry.getKey();
-      IQuery q = (IQuery) getSession().createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM_BASE_CLASS);
-      q.setCaseSensitive(false);
-      q.setCriteria("[Team.Name] contains '" + member.toString()+"'");
-      ITable queryResult = q.execute();
-      // if query result > limit of finalSuggestion, move suggestion down one spot and move others up
-      finalSuggestion.add(2,memberEntryObj);
-      if(queryResult.size() > 2){
-        finalSuggestion.add(0,memberEntryObj);
-      }else{
-        finalSuggestion.add(memberEntryObj);
-      }
-    }
+//    for(Object memberEntryObj: suggestion){
+//      // query for programs that the member is in and is in progress
+//      Entry memberEntry = (Entry) memberEntryObj;
+//      IUser member = (IUser) memberEntry.getKey();
+//      IQuery q = (IQuery) getSession().createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM_BASE_CLASS);
+//      q.setCaseSensitive(false);
+//      q.setCriteria("[Team.Name] contains '" + member.toString()+"'");
+//      ITable queryResult = q.execute();
+//      // if query result > limit of finalSuggestion, move suggestion down one spot and move others up
+//      finalSuggestion.add(2,memberEntryObj);
+//      if(queryResult.size() > 2){
+//        finalSuggestion.add(0,memberEntryObj);
+//      }else{
+//        finalSuggestion.add(memberEntryObj);
+//      }
+//    }
     // return project final suggestions
     conn.close();
     return finalSuggestion;

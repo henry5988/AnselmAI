@@ -82,9 +82,14 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
 				writeToFile(infoList);
 
 				System.out.println("Creating BOM HTML for client...");
+				//透過exist讀取跳出視窗的網頁?
+				File exist = new File(replaceServerSource(getSession().getCurrentUser().getName(), EXIST));
 				UpdateHTML htmlMaker = new UpdateHTML(getOutput_path(), getHtmlTemplate(), getHtmlOutput());
 				System.out.println("HTML Updating..");
 				htmlMaker.update();
+				FileWriter existWriter = new FileWriter(exist);
+				existWriter.write(getHtmlOutput());
+				existWriter.close();
 			} else {
 				setHtmlOutput(getHtmlTemplate());
 				System.out.println("Printing Test html...");
