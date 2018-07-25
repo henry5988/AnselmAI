@@ -1,7 +1,7 @@
 interface Constants{
   //database constants
   //String LOCALHOST = "agile936d";
-  String LOCALHOST = "agile936d";
+  String LOCALHOST = "win-ooi3viu801v";
   String USERNAME = "agile";
   String PASSWORD = "tartan";
   String URL = "jdbc:oracle:thin:@"+ LOCALHOST +":1521:agile9";
@@ -12,7 +12,7 @@ interface Constants{
   String PASSWORD2 = "tartan";
   String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST2 +":1521:agile9";
   String MYSQLHOST = "LAPTOP-58ASB998";
-  String MYSQLURL = "jdbc:mariadb://localhost:3306/anselmai";
+  String MYSQLURL = "jdbc:mariadb://192.168.88.127:3306/anselmai";
   String MYSQLUSERNAME = "root";
   String MYSQLPASSWORD = "tartan";
   // admin client credentials

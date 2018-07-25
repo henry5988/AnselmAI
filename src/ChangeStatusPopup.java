@@ -22,7 +22,7 @@ public class ChangeStatusPopup extends SuggestionPopup{
 
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
-    String source = "C:\\serverSource\\";
+    String source = "C:\\anselmAIWeb\\\\serverSource\\";
     String output_path = source + "changeStatusPopup.txt";
     String output_html = source + "changeStatusPopup.htm";
     String output_template = source + "changeStatusPopup.html";

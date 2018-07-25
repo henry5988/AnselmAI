@@ -25,7 +25,7 @@ import javax.swing.JFrame;
 
 public abstract class SuggestionPopup implements IEventAction, Constants {
   static final Object NO_EVENT = null;
-  private boolean test = false;
+  private boolean test = true;
   private IAgileSession session;
   private IEventInfo eventInfo;
   private String output_path;
