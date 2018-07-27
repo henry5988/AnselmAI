@@ -6,6 +6,7 @@ import com.HF;
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
+import com.agile.api.IChange;
 import com.agile.api.IDataObject;
 import com.agile.api.IItem;
 import com.agile.api.INode;
@@ -13,6 +14,7 @@ import com.agile.api.IRow;
 import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
 import com.agile.px.EventActionResult;
+import com.agile.px.IEventDirtyCell;
 import com.agile.px.IEventDirtyRowUpdate;
 import com.agile.px.IEventDirtyTable;
 import com.agile.px.IEventInfo;
@@ -30,6 +32,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import org.apache.commons.dbutils.DbUtils;
 
@@ -136,47 +139,71 @@ public class BOMPopup extends SuggestionPopup {
   }
 
   @Override
-  //TODO getItemAdvice需要回饋機制
+  //TODO getItemAdvice
   protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
-      throws APIException, ClassNotFoundException {
-    // get the item
-    HashMap altItemOccurance = new HashMap();
-    LinkedList altItems = null;
-    List itemList = null;
-    Connection conn = null;
-    try {
-      conn = getConnection(USERNAME, PASSWORD, URL);
+			throws APIException, ClassNotFoundException, SQLException {
+		// get the item
+		HashMap altItemOccurance = new HashMap();
+		LinkedList tempItems = null;
+		LinkedList altItems = new LinkedList();
+		List itemList = null;
+		Connection conn = null;
+		try {
+			conn = getConnection(USERNAME, PASSWORD, URL);
 
-      IUpdateTableEventInfo updateBOMEvent = (IUpdateTableEventInfo) getEventInfo();
-      IEventDirtyTable table = updateBOMEvent.getTable();
-      Iterator it = table.iterator();
-      IEventDirtyRowUpdate rowUpdate = (IEventDirtyRowUpdate) it.next();
-      IItem item = (IItem) rowUpdate.getReferent();
-      String itemName = item.getName();
-      System.out.println("Item name: " + itemName);
-      String sql = "select FIND_NUMBER from BOM where ITEM_NUMBER = '" + itemName + "'";
-      LinkedList findNumberList = executeSQL(conn, sql, true);
-      System.out.println(
-          "Find Number: " + (findNumberList.get(0) == null ? "null" : findNumberList.get(0)));
-      String findNumber = (String) findNumberList.get(0);
-      if (findNumber.equals("0"))
-        return null;
-      sql = "select ITEM_NUMBER from BOM where FIND_NUMBER = '" + findNumber + "'";
-      altItems = executeSQL(conn, sql, false);
-    }catch(SQLException e){
-      System.err.println("SQLException in BOMPopup.getItemAdvice(): " + e.getMessage());
-    }finally {
-      DbUtils.closeQuietly(conn);
-    }
-    System.out.println("altItems: " + altItems.toString());
-    for(int i = 0; i<altItems.size(); i++) {
-      if(!altItemOccurance.containsKey(altItems.get(i)))
-        altItemOccurance.put(getSession().getObject(ItemConstants.CLASS_ITEM_BASE_CLASS, altItems.get(i)), Collections.frequency(altItems, altItems.get(i)));
-    }
-    itemList = extractTop(altItemOccurance, 3);
-    System.out.println("returned: " + itemList.toString());
-    return itemList;
-  }
+			IUpdateTableEventInfo updateBOMEvent = (IUpdateTableEventInfo) getEventInfo();
+			IEventDirtyTable table = updateBOMEvent.getTable();
+			Iterator<?> it = table.iterator();
+			IEventDirtyRowUpdate rowUpdate = (IEventDirtyRowUpdate) it.next();
+			IItem item = (IItem) rowUpdate.getReferent();
+			String itemName = item.getName();
+			String find = (String) ((IEventDirtyCell) rowUpdate.getCell(ItemConstants.ATT_BOM_FIND_NUM)).getValue();
+			System.out.println("Item name: " + itemName + " find num: " + find);
+			if (find.equals("0"))
+				return null;
+			IItem root = (IItem) updateBOMEvent.getDataObject();
+			System.out.println("root item Num: " + root);
+			setRevtoLatest(root);
+			ITable Bom_table = root.getTable(ItemConstants.TABLE_BOM);
+			Iterator<?> it_bom = Bom_table.iterator();
+			while (it_bom.hasNext()) {
+				IRow row = (IRow) it_bom.next();
+				if (row.getValue(ItemConstants.ATT_BOM_FIND_NUM).equals(find)) {
+					System.out.println(row.getValue(ItemConstants.ATT_BOM_ITEM_NUMBER));
+					String sql = "select ITEM_NUMBER from bom where (find_number in (select find_number from BOM where item in (select item from BOM where ITEM_NUMBER = '"
+							+ row.getValue(ItemConstants.ATT_BOM_ITEM_NUMBER)
+							+ "' and change_in != '0') and item_number='"
+							+ row.getValue(ItemConstants.ATT_BOM_ITEM_NUMBER)
+							+ "' and change_in != '0') and item in (select item from BOM where ITEM_NUMBER = '"
+							+ row.getValue(ItemConstants.ATT_BOM_ITEM_NUMBER)
+							+ "' and change_in != '0')) and item_number != '"
+							+ itemName + "'";
+					System.out.println("2: " + sql);
+					tempItems = executeSQL(conn, sql, false);
+				}
+				if(tempItems.size()==0)continue;
+				for(int i = 0; i < tempItems.size(); i++){
+					altItems.push(tempItems.get(i));
+				}
+			}
+			System.out.println(altItems);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("SQLException in BOMPopup.getItemAdvice(): " + e.getMessage());
+		} finally {
+			// DbUtils.closeQuietly(conn);
+			conn.close();
+		}
+		System.out.println("altItems: " + altItems.toString());
+		for (int i = 0; i < altItems.size(); i++) {
+			if (!altItemOccurance.containsKey(altItems.get(i)))
+				altItemOccurance.put(getSession().getObject(ItemConstants.CLASS_ITEM_BASE_CLASS, altItems.get(i)),
+						Collections.frequency(altItems, altItems.get(i)));
+		}
+		itemList = extractTop(altItemOccurance, 3);
+		System.out.println("returned: " + itemList.toString());
+		return itemList;
+	}
 
   @Override
   protected IAgileObject getTargetItem(IEventInfo req) throws APIException {
@@ -186,4 +213,13 @@ public class BOMPopup extends SuggestionPopup {
     IDataObject obj = info.getDataObject();
     return obj;
   }
+  private IItem setRevtoLatest(IItem item) throws APIException {
+		Map revisions = item.getRevisions();
+		Set set = revisions.entrySet();
+		Iterator it = set.iterator();
+		Map.Entry entry = (Map.Entry) it.next();
+		String rev = (String) entry.getValue();
+		item.setRevision(rev);
+		return item;
+	}//End of setRevtoLatest
 }

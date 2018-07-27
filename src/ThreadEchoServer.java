@@ -19,7 +19,7 @@ class ThreadedEchoServer {
   private static BufferedInputStream bis = null;
   private static OutputStream os = null;
 
-  public static void main(String args[]) throws IOException {
+  public static void main(String args[]) throws IOException { 
     HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
     server.createContext("/", new RootHandler());
     server.createContext("/echoHeader", new EchoHeaderHandler());
