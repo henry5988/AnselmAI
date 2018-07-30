@@ -1,21 +1,33 @@
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
+import com.agile.api.IChange;
+import com.agile.api.IDataObject;
 import com.agile.api.IItem;
 import com.agile.api.INode;
+import com.agile.api.IUser;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventDirtyFile;
 import com.agile.px.IEventInfo;
 import com.agile.px.IFileEventInfo;
+
+import static com.HF.executeSQL;
+import static com.HF.getConnection;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GetFilePopup extends SuggestionPopup {
 
@@ -104,6 +116,52 @@ public class GetFilePopup extends SuggestionPopup {
 	@Override
 	protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
 			throws SQLException, APIException, ClassNotFoundException {
+		String sql;
+		List sqlResult;
+		Map<String, Integer> getFileDetail  = new HashMap();
+		IUser user = session.getCurrentUser();
+		IFileEventInfo info = (IFileEventInfo) req;
+		IEventDirtyFile[] files = info.getFiles();
+		IDataObject ob = info.getDataObject();
+		IItem itm = (IItem)session.getObject(IItem.OBJECT_TYPE,  ob.getName());
+		Connection conn = getConnection(USERNAME, PASSWORD, URL);
+		sql = "SELECT USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') as DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
+
+		Statement stat = conn.createStatement();
+		ResultSet rs = stat.executeQuery(sql);
+		
+		while (rs.next()) {
+			String userName = rs.getString("USER_NAME").toString();
+			String dateTime = rs.getString("DATETIME").toString();
+			sql = "SELECT DETAILS  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+files[0].getFilename()+"%' AND TIMESTAMP >= TO_DATE('"+dateTime+"', 'DD-MM-YY')-7 AND TIMESTAMP <= TO_DATE('"+dateTime+"', 'DD-MM-YY')+7";
+			
+			Statement stat2 = conn.createStatement();
+			ResultSet rs2 = stat2.executeQuery(sql);
+			System.out.println("☆☆☆☆☆"+sql);
+			while (rs2.next()) {
+				String detail = rs2.getString("DETAILS").toString();
+				  if(getFileDetail.containsKey(detail)){
+				      Integer v = (Integer) getFileDetail.get(detail);
+				      getFileDetail.remove(detail);
+				      getFileDetail.put(detail, v+1);
+				    }else{
+				    	getFileDetail.put(detail, 1);
+				    }
+			}
+			//System.out.println(userName+"   "+dateTime);
+		}
+		   for (Map.Entry entry : getFileDetail.entrySet()) {
+	            System.out.println("Key-value : " + entry.getKey() + "- "
+	                    + entry.getValue());
+	        }
+		
+		/*
+		sqlResult = executeSQL(conn, sql);
+		for(Object relatedFiletData : sqlResult){	
+			sql = "SELECT DETAILS  FROM ITEM_HISTORY  WHERE ACTION = 15 AND ";
+			System.out.println("☆☆"+folder[0]);
+		}
+		*/
 		return null;
 	}
 
