@@ -25,9 +25,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class GetFilePopup extends SuggestionPopup {
 
@@ -118,28 +123,33 @@ public class GetFilePopup extends SuggestionPopup {
 			throws SQLException, APIException, ClassNotFoundException {
 		String sql;
 		List sqlResult;
-		Map<String, Integer> getFileDetail  = new HashMap();
+		List finalSuggestion = new LinkedList();
+		Map<String,Integer> getFileDetail  = new HashMap();
 		IUser user = session.getCurrentUser();
 		IFileEventInfo info = (IFileEventInfo) req;
 		IEventDirtyFile[] files = info.getFiles();
 		IDataObject ob = info.getDataObject();
 		IItem itm = (IItem)session.getObject(IItem.OBJECT_TYPE,  ob.getName());
 		Connection conn = getConnection(USERNAME, PASSWORD, URL);
-		sql = "SELECT USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') as DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
-
+		//sql = "SELECT USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') as DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
+		sql = "SELECT USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') AS DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
 		Statement stat = conn.createStatement();
 		ResultSet rs = stat.executeQuery(sql);
 		
 		while (rs.next()) {
 			String userName = rs.getString("USER_NAME").toString();
 			String dateTime = rs.getString("DATETIME").toString();
-			sql = "SELECT DETAILS  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+files[0].getFilename()+"%' AND TIMESTAMP >= TO_DATE('"+dateTime+"', 'DD-MM-YY')-7 AND TIMESTAMP <= TO_DATE('"+dateTime+"', 'DD-MM-YY')+7";
-			
+			sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+files[0].getFilename()+"%' AND TIMESTAMP >= TO_DATE('"+dateTime+"', 'DD-MM-YY')-7 AND TIMESTAMP <= TO_DATE('"+dateTime+"', 'DD-MM-YY')+7 GROUP BY TO_CHAR(DETAILS),USER_NAME ORDER BY USER_NAME";	
 			Statement stat2 = conn.createStatement();
 			ResultSet rs2 = stat2.executeQuery(sql);
-			System.out.println("☆☆☆☆☆"+sql);
+			String former_user  ="";
+			String former_detail = "";
+			
 			while (rs2.next()) {
+				
 				String detail = rs2.getString("DETAILS").toString();
+				String userName2 = rs2.getString("USER_NAME").toString();
+				if(!userName2.equals(former_user)&& !detail.equals(former_detail)) {
 				  if(getFileDetail.containsKey(detail)){
 				      Integer v = (Integer) getFileDetail.get(detail);
 				      getFileDetail.remove(detail);
@@ -147,13 +157,53 @@ public class GetFilePopup extends SuggestionPopup {
 				    }else{
 				    	getFileDetail.put(detail, 1);
 				    }
+				}
+				former_user =  rs2.getString("USER_NAME").toString();
+				former_detail = rs2.getString("DETAILS").toString();
 			}
 			//System.out.println(userName+"   "+dateTime);
 		}
-		   for (Map.Entry entry : getFileDetail.entrySet()) {
-	            System.out.println("Key-value : " + entry.getKey() + "- "
-	                    + entry.getValue());
+		
+		Comparator<Map.Entry<String, Integer>> valueComparator = new Comparator<Map.Entry<String,Integer>>() {
+	        @Override
+	        public int compare(Entry<String, Integer> o1,Entry<String, Integer> o2) {
+	            // TODO Auto-generated method stub
+	            return o2.getValue()-o1.getValue();
 	        }
+	    };
+
+	    // map转换成list进行排序
+	    List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String,Integer>>(getFileDetail.entrySet());
+
+	    // 排序
+	    Collections.sort(list,valueComparator);
+
+	    // 默认情况下，TreeMap对key进行降序排序
+	    System.out.println("------------map按照value降序排序--------------------");
+	    for (Map.Entry<String, Integer> entry : list) {
+	    	String detail = entry.getKey().toString();
+	    	String[] fileInfo = detail.split(" ");
+	    	sql = "SELECT ATTACHMENT.DESCRIPTION, FILES.FILENAME FROM ATTACHMENT INNER JOIN  ATTACHMENT_MAP ON ATTACHMENT_MAP.ATTACH_ID = ATTACHMENT.ID INNER JOIN FILES ON FILES.ID = ATTACHMENT_MAP.FILE_ID WHERE ATTACHMENT.ATTACHMENT_NUMBER = '"+fileInfo[0]+"'";
+	    	Statement stat3 = conn.createStatement();
+			ResultSet rs3 = stat3.executeQuery(sql);
+			while (rs3.next()) {
+				String description = rs3.getString("DESCRIPTION").toString();
+				String filename = rs3.getString("FILENAME").toString();
+				String[] filetype = filename.split(".");
+				if(filetype[0].equals("doc")) {
+					
+				}
+				else if (filetype[0].equals("xlms")){
+					
+				}				
+				finalSuggestion.add(filename);
+				finalSuggestion.add(description);
+				finalSuggestion.add(entry.getValue().toString());
+			}
+	    
+	    	//System.out.println(entry.getKey() + ":" + entry.getValue());
+	    }
+	  
 		
 		/*
 		sqlResult = executeSQL(conn, sql);
@@ -162,7 +212,7 @@ public class GetFilePopup extends SuggestionPopup {
 			System.out.println("☆☆"+folder[0]);
 		}
 		*/
-		return null;
+		return finalSuggestion;
 	}
 
 }
