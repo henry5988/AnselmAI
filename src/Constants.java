@@ -13,7 +13,7 @@ interface Constants{
   String PASSWORD2 = "tartan";
   String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST2 +":1521:agile9";
   String MYSQLHOST = "LAPTOP-58ASB998";
-  String MYSQLURL = "jdbc:mariadb://192.168.88.125:3306/anselmai";
+  String MYSQLURL = "jdbc:mariadb://192.168.88.115:3306/anselmai";
   String MYSQLUSERNAME = "root";
   String MYSQLPASSWORD = "tartan";
   // admin client credentials
