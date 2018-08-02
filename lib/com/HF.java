@@ -39,7 +39,7 @@ public class HF{
   }
 
   public static Connection getMySQLConnection(String username, String password, String url)
-      throws SQLException, ClassNotFoundException {
+      throws SQLException, ClassNotFoundException,Exception {
     Connection conn;
     Class.forName("org.mariadb.jdbc.Driver");
     Properties connectionProps = new Properties();

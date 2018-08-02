@@ -1,3 +1,4 @@
+import com.HF;
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
@@ -6,6 +7,7 @@ import com.agile.api.IDataObject;
 import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.IUser;
+import com.agile.api.UserConstants;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventDirtyFile;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -32,15 +35,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 
-public class GetFilePopup extends SuggestionPopup {
+public class GetFilePopup extends SuggestionPopup implements Constants{
 
 	@Override
 	public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
-		init(session, req, "C:\\anselmAIWeb\\serverSource\\documentPopup.txt",
-				"C:\\anselmAIWeb\\serverSource\\createDocumentPopup.htm",
-				"C:\\anselmAIWeb\\serverSource\\createDocumentPopup.html", false, true);
+		init(session, req, "getFilePopup",
+				"C:\\anselmAIWeb\\serverSource\\getFilePopup.htm",
+				"C:\\anselmAIWeb\\serverSource\\getFilePopup.html", false, false);
 		super.doAction(session, node, req);
 		return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Get File Popup"));
 	}
@@ -50,9 +54,63 @@ public class GetFilePopup extends SuggestionPopup {
 		// no field checking in this class
 		return null;
 	}
-
+	 public static Connection getMySQLConnection2(String username, String password, String url)
+		      throws SQLException, ClassNotFoundException,Exception {
+		    Connection conn;
+		    Class.forName("org.mariadb.jdbc.Driver");
+		    Properties connectionProps = new Properties();
+		    connectionProps.put("user", username);
+		    connectionProps.put("password", password);
+		    conn = DriverManager.getConnection(url, connectionProps);
+		    System.out.println("Connection established");
+		    return conn;
+		  }
 	@Override
-	protected void writeToFile(List<List> infoList) throws IOException {
+	protected void writeToFile(List<List> infoList) throws ClassNotFoundException {
+	
+		Connection conn_sql;
+		
+		
+		try {
+			conn_sql = getMySQLConnection2(Constants.MYSQLUSERNAME, Constants.MYSQLPASSWORD, Constants.MYSQLURL);
+			String value ="";
+			String column ="";
+			String sql;
+			List sqlResult= new LinkedList(); ;
+			sqlResult.add(getTargetItem(getEventInfo()).getName());  
+			for(int i=0; i<3; i++){
+			      for(int j = 0; j< infoList.size(); j++){
+			    	  sqlResult.add(infoList.get(j).get(i));   	 
+			      }
+			    }
+			for(int i=0; i<sqlResult.size();i++){	
+				if (i==0) {
+					column += "column"+String.valueOf(i+1);
+					value += "'"+sqlResult.get(i)+"'";
+				}
+				else {
+					column += ", column"+String.valueOf(i+1);
+					value +=  ", '"+sqlResult.get(i)+"'";
+				}
+					
+			}
+			
+			
+			sql = "INSERT INTO getFilePopup ("+column+") VALUES ("+value+")" ;
+			System.out.println(sql);
+//			Statement stat = conn_sql.createStatement();
+//			stat.executeQuery(sql);
+			conn_sql.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		/*
 		// locate output file
 		IEventInfo req = getEventInfo();
 		IFileEventInfo info = (IFileEventInfo) req;
@@ -83,7 +141,7 @@ public class GetFilePopup extends SuggestionPopup {
 			for (Object o : l) {
 				// if printing last element, add new line character at the end
 				if (l.indexOf(o) == l.size() - 1) {
-					fos.write((o.toString() + "\n").getBytes());
+					fos.write((o.toString() + "\r\n").getBytes());
 				} else {
 					// print image source
 					// print file suggestion names
@@ -94,6 +152,7 @@ public class GetFilePopup extends SuggestionPopup {
 		}
 		// close file streams
 		fos.close();
+		*/
 	}
 
 	@Override
@@ -115,7 +174,10 @@ public class GetFilePopup extends SuggestionPopup {
 
 	@Override
 	protected List<List> convertObjectToInfo(List l) throws APIException {
-		return null;
+		  List<List> list = new LinkedList<>();
+		  list.add(l);
+		  
+	    return l;
 	}
 
 	@Override
@@ -123,6 +185,7 @@ public class GetFilePopup extends SuggestionPopup {
 			throws SQLException, APIException, ClassNotFoundException {
 		String sql;
 		List sqlResult;
+		
 		List finalSuggestion = new LinkedList();
 		Map<String,Integer> getFileDetail  = new HashMap();
 		IUser user = session.getCurrentUser();
@@ -132,14 +195,16 @@ public class GetFilePopup extends SuggestionPopup {
 		IItem itm = (IItem)session.getObject(IItem.OBJECT_TYPE,  ob.getName());
 		Connection conn = getConnection(USERNAME, PASSWORD, URL);
 		//sql = "SELECT USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') as DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
-		sql = "SELECT USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') AS DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
+		sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') AS DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY TO_CHAR(DETAILS),USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
 		Statement stat = conn.createStatement();
 		ResultSet rs = stat.executeQuery(sql);
-		
+		System.out.println("★"+sql);
 		while (rs.next()) {
 			String userName = rs.getString("USER_NAME").toString();
 			String dateTime = rs.getString("DATETIME").toString();
-			sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+files[0].getFilename()+"%' AND TIMESTAMP >= TO_DATE('"+dateTime+"', 'DD-MM-YY')-7 AND TIMESTAMP <= TO_DATE('"+dateTime+"', 'DD-MM-YY')+7 GROUP BY TO_CHAR(DETAILS),USER_NAME ORDER BY USER_NAME";	
+			String detail = rs.getString("DETAILS").toString();
+			sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+detail+"%' AND TIMESTAMP >= TO_DATE('"+dateTime+"', 'DD-MM-YY')-7 AND TIMESTAMP <= TO_DATE('"+dateTime+"', 'DD-MM-YY')+7 GROUP BY TO_CHAR(DETAILS),USER_NAME ORDER BY USER_NAME";	
+			System.out.println("★★"+sql);
 			Statement stat2 = conn.createStatement();
 			ResultSet rs2 = stat2.executeQuery(sql);
 			String former_user  ="";
@@ -147,9 +212,9 @@ public class GetFilePopup extends SuggestionPopup {
 			
 			while (rs2.next()) {
 				
-				String detail = rs2.getString("DETAILS").toString();
+				detail = rs2.getString("DETAILS").toString();
 				String userName2 = rs2.getString("USER_NAME").toString();
-				if(!userName2.equals(former_user)&& !detail.equals(former_detail)) {
+				if(!userName2.equals(former_user)|| !detail.equals(former_detail)) {
 				  if(getFileDetail.containsKey(detail)){
 				      Integer v = (Integer) getFileDetail.get(detail);
 				      getFileDetail.remove(detail);
@@ -172,38 +237,66 @@ public class GetFilePopup extends SuggestionPopup {
 	        }
 	    };
 
-	    // map转换成list进行排序
+	    // map轉換成list進行排序
 	    List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String,Integer>>(getFileDetail.entrySet());
 
 	    // 排序
 	    Collections.sort(list,valueComparator);
 
-	    // 默认情况下，TreeMap对key进行降序排序
-	    System.out.println("------------map按照value降序排序--------------------");
+	    // 默認情况下，TreeMap對key進行降序排序
+	    int max =1;
+	    //System.out.println("------------map按照value降序排序--------------------");
 	    for (Map.Entry<String, Integer> entry : list) {
+	    	System.out.println("☆☆☆☆☆"+entry.getKey() + ":" + entry.getValue());
+	    	List suggestion = new LinkedList();
 	    	String detail = entry.getKey().toString();
 	    	String[] fileInfo = detail.split(" ");
-	    	sql = "SELECT ATTACHMENT.DESCRIPTION, FILES.FILENAME FROM ATTACHMENT INNER JOIN  ATTACHMENT_MAP ON ATTACHMENT_MAP.ATTACH_ID = ATTACHMENT.ID INNER JOIN FILES ON FILES.ID = ATTACHMENT_MAP.FILE_ID WHERE ATTACHMENT.ATTACHMENT_NUMBER = '"+fileInfo[0]+"'";
+	    	sql = "SELECT ATTACHMENT.DESCRIPTION, FILES.FILENAME, ITEM.ITEM_NUMBER FROM ATTACHMENT "
+	    			+ "INNER JOIN  ATTACHMENT_MAP ON ATTACHMENT_MAP.ATTACH_ID = ATTACHMENT.ID "
+	    			+ "INNER JOIN FILES ON FILES.ID = ATTACHMENT_MAP.FILE_ID "
+	    			+ "INNER JOIN ITEM ON ITEM.ID =  ATTACHMENT_MAP.PARENT_ID "
+	    			+ "WHERE ATTACHMENT.ATTACHMENT_NUMBER = '"+fileInfo[0]+"'";
 	    	Statement stat3 = conn.createStatement();
 			ResultSet rs3 = stat3.executeQuery(sql);
-			while (rs3.next()) {
-				String description = rs3.getString("DESCRIPTION").toString();
+			System.out.println(sql);
+			String description = "n/a";
+			rs3.next();
+			//IDataObject ido= (IDataObject) session.getObject(IItem.OBJECT_TYPE, rs3.getString("ITEM_NUMBER").toString());
+			try{
+				itm = (IItem)session.getObject(IItem.OBJECT_TYPE,  rs3.getString("ITEM_NUMBER").toString());
+				System.out.println(itm+"        "+ user.hasPrivilege(UserConstants.PRIV_READ, itm));
+				if (!rs3.getString("DESCRIPTION").isEmpty())	
+					description = rs3.getString("DESCRIPTION").toString();
+				
 				String filename = rs3.getString("FILENAME").toString();
-				String[] filetype = filename.split(".");
-				if(filetype[0].equals("doc")) {
-					
+				String[] filetype = filename.split("\\.");
+				suggestion.add("aaa");
+				suggestion.add(filename);	
+				suggestion.add(description);
+				suggestion.add(entry.getValue().toString());
+				finalSuggestion.add(suggestion);	
+				
+				max++;
+				if(max==3)
+					break;
+			}catch(APIException e){
+				if(e.getErrorCode().toString().equals("407")){
+					System.out.println("權限不足");
+					continue;
 				}
-				else if (filetype[0].equals("xlms")){
-					
-				}				
-				finalSuggestion.add(filename);
-				finalSuggestion.add(description);
-				finalSuggestion.add(entry.getValue().toString());
+				e.printStackTrace();
+				throw e;
 			}
-	    
-	    	//System.out.println(entry.getKey() + ":" + entry.getValue());
+			
+		
+			
+			
+			
+	    	
 	    }
-	  
+	   
+	    
+	    
 		
 		/*
 		sqlResult = executeSQL(conn, sql);
@@ -212,6 +305,7 @@ public class GetFilePopup extends SuggestionPopup {
 			System.out.println("☆☆"+folder[0]);
 		}
 		*/
+		conn.close();
 		return finalSuggestion;
 	}
 

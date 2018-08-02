@@ -31,11 +31,11 @@ public class Client implements Constants {
 
   public final static int SOCKET_PORT = 1705;      // you may change this
   //public final static String SERVER = "127.0.0.1"; //localhost
-  //public final static String SERVER = "192.168.1.202";  // server
+  //public final static String SERVER = "192.168.1.202";  // serveradmi
   //public final static String SERVER = "192.168.1.122"; // server2
-  public final static String SERVER = "192.168.88.127"; // local server;
-  public final static String
-      FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
+  public final static String SERVER = "192.168.88.125"; // local server;
+//  public final static String
+//      FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
   public final static String SAVED_FILE = "C:\\saved.txt";
   // might have error for no user privilege need, follow https://answers.microsoft.com/en-us/insider/forum/insider_wintp-insider_files/error-0x80070522-build-10074-a-required-privilege/516f87a8-80a6-4acb-a278-8866b2080460
   // for possible solution
@@ -50,7 +50,7 @@ public class Client implements Constants {
   private static InputStream is;
 
   public static void main (String[] args )
-      throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+      throws Exception {
     Date dt = new Date();
 
     SimpleDateFormat sdf =

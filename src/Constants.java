@@ -12,7 +12,7 @@ interface Constants{
   String PASSWORD2 = "tartan";
   String URL2 = "jdbc:oracle:thin:@"+ LOCALHOST2 +":1521:agile9";
   String MYSQLHOST = "LAPTOP-58ASB998";
-  String MYSQLURL = "jdbc:mariadb://192.168.88.127:3306/anselmai";
+  String MYSQLURL = "jdbc:mariadb://"+ LOCALHOST +":3306/anselmai";
   String MYSQLUSERNAME = "root";
   String MYSQLPASSWORD = "tartan";
   // admin client credentials
@@ -24,9 +24,9 @@ interface Constants{
   // Output File Path
   String EXIST = "C:\\anselmAIWeb\\serverSource\\exist.txt";
   // BOMPopup
-  String BOMPOPUP_OUTPUT_PATH = "C:\\anselmAIWeb\\serverSource\\bomPupup.txt";
-  String BOMPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\BOMPopup.htm";
-  String BOMPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\BOMPopup.htm";
+  String BOMPOPUP_OUTPUT_PATH = "bomPupup";
+  String BOMPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\serverSource\\bomPopup.htm";
+  String BOMPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\bomPopup.html";
   // ProjectPopup
   String PROJECTPOPUP_OUTPUT_PATH = "C:\\anselmAIWeb\\serverSource\\createProject.txt";
   String PROJECTPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\createProject.htm";

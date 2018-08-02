@@ -79,9 +79,13 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
       writeToFile(infoList);
 
       System.out.println("Creating BOM HTML for client...");
-      UpdateHTML htmlMaker = new UpdateHTML(getOutput_path(), getHtmlTemplate(), getHtmlOutput());
-      System.out.println("HTML Updating..");
-      htmlMaker.update();
+      File exist = new File(replaceServerSource(getSession().getCurrentUser().getName(), EXIST));
+		UpdateHTML htmlMaker = new UpdateHTML(getOutput_path(), getHtmlTemplate(), getHtmlOutput());
+		System.out.println("HTML Updating..");
+		htmlMaker.update();
+		FileWriter existWriter = new FileWriter(exist);
+		existWriter.write(getHtmlOutput());
+		existWriter.close();
       }else{
         setHtmlOutput(getHtmlTemplate());
         System.out.println("Printing Test html...");
@@ -110,7 +114,10 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     // out("JFrame info printed");
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, returnString));
   }
@@ -155,7 +162,7 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
   }
 
 
-  protected abstract void writeToFile(List<List> infoList) throws IOException;
+  protected abstract void writeToFile(List<List> infoList) throws IOException, ClassNotFoundException, SQLException, Exception;
 
   private String getDownloadedFileName(IFileEventInfo info) throws APIException {
     IEventDirtyFile[] files = info.getFiles(); 
