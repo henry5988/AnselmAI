@@ -25,7 +25,7 @@ public class UpdateHTML {
 
 		String line;
 		String html = "";
-		String[] tempArray = new String[50];
+		String[] tempArray = new String[100];
 		int br_data_line = 0;
 		int i = 0;
 

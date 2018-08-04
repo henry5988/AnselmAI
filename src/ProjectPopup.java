@@ -13,10 +13,12 @@ import com.agile.api.IQuery;
 import com.agile.api.IRow;
 import com.agile.api.ITable;
 import com.agile.api.IUser;
+import com.agile.api.IUserGroup;
 import com.agile.api.ProgramConstants;
 import com.agile.api.ProjectConstants;
 import com.agile.api.QueryConstants;
 import com.agile.api.TableTypeConstants;
+import com.agile.api.UserConstants;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
@@ -29,6 +31,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -91,18 +94,20 @@ public class ProjectPopup extends SuggestionPopup{
 
   @Override
   protected List<List> convertObjectToInfo(List l) throws APIException {
-	  List<List> list = new LinkedList<>();
-	  list.add(l);
 	  
-    return list;
+	  
+    return l;
   }
 
   @Override
   protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
-    List suggestion = new LinkedList();
-    List finalSuggestion = new LinkedList();
-//    finalSuggestion.add("");finalSuggestion.add("");finalSuggestion.add("");
+	List projectSuggestion = new LinkedList();
+    List memberSuggestion = new LinkedList();
+    List<List> finalSuggestion = new LinkedList();
+    String objname = ((IProgram)obj).getValue(ProgramConstants.ATT_GENERAL_INFO_NAME) + "";
+    projectSuggestion.add(objname);
+    finalSuggestion.add(new LinkedList(projectSuggestion));
     String sql;
     List sqlResult;
     Map<IAgileObject, Integer> teamMembers  = new HashMap();
@@ -122,63 +127,84 @@ public class ProjectPopup extends SuggestionPopup{
     // 2. get project names created from the same template ID
     sql = "SELECT NAME FROM ACTIVITY WHERE CREATED_FROM_TEMPLATE='"+ templateID +"' AND SUBCLASS='"+18027+"'";
     sqlResult = executeSQL(conn, sql);
-   
+    int countProject = 0;
+    int countTeamMember = 0;
     // D. get the team table for each project
     for(Object relatedProjectName : sqlResult){
+    	if(objname.equals(relatedProjectName.toString()))continue;
+      projectSuggestion = new LinkedList();
       System.out.println("Related: " + relatedProjectName);
       // 1. get the project object from their names
       sql = "SELECT ACTIVITY_NUMBER FROM ACTIVITY WHERE NAME='" + relatedProjectName + "'";
       sqlResult = executeSQL(conn, sql);
       IProgram relatedProject = (IProgram) session.getObject(IProgram.OBJECT_TYPE, sqlResult.get(0).toString());
-      System.out.println("program name: " + relatedProject);
-      finalSuggestion.add(relatedProjectName);
+//      System.out.println("program name: " + relatedProject);
+      if(countProject<3)projectSuggestion.add(relatedProjectName);
       
       // 2. Get actual duration of project
       String actualDuration = "";
       String estimatedDuration = "";
       int error = 0;
       String errorDuration = "";
+      if(relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ESTIMATED_DURATION)!=null)
+    	  estimatedDuration = relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ESTIMATED_DURATION).toString();
+      double estimatedDrationD = Double.valueOf(estimatedDuration);
+      int estimatedDrationI = (int)(estimatedDrationD);
       if("Complete".equals(relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_STATUS).toString())) {
     	  actualDuration = relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ACTUAL_DURATION).toString();
-    	  estimatedDuration = relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ESTIMATED_DURATION).toString();
-    	  double estimatedDrationD = Double.valueOf(estimatedDuration);
     	  double actualDurationD = Double.valueOf(actualDuration);
-    	  error = (int)(estimatedDrationD)-(int)(actualDurationD);
+    	  error = estimatedDrationI-(int)(actualDurationD);
     	  if(error>0)errorDuration = "提早"+error+"天";
     	  else errorDuration = "延遲"+String.valueOf(error).substring(1,String.valueOf(error).length())+"天";
     	  System.out.println("Error duration: "+errorDuration);
       }
-      finalSuggestion.add(estimatedDuration);
-      finalSuggestion.add(errorDuration);
+      if(!"".equals(estimatedDuration))
+    	  estimatedDuration = estimatedDrationI + "天";
+      if(countProject<3) projectSuggestion.add(estimatedDuration);
+      if(countProject<3) projectSuggestion.add(errorDuration);
+      
       ITable teamTable = relatedProject.getTable(ProgramConstants.TABLE_TEAM);
       // 3. all the members from each table in a hashmap with number of appearances
       
       for(Object r: teamTable){
-    	  
+    	if(countTeamMember==3)break;
         IRow row = (IRow) r;
-        System.out.println(addMemberRecommendation(teamMembers, row.getReferent()));
+        IUser teamMember = (IUser) row.getReferent();
+        // Check the quantity of the projects this user have
+        IQuery query = (IQuery) session.createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM);
+        // Project = Active and  Status = In Process and team have above user
+        String queryCritria = "[General Info.Project State] == 'Active'"
+				+ " and [General Info.Status] in ( 'Default Activities.In Process' ) " + " and ["
+				+ ProgramConstants.ATT_GENERAL_INFO_ACTIVITIES_TYPE + "] == 'Program'"
+			    + " and ["+ProgramConstants.ATT_TEAM_NAME+"] == '"+teamMember.toString()+"'";
+		query.setCriteria(queryCritria);
+		ITable queryResult = query.execute();
+		memberSuggestion.add(queryResult.size());
+		
+		// Check the division of the user
+		String userGroupList = "";
+		ITable userGroupTable = teamMember.getTable(UserConstants.TABLE_USERGROUP);
+		Iterator ugIt = userGroupTable.iterator();
+		while(ugIt.hasNext()) {
+			IRow ugRow = (IRow) ugIt.next();
+			IUserGroup userGroup = (IUserGroup) ugRow.getReferent();
+			if(!"".equals(userGroupList)) {
+				userGroupList += "<br>"+userGroup.getName();
+			}else {
+				userGroupList += userGroup.getName();
+			}
+		}
+		memberSuggestion.add(userGroupList);
+		memberSuggestion.add(teamMember.getValue(UserConstants.ATT_GENERAL_INFO_FIRST_NAME)
+				+" "+teamMember.getValue(UserConstants.ATT_GENERAL_INFO_LAST_NAME));
+        countTeamMember++;
       }
+      if(countProject<3)finalSuggestion.add(new LinkedList(projectSuggestion));
+      countProject++;
     }
-    // E. check top 3 member availability
-//    suggestion = extractTop(teamMembers, 3);
-    // lower priority if a member is loaded
-//    for(Object memberEntryObj: suggestion){
-//      // query for programs that the member is in and is in progress
-//      Entry memberEntry = (Entry) memberEntryObj;
-//      IUser member = (IUser) memberEntry.getKey();
-//      IQuery q = (IQuery) getSession().createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM_BASE_CLASS);
-//      q.setCaseSensitive(false);
-//      q.setCriteria("[Team.Name] contains '" + member.toString()+"'");
-//      ITable queryResult = q.execute();
-//      // if query result > limit of finalSuggestion, move suggestion down one spot and move others up
-//      finalSuggestion.add(2,memberEntryObj);
-//      if(queryResult.size() > 2){
-//        finalSuggestion.add(0,memberEntryObj);
-//      }else{
-//        finalSuggestion.add(memberEntryObj);
-//      }
-//    }
-    // return project final suggestions
+    addEmptyInfoToList(finalSuggestion);
+    finalSuggestion.add(memberSuggestion);
+    
     conn.close();
     return finalSuggestion;
   }
@@ -192,16 +218,15 @@ public class ProjectPopup extends SuggestionPopup{
     IProgram program = (IProgram) session.getObject(IProgram.OBJECT_TYPE, projectName);
     return program;
   }
+  @Override
+  protected List addEmptyInfoToList(List<List> infoList) {
+		while (infoList.size() < 4) {
+			infoList.add(new LinkedList<>());
+			for (int i = 0; i < infoList.get(1).size(); i++) {
+				infoList.get(infoList.size() - 1).add("n/a");
+			}
+		}
+		return infoList;
+	}
 
-  private String addMemberRecommendation(Map teamMembers, IDataObject referent)
-      throws APIException {
-    if(teamMembers.containsKey(referent)){
-      Integer v = (Integer) teamMembers.get(referent);
-      teamMembers.remove(referent);
-      teamMembers.put(referent, v+1);
-    }else{
-      teamMembers.put(referent, 1);
-    }
-    return "User " + referent.getName() + " added to teamMember for " + teamMembers.get(referent) + " time" + (teamMembers.get(referent).equals(1)?"":"s");
-  }
 }
