@@ -33,7 +33,7 @@ public class Client implements Constants {
   //public final static String SERVER = "127.0.0.1"; //localhost
   //public final static String SERVER = "192.168.1.202";  // serveradmi
   //public final static String SERVER = "192.168.1.122"; // server2
-  public final static String SERVER = "192.168.88.130"; // local server;
+  public final static String SERVER = "192.168.88.110"; // local server;
 //  public final static String
 //      FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
   public final static String SAVED_FILE = "C:\\saved.txt";
@@ -66,31 +66,31 @@ public class Client implements Constants {
     String username = scanner.nextLine();
     System.out.println("username: " + username);
     //TODO implement a username checking mechanic
-    Connection conn = HF.getMySQLConnection(Constants.MYSQLUSERNAME, Constants.MYSQLPASSWORD, Constants.MYSQLURL);
-    sql = "SELECT * FROM userlogins WHERE username = ?";
-    statement = conn.prepareStatement(sql);
-    statement.setString(1, username);
-    ResultSet r = statement.executeQuery();
-    if(!r.next()){
-      sql = "INSERT INTO userlogins (username, last_updated) VALUES (?, ?)";
-      statement = conn.prepareStatement(sql);
-      statement.setString(1, username);
-      statement.setString(2, currentTime);
-      System.out.println("INSERT: " + sql);
-      statement.executeUpdate();
-    }else{
-      sql = "UPDATE userlogins SET last_updated = ? WHERE username = ?";
-      System.out.println("UPDATE: " + sql);
-      statement = conn.prepareStatement(sql);
-      statement.setString(1, currentTime);
-      statement.setString(2, username);
-      statement.executeUpdate();
-    }
-    scanner.close();
-    conn.close();
+//    Connection conn = HF.getMySQLConnection(Constants.MYSQLUSERNAME, Constants.MYSQLPASSWORD, Constants.MYSQLURL);
+//    sql = "SELECT * FROM userlogins WHERE username = ?";
+//    statement = conn.prepareStatement(sql);
+//    statement.setString(1, username);
+//    ResultSet r = statement.executeQuery();
+//    if(!r.next()){
+//      sql = "INSERT INTO userlogins (username, last_updated) VALUES (?, ?)";
+//      statement = conn.prepareStatement(sql);
+//      statement.setString(1, username);
+//      statement.setString(2, currentTime);
+//      System.out.println("INSERT: " + sql);
+//      statement.executeUpdate();
+//    }else{
+//      sql = "UPDATE userlogins SET last_updated = ? WHERE username = ?";
+//      System.out.println("UPDATE: " + sql);
+//      statement = conn.prepareStatement(sql);
+//      statement.setString(1, currentTime);
+//      statement.setString(2, username);
+//      statement.executeUpdate();
+//    }
+//    scanner.close();
+//    conn.close();
     String url = "http://" + SERVER + ":" + SOCKET_PORT + "/bounce";
     while(true) {
-
+System.out.println(url);
       URL obj = new URL(url);
       HttpURLConnection con = (HttpURLConnection) obj.openConnection();
       con.setRequestMethod("GET");

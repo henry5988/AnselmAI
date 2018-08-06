@@ -6,13 +6,13 @@ import com.HF;
 import com.agile.api.APIException;
 import com.agile.api.IAgileObject;
 import com.agile.api.IAgileSession;
-import com.agile.api.IChange;
 import com.agile.api.IDataObject;
 import com.agile.api.IItem;
 import com.agile.api.INode;
 import com.agile.api.IRow;
 import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
+import com.agile.api.NodeConstants;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventDirtyCell;
 import com.agile.px.IEventDirtyRowUpdate;
@@ -26,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import org.apache.commons.dbutils.DbUtils;
 
 public class BOMPopup extends SuggestionPopup {
 
@@ -121,7 +119,9 @@ public class BOMPopup extends SuggestionPopup {
       List itemInfo = new LinkedList();
       Map.Entry entry = (Entry) l.get(i);
       IItem item = (IItem) entry.getKey();
-      itemInfo.add(item.getName());
+      String item_url = (String) getSession().getAdminInstance().getNode(NodeConstants.NODE_SERVER_LOCATION)
+					.getProperty("Web Server URL").getValue()+"?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D10000%26objid%3D"+item.getObjectId()+"%26tabid%3D0%26";  
+      itemInfo.add("<a href='"+item_url+"' target='_blank' >"+item.getName()+"</a>");
       itemInfo.add(item.getValue(ItemConstants.ATT_TITLE_BLOCK_DESCRIPTION));
       String itemQty = "n/a";
       IItem target = (IItem) getTargetItem(getEventInfo());
