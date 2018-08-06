@@ -11,7 +11,7 @@ import java.net.Socket;
 class ThreadedEchoServer {
 
 
-  static final int PORT = 1701;
+  static final int PORT = 1705;
   private static BufferedReader in;
   private static PrintWriter out;
   private static Socket sock;
