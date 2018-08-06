@@ -38,7 +38,8 @@ public class UpdateHTML {
 	
 	  try {
 		conn_sql = getMySQLConnection2(Constants.MYSQLUSERNAME, Constants.MYSQLPASSWORD, Constants.MYSQLURL);
-		String sql = "SELECT * FROM "+data_path+" ORDER BY TIME ASC";
+		String sql = "SELECT * FROM "+data_path+" ORDER BY TIME DESC";
+		System.out.println(sql);
 		Statement stat = conn_sql.createStatement();
 		ResultSet rs = stat.executeQuery(sql);
 		

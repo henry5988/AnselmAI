@@ -13,6 +13,7 @@ import com.agile.api.INode;
 import com.agile.api.IRow;
 import com.agile.api.ITable;
 import com.agile.api.ItemConstants;
+import com.agile.api.NodeConstants;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventDirtyCell;
 import com.agile.px.IEventDirtyRowUpdate;
@@ -115,7 +116,7 @@ public class BOMPopup extends SuggestionPopup {
 			}
 			
 			
-			sql = "INSERT INTO bomPupup ("+column+") VALUES ("+value+")" ;
+			sql = "INSERT INTO "+BOMPOPUP_OUTPUT_PATH+" ("+column+") VALUES ("+value+")" ;
 			System.out.println(sql);
 			Statement stat = conn_sql.createStatement();
 			stat.executeQuery(sql);
@@ -180,7 +181,9 @@ public class BOMPopup extends SuggestionPopup {
       List itemInfo = new LinkedList();
       Map.Entry entry = (Entry) l.get(i);
       IItem item = (IItem) entry.getKey();
-      itemInfo.add(item.getName());
+      String item_url = (String) getSession().getAdminInstance().getNode(NodeConstants.NODE_SERVER_LOCATION)
+    		     .getProperty("Web Server URL").getValue()+"?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D10000%26objid%3D"+item.getObjectId()+"%26tabid%3D0%26";  
+      itemInfo.add("<a href=\""+item_url+"\" target=\"_blank\" >"+item.getName()+"</a>");
       itemInfo.add(item.getValue(ItemConstants.ATT_TITLE_BLOCK_DESCRIPTION));
       String itemQty = "n/a";
       IItem target = (IItem) getTargetItem(getEventInfo());

@@ -50,7 +50,7 @@ public class BounceHandler implements HttpHandler, Constants {
     if (isEventTriggered(username)) {
 
       //response += EchoGetHandler.readFile("C:\\bounce.html", Charset.forName("UTF8"));
-      response += "<!DOCTYPE HTML><html><head><script>var objWin=window.self; objWin.open('','_self', '').focus(); popup(\"http://192.168.88.125:1705/echoGet?username="+username+"\"); objWin.close();function popup(mylink) {\n"
+      response += "<!DOCTYPE HTML><html><head><script>var objWin=window.self; objWin.open('','_self', '').focus(); popup(\"http://192.168.43.70:1705/echoGet?username="+username+"\"); objWin.close();function popup(mylink) {\n"
           + "                if (! window.focus)return true;\n"
           + "                var href;\n"
           + "                if (typeof(mylink) == 'string') href=mylink;\n"

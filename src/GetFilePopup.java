@@ -42,9 +42,9 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 
 	@Override
 	public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
-		init(session, req, "getFilePopup",
-				"C:\\anselmAIWeb\\serverSource\\getFilePopup.htm",
-				"C:\\anselmAIWeb\\serverSource\\getFilePopup.html", false, false);
+		init(session, req, GETFILEPOPUP_OUTPUT_PATH,
+				GETFILEPOPUP__HTML_TEMPLATE,
+				 GETFILEPOPUP_HTML_OUTPUT, false, false);
 		super.doAction(session, node, req);
 		return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Get File Popup"));
 	}
@@ -78,7 +78,7 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 			String sql;
 			List sqlResult= new LinkedList(); ;
 			sqlResult.add(getTargetItem(getEventInfo()).getName());  
-			for(int i=0; i<3; i++){
+			for(int i=0; i<infoList.get(0).size(); i++){
 			      for(int j = 0; j< infoList.size(); j++){
 			    	  sqlResult.add(infoList.get(j).get(i));   	 
 			      }
@@ -96,7 +96,7 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 			}
 			
 			
-			sql = "INSERT INTO getFilePopup ("+column+") VALUES ("+value+")" ;
+			sql = "INSERT INTO "+GETFILEPOPUP_OUTPUT_PATH+" ("+column+") VALUES ("+value+")" ;
 			System.out.println(sql);
 //			Statement stat = conn_sql.createStatement();
 //			stat.executeQuery(sql);
@@ -288,10 +288,7 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 				throw e;
 			}
 			
-		
-			
-			
-			
+
 	    	
 	    }
 	   

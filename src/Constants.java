@@ -28,7 +28,15 @@ interface Constants{
   String BOMPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\serverSource\\bomPopup.htm";
   String BOMPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\bomPopup.html";
   // ProjectPopup
-  String PROJECTPOPUP_OUTPUT_PATH = "C:\\anselmAIWeb\\serverSource\\createProject.txt";
-  String PROJECTPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\createProject.htm";
-  String PROJECTPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\createProject.htm";
+  String PROJECTPOPUP_OUTPUT_PATH = "creatProjectPopup";
+  String PROJECTPOPUP_HTML_TEMPLATE = "C:\\anselmAIWeb\\serverSource\\creatProjectPopup(HR).htm";
+  String PROJECTPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\creatProjectPopup(HR).html";
+  
+  String GETFILEPOPUP_OUTPUT_PATH =  "getFilePopup";
+  String GETFILEPOPUP__HTML_TEMPLATE = "C:\\anselmAIWeb\\serverSource\\getFilePopup.htm";
+  String GETFILEPOPUP_HTML_OUTPUT = "C:\\anselmAIWeb\\serverSource\\getFilePopup.html";
+  
+
+
+
 }

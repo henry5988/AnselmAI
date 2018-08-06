@@ -1,4 +1,6 @@
 import com.HF;
+import com.agile.api.APIException;
+
 import java.awt.Desktop;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -20,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -33,7 +36,7 @@ public class Client implements Constants {
   //public final static String SERVER = "127.0.0.1"; //localhost
   //public final static String SERVER = "192.168.1.202";  // serveradmi
   //public final static String SERVER = "192.168.1.122"; // server2
-  public final static String SERVER = "192.168.88.125"; // local server;
+  public final static String SERVER = "192.168.43.70"; // local server;
 //  public final static String
 //      FILE_TO_RECEIVED = "C:\\Users\\Riekon\\socket\\web\\source-downloaded.txt";  // you may change this
   public final static String SAVED_FILE = "C:\\saved.txt";
@@ -67,56 +70,79 @@ public class Client implements Constants {
     System.out.println("username: " + username);
     //TODO implement a username checking mechanic
     Connection conn = HF.getMySQLConnection(Constants.MYSQLUSERNAME, Constants.MYSQLPASSWORD, Constants.MYSQLURL);
-    sql = "SELECT * FROM userlogins WHERE username = ?";
-    statement = conn.prepareStatement(sql);
-    statement.setString(1, username);
-    ResultSet r = statement.executeQuery();
-    if(!r.next()){
-      sql = "INSERT INTO userlogins (username, last_updated) VALUES (?, ?)";
-      statement = conn.prepareStatement(sql);
-      statement.setString(1, username);
-      statement.setString(2, currentTime);
-      System.out.println("INSERT: " + sql);
-      statement.executeUpdate();
-    }else{
-      sql = "UPDATE userlogins SET last_updated = ? WHERE username = ?";
-      System.out.println("UPDATE: " + sql);
-      statement = conn.prepareStatement(sql);
-      statement.setString(1, currentTime);
-      statement.setString(2, username);
-      statement.executeUpdate();
-    }
-    scanner.close();
-    conn.close();
-    String url = "http://" + SERVER + ":" + SOCKET_PORT + "/bounce";
-    while(true) {
+    
+    sql= "SELECT AES_DECRYPT(LICENSE,'CHSS') AS license FROM license";
+    Statement stat = conn.createStatement();
+	ResultSet rs = stat.executeQuery(sql);
+	rs.next();
+	String license = rs.getString("license");
+	
+	sql= "SELECT COUNT(*) as userAmount FROM userlogins;";
+	stat = conn.createStatement();
+	rs = stat.executeQuery(sql);
+	rs.next();
+	String userAmount = rs.getString("userAmount");
+    System.out.println(Integer.valueOf(userAmount) +"    "+ Integer.valueOf(license));
+	if(Integer.valueOf(userAmount) > Integer.valueOf(license)) {
+		System.out.println("請與Anselm聯絡");
+	}
+	else {
+		sql = "SELECT * FROM userlogins WHERE username = ?";
+	    statement = conn.prepareStatement(sql);
+	    statement.setString(1, username);
+	    ResultSet r = statement.executeQuery();
+	    if(!r.next()){
+	      System.out.println("此帳戶無授權");
+//	      sql = "INSERT INTO userlogins (username, last_updated) VALUES (?, ?)";
+//	      statement = conn.prepareStatement(sql);
+//	      statement.setString(1, username);
+//	      statement.setString(2, currentTime);
+//	      System.out.println("INSERT: " + sql);
+//	      statement.executeUpdate();
+	    }else{
+	      sql = "UPDATE userlogins SET last_updated = ? WHERE username = ?";
+	      System.out.println("UPDATE: " + sql);
+	      statement = conn.prepareStatement(sql);
+	      statement.setString(1, currentTime);
+	      statement.setString(2, username);
+	      statement.executeUpdate();
+	      scanner.close();
+		    conn.close();
+		    String url = "http://" + SERVER + ":" + SOCKET_PORT + "/bounce";
+		    while(true) {
 
-      URL obj = new URL(url);
-      HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-      con.setRequestMethod("GET");
-      con.addRequestProperty("username", username);
-      int responseCode = con.getResponseCode();
-      System.out.println("\nSending 'GET' request to URL : " + url);
-      System.out.println("Response Code : " + responseCode);
-      BufferedReader in = new BufferedReader(
-          new InputStreamReader(con.getInputStream()));
-      String inputLine;
-      StringBuffer response = new StringBuffer();
+		      URL obj = new URL(url);
+		      HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		      con.setRequestMethod("GET");
+		      con.addRequestProperty("username", username);
+		      int responseCode = con.getResponseCode();
+		      System.out.println("\nSending 'GET' request to URL : " + url);
+		      System.out.println("Response Code : " + responseCode);
+		      BufferedReader in = new BufferedReader(
+		          new InputStreamReader(con.getInputStream()));
+		      String inputLine;
+		      StringBuffer response = new StringBuffer();
 
-      while ((inputLine = in.readLine()) != null) {
-        response.append(inputLine);
-      }
-      in.close();
+		      while ((inputLine = in.readLine()) != null) {
+		        response.append(inputLine);
+		      }
+		      in.close();
 
-      if(responseCode == 200) {
-        Desktop.getDesktop().browse(URI.create(url+"?username="+username));
-        Thread.sleep(5000);
-      }
-      //print result
-      System.out.println(response.toString());
-      con.disconnect();
+		      if(responseCode == 200) {
+		        Desktop.getDesktop().browse(URI.create(url+"?username="+username));
+		        Thread.sleep(5000);
+		      }
+		      //print result
+		      System.out.println(response.toString());
+		      con.disconnect();
+	    }
+	    
 
-    }
+	    }
+	}
+	
+	
+    
   }
 
   private static boolean isFileReceived(int bytesRead) {

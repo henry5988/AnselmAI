@@ -13,10 +13,13 @@ import com.agile.api.IQuery;
 import com.agile.api.IRow;
 import com.agile.api.ITable;
 import com.agile.api.IUser;
+import com.agile.api.IUserGroup;
 import com.agile.api.ProgramConstants;
 import com.agile.api.ProjectConstants;
 import com.agile.api.QueryConstants;
 import com.agile.api.TableTypeConstants;
+import com.agile.api.UserConstants;
+import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
 import com.agile.px.IEventInfo;
 import com.agile.px.ISaveAsEventInfo;
@@ -25,30 +28,36 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.PrivilegedAction;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.logging.SimpleFormatter;
 
 public class ProjectPopup extends SuggestionPopup{
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
-    setTest(true);
+	  System.out.println("-----Project Pop up Start-----");
+//    setTest(true);
     setFieldCheck(false);
     String userDir = null;
-    try {
-      userDir = "C:\\"+session.getCurrentUser().getName() + "\\";
-    } catch (APIException e) {
-      e.printStackTrace();
-    }
-    String output_path = userDir + "createProject.txt";
-    String output_html = userDir + "createProject.htm";
-    String output_template = userDir + "createProject.html";
-    init(session, req,output_path, output_html, output_template, false, false);
-    return super.doAction(session, node, req);
+//    userDir = "C:\\anselmAIWeb\\serverSource\\";
+//    String output_path = userDir + "creatProjectPopup(HR).txt";
+//    String output_html = userDir + "creatProjectPopup(HR).htm";
+//    String output_template = userDir + "creatProjectPopup(HR).html";
+    init(session, req,PROJECTPOPUP_OUTPUT_PATH, PROJECTPOPUP_HTML_TEMPLATE, PROJECTPOPUP_HTML_OUTPUT, false, false);
+    super.doAction(session, node, req);
+    System.out.println("-----Project Pop up End-----");
+    return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Project Pop up"));
   }
 
   @Override
@@ -56,47 +65,115 @@ public class ProjectPopup extends SuggestionPopup{
     // no use in this module
     return null;
   }
-
+  public static Connection getMySQLConnection2(String username, String password, String url)
+	      throws SQLException, ClassNotFoundException,Exception {
+	    Connection conn;
+	    Class.forName("org.mariadb.jdbc.Driver");
+	    Properties connectionProps = new Properties();
+	    connectionProps.put("user", username);
+	    connectionProps.put("password", password);
+	    conn = DriverManager.getConnection(url, connectionProps);
+	    System.out.println("Connection established");
+	    return conn;
+  }
   @Override
   protected void writeToFile(List<List> infoList) throws IOException {
-    File f = new File(getOutput_path());
-    File exist = new File(EXIST);
-    if(!exist.exists()){
-      Files.createDirectories(Paths.get(exist.getPath()).getParent());
-      exist.createNewFile();
-    }
-    if(!f.exists()){
-      Files.createDirectories(Paths.get(f.getPath()).getParent());
-      f.createNewFile();
-    }
-
-    FileWriter existWriter = new FileWriter(exist);
-    existWriter.write("createProject\n" + System.currentTimeMillis());
-    FileWriter fw = new FileWriter(f);
-    fw.write("createProject test string"); //TODO createProject logic
-    existWriter.close();
-    fw.close();
+	  Connection conn_sql;
+		
+		
+		try {
+			conn_sql = getMySQLConnection2(Constants.MYSQLUSERNAME, Constants.MYSQLPASSWORD, Constants.MYSQLURL);
+			String value ="";
+			String column ="";
+			String sql;
+			List sqlResult= new LinkedList(); ;
+			sqlResult.add(getTargetItem(getEventInfo()).getName());  
+			for(int i=0; i<infoList.size(); i++){
+			      for(int j = 0; j< infoList.get(0).size(); j++){
+			    	  sqlResult.add(infoList.get(j).get(i));   	 
+			      }
+			    }
+			for(int i=0; i<sqlResult.size();i++){	
+				if (i==0) {
+					column += "column"+String.valueOf(i+1);
+					value += "'"+sqlResult.get(i)+"'";
+				}
+				else {
+					column += ", column"+String.valueOf(i+1);
+					value +=  ", '"+sqlResult.get(i)+"'";
+				}
+					
+			}
+			
+			
+			sql = "INSERT INTO "+PROJECTPOPUP_OUTPUT_PATH+" ("+column+") VALUES ("+value+")" ;
+			System.out.println(sql);
+//			Statement stat = conn_sql.createStatement();
+//			stat.executeQuery(sql);
+			conn_sql.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//    File f = new File(getOutput_path());
+//    File exist = new File(EXIST);
+//    if(!exist.exists()){
+//      Files.createDirectories(Paths.get(exist.getPath()).getParent());
+//      exist.createNewFile();
+//    }
+//    if(!f.exists()){
+//      Files.createDirectories(Paths.get(f.getPath()).getParent());
+//      f.createNewFile();
+//    }
+//
+//    FileWriter existWriter = new FileWriter(exist);
+//    existWriter.write("createProject\n" + System.currentTimeMillis());
+//    FileWriter fw = new FileWriter(f);
+//    if(!infoList.isEmpty()) {
+//    	for(List list:infoList) {
+//    		if(!list.isEmpty()) {
+//    			for(Object o:list) {
+//    				fw.write(o.toString()+"\r\n");
+//    				fw.flush();
+//    			}
+//    		}
+//    	}
+//    }else {
+//    	fw.write("empty");
+//    }
+//    existWriter.close();
+//    fw.close();
   }
 
   @Override
   protected List<List> convertObjectToInfo(List l) throws APIException {
-	  List<List> list = new LinkedList<>();
-	  list.add(l);
 	  
-    return list;
+	  
+    return l;
   }
 
   @Override
   protected List getItemAdvice(IAgileSession session, IAgileObject obj, IEventInfo req)
       throws SQLException, APIException, ClassNotFoundException {
-    List suggestion = new LinkedList();
-    List finalSuggestion = new LinkedList();
+	List projectSuggestion = new LinkedList();
+    List memberSuggestion = new LinkedList();
+    List<List> finalSuggestion = new LinkedList();
+    String url = "http://"+Constants.LOCALHOST+":7001/Agile/?fromPCClient=true"
+    		+ "&module=ActivityHandler"
+    		+ "&requestUrl=module%3DActivityHandler%26opcode%3DdisplayObject%26classid%3D18022%26objid%3D";
+    String footUrl = "%26tabid%3D0%26";
+    String objname = ((IProgram)obj).getValue(ProgramConstants.ATT_GENERAL_INFO_NAME) + "";
+    projectSuggestion.add(objname);
+    finalSuggestion.add(new LinkedList(projectSuggestion));
     String sql;
     List sqlResult;
     Map<IAgileObject, Integer> teamMembers  = new HashMap();
     // A. get project
     IProgram program = (IProgram) obj;
-
+    String objID = program.getObjectId().toString();
     // B. get created from template value
     String template = (String) program.getValue(2000008049);
 
@@ -110,43 +187,99 @@ public class ProjectPopup extends SuggestionPopup{
     // 2. get project names created from the same template ID
     sql = "SELECT NAME FROM ACTIVITY WHERE CREATED_FROM_TEMPLATE='"+ templateID +"' AND SUBCLASS='"+18027+"'";
     sqlResult = executeSQL(conn, sql);
-
+    int countProject = 0;
+    int countTeamMember = 0;
     // D. get the team table for each project
     for(Object relatedProjectName : sqlResult){
+    	if(objname.equals(relatedProjectName.toString()))continue;
+      projectSuggestion = new LinkedList();
       System.out.println("Related: " + relatedProjectName);
-      // 1. get the project object from their names
+      // 1. get the project object from their names      
       sql = "SELECT ACTIVITY_NUMBER FROM ACTIVITY WHERE NAME='" + relatedProjectName + "'";
       sqlResult = executeSQL(conn, sql);
       IProgram relatedProject = (IProgram) session.getObject(IProgram.OBJECT_TYPE, sqlResult.get(0).toString());
-      System.out.println("program name: " + relatedProject);
+      IUser user = session.getCurrentUser();
+      System.out.println(user.hasPrivilege(UserConstants.PRIV_READ, relatedProject));
+      
+      //      System.out.println("program name: " + relatedProject);
+      if(countProject<3)projectSuggestion.add("<a href=\""+url+objID+footUrl+"\">"+relatedProjectName+"</a>");
+      
+      // 2. Get actual duration of project
+      String actualDuration = "";
+      String estimatedDuration = "";
+      int error = 0;
+      String errorDuration = "";
+      if(relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ESTIMATED_DURATION)!=null)
+    	  estimatedDuration = relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ESTIMATED_DURATION).toString();
+      double estimatedDrationD = Double.valueOf(estimatedDuration);
+      int estimatedDrationI = (int)(estimatedDrationD);
+      if("Complete".equals(relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_STATUS).toString())) {
+    	  actualDuration = relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_ACTUAL_DURATION).toString();
+    	  double actualDurationD = Double.valueOf(actualDuration);
+    	  error = estimatedDrationI-(int)(actualDurationD);
+    	  if(error>0)errorDuration = "提早"+error+"天";
+    	  else errorDuration = "延遲"+String.valueOf(error).substring(1,String.valueOf(error).length())+"天";
+    	  System.out.println("Error duration: "+errorDuration);
+      }
+      if(!"".equals(estimatedDuration))
+    	  estimatedDuration = estimatedDrationI + "天";
+      if(countProject<3) projectSuggestion.add(estimatedDuration);
+      if(countProject<3) projectSuggestion.add(errorDuration);
+      
       ITable teamTable = relatedProject.getTable(ProgramConstants.TABLE_TEAM);
-      // 2. tally the members from each table in a hashmap with number of appearances
+      // 3. all the members from each table in a hashmap with number of appearances
+      
       for(Object r: teamTable){
+    	if(countTeamMember==3)break;
         IRow row = (IRow) r;
-        System.out.println(addMemberRecommendation(teamMembers, row.getReferent()));
+        IUser teamMember = (IUser) row.getReferent();
+        System.out.println("Team member "+teamMember.toString()+" ...");
+        System.out.println("Query working project...");
+        
+        // Check the quantity of the projects this user have
+        IQuery query = (IQuery) session.createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM);
+        // Project = Active and  Status = In Process and team have above user
+        String queryCritria = "[General Info.Project State] == 'Active'"
+				+ " and [General Info.Status] in ( 'Default Activities.In Process' ) " + " and ["
+				+ ProgramConstants.ATT_GENERAL_INFO_ACTIVITIES_TYPE + "] == 'Program'"
+			    + " and ["+ProgramConstants.ATT_TEAM_NAME+"] == '"+teamMember.toString()+"'";
+		query.setCriteria(queryCritria);
+		ITable queryResult = query.execute();
+		memberSuggestion.add(queryResult.size());
+		
+		System.out.println("Get user group...");
+		
+		// Check the division of the user
+		String userGroupList = "";
+		ITable userGroupTable = teamMember.getTable(UserConstants.TABLE_USERGROUP);
+		Iterator ugIt = userGroupTable.iterator();
+		while(ugIt.hasNext()) {
+			IRow ugRow = (IRow) ugIt.next();
+			IUserGroup userGroup = (IUserGroup) ugRow.getReferent();
+			if(!"".equals(userGroupList)) {
+				userGroupList += "<br>"+userGroup.getName();
+			}else {
+				userGroupList += userGroup.getName();
+			}
+		}
+		
+		memberSuggestion.add(userGroupList);
+		memberSuggestion.add(teamMember.getValue(UserConstants.ATT_GENERAL_INFO_FIRST_NAME)
+				+" "+teamMember.getValue(UserConstants.ATT_GENERAL_INFO_LAST_NAME));
+        countTeamMember++;
       }
-    }
-
-    // E. check top 3 member availability
-    suggestion = extractTop(teamMembers, 3);
-    // lower priority if a member is loaded
-    for(Object memberEntryObj: suggestion){
-      // query for programs that the member is in and is in progress
-      Entry memberEntry = (Entry) memberEntryObj;
-      IUser member = (IUser) memberEntry.getKey();
-      IQuery q = (IQuery) getSession().createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM_BASE_CLASS);
-      q.setCaseSensitive(false);
-      q.setCriteria("[Team.Name] contains " + member.getName());
-      ITable queryResult = q.execute();
-      // if query result > limit of finalSuggestion, move suggestion down one spot and move others up
-      finalSuggestion.add(2,memberEntryObj);
-      if(queryResult.size() > 2){
-        finalSuggestion.add(0,memberEntryObj);
-      }else{
-        finalSuggestion.add(memberEntryObj);
+      if(countProject<3)finalSuggestion.add(new LinkedList(projectSuggestion));
+      if(countProject>=3&&countTeamMember>=3) {
+    	  break;
       }
+      countProject++;
     }
-    // return project final suggestions
+    
+    System.out.println("addEmptyInfoToList...");
+    addEmptyInfoToList(finalSuggestion);
+    
+    finalSuggestion.add(memberSuggestion);
+    
     conn.close();
     return finalSuggestion;
   }
@@ -160,16 +293,15 @@ public class ProjectPopup extends SuggestionPopup{
     IProgram program = (IProgram) session.getObject(IProgram.OBJECT_TYPE, projectName);
     return program;
   }
+  @Override
+  protected List addEmptyInfoToList(List<List> infoList) {
+		while (infoList.size() < 4) {
+			infoList.add(new LinkedList<>());
+			for (int i = 0; i < infoList.get(1).size(); i++) {
+				infoList.get(infoList.size() - 1).add("n/a");
+			}
+		}
+		return infoList;
+	}
 
-  private String addMemberRecommendation(Map teamMembers, IDataObject referent)
-      throws APIException {
-    if(teamMembers.containsKey(referent)){
-      Integer v = (Integer) teamMembers.get(referent);
-      teamMembers.remove(referent);
-      teamMembers.put(referent, v+1);
-    }else{
-      teamMembers.put(referent, 1);
-    }
-    return "User " + referent.getName() + " added to teamMember for " + teamMembers.get(referent) + " time" + (teamMembers.get(referent).equals(1)?"":"s");
-  }
 }
