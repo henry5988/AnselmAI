@@ -28,14 +28,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.PrivilegedAction;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.SimpleFormatter;
 
 public class ProjectPopup extends SuggestionPopup{
   @Override
@@ -105,6 +109,10 @@ public class ProjectPopup extends SuggestionPopup{
 	List projectSuggestion = new LinkedList();
     List memberSuggestion = new LinkedList();
     List<List> finalSuggestion = new LinkedList();
+    String url = "http://"+Constants.LOCALHOST+":7001/Agile/?fromPCClient=true"
+    		+ "&module=ActivityHandler"
+    		+ "&requestUrl=module%3DActivityHandler%26opcode%3DdisplayObject%26classid%3D18022%26objid%3D";
+    String footUrl = "%26tabid%3D0%26";
     String objname = ((IProgram)obj).getValue(ProgramConstants.ATT_GENERAL_INFO_NAME) + "";
     projectSuggestion.add(objname);
     finalSuggestion.add(new LinkedList(projectSuggestion));
@@ -113,7 +121,7 @@ public class ProjectPopup extends SuggestionPopup{
     Map<IAgileObject, Integer> teamMembers  = new HashMap();
     // A. get project
     IProgram program = (IProgram) obj;
-
+    String objID = program.getObjectId().toString();
     // B. get created from template value
     String template = (String) program.getValue(2000008049);
 
@@ -134,12 +142,15 @@ public class ProjectPopup extends SuggestionPopup{
     	if(objname.equals(relatedProjectName.toString()))continue;
       projectSuggestion = new LinkedList();
       System.out.println("Related: " + relatedProjectName);
-      // 1. get the project object from their names
+      // 1. get the project object from their names      
       sql = "SELECT ACTIVITY_NUMBER FROM ACTIVITY WHERE NAME='" + relatedProjectName + "'";
       sqlResult = executeSQL(conn, sql);
       IProgram relatedProject = (IProgram) session.getObject(IProgram.OBJECT_TYPE, sqlResult.get(0).toString());
-//      System.out.println("program name: " + relatedProject);
-      if(countProject<3)projectSuggestion.add(relatedProjectName);
+      IUser user = session.getCurrentUser();
+      System.out.println(user.hasPrivilege(UserConstants.PRIV_READ, relatedProject));
+      
+      //      System.out.println("program name: " + relatedProject);
+      if(countProject<3)projectSuggestion.add("<a href=\""+url+objID+footUrl+"\">"+relatedProjectName+"</a>");
       
       // 2. Get actual duration of project
       String actualDuration = "";
@@ -170,6 +181,9 @@ public class ProjectPopup extends SuggestionPopup{
     	if(countTeamMember==3)break;
         IRow row = (IRow) r;
         IUser teamMember = (IUser) row.getReferent();
+        System.out.println("Team member "+teamMember.toString()+" ...");
+        System.out.println("Query working project...");
+        
         // Check the quantity of the projects this user have
         IQuery query = (IQuery) session.createObject(IQuery.OBJECT_TYPE, ProgramConstants.CLASS_PROGRAM);
         // Project = Active and  Status = In Process and team have above user
@@ -180,6 +194,8 @@ public class ProjectPopup extends SuggestionPopup{
 		query.setCriteria(queryCritria);
 		ITable queryResult = query.execute();
 		memberSuggestion.add(queryResult.size());
+		
+		System.out.println("Get user group...");
 		
 		// Check the division of the user
 		String userGroupList = "";
@@ -194,15 +210,22 @@ public class ProjectPopup extends SuggestionPopup{
 				userGroupList += userGroup.getName();
 			}
 		}
+		
 		memberSuggestion.add(userGroupList);
 		memberSuggestion.add(teamMember.getValue(UserConstants.ATT_GENERAL_INFO_FIRST_NAME)
 				+" "+teamMember.getValue(UserConstants.ATT_GENERAL_INFO_LAST_NAME));
         countTeamMember++;
       }
       if(countProject<3)finalSuggestion.add(new LinkedList(projectSuggestion));
+      if(countProject>=3&&countTeamMember>=3) {
+    	  break;
+      }
       countProject++;
     }
+    
+    System.out.println("addEmptyInfoToList...");
     addEmptyInfoToList(finalSuggestion);
+    
     finalSuggestion.add(memberSuggestion);
     
     conn.close();
