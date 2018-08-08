@@ -46,7 +46,7 @@ public class BOMPopup extends SuggestionPopup {
   @Override
   public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req){
     System.out.println("BOMPopup()...");
-    init(session, req, BOMPOPUP_OUTPUT_PATH, BOMPOPUP_HTML_OUTPUT, BOMPOPUP_HTML_TEMPLATE, true, false);
+    init(session, req, BOMPOPUP_OUTPUT_PATH, BOMPOPUP_HTML_OUTPUT, BOMPOPUP_HTML_TEMPLATE,BOMPOPUP_DATABASE_TABLE, true, false);
     return super.doAction(session, node, req);
   }
 
@@ -116,7 +116,7 @@ public class BOMPopup extends SuggestionPopup {
 			}
 			
 			
-			sql = "INSERT INTO "+BOMPOPUP_OUTPUT_PATH+" ("+column+") VALUES ("+value+")" ;
+			sql = "INSERT INTO "+BOMPOPUP_DATABASE_TABLE+" ("+column+") VALUES ("+value+")" ;
 			System.out.println(sql);
 			Statement stat = conn_sql.createStatement();
 			stat.executeQuery(sql);

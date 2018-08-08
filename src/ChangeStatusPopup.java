@@ -26,7 +26,7 @@ public class ChangeStatusPopup extends SuggestionPopup{
     String output_path = source + "changeStatusPopup.txt";
     String output_html = source + "changeStatusPopup.htm";
     String output_template = source + "changeStatusPopup.html";
-    init(session, req, output_path, output_html, output_template, true, true);
+    init(session, req, output_path, output_html, output_template," ", true, true);
     super.doAction(session, node, req);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "ChangeStatusPopup"));
   }

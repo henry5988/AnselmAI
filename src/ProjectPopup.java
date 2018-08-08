@@ -32,6 +32,7 @@ import java.security.PrivilegedAction;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class ProjectPopup extends SuggestionPopup{
 //    String output_path = userDir + "creatProjectPopup(HR).txt";
 //    String output_html = userDir + "creatProjectPopup(HR).htm";
 //    String output_template = userDir + "creatProjectPopup(HR).html";
-    init(session, req,PROJECTPOPUP_OUTPUT_PATH, PROJECTPOPUP_HTML_TEMPLATE, PROJECTPOPUP_HTML_OUTPUT, false, false);
+    init(session, req,PROJECTPOPUP_OUTPUT_PATH, PROJECTPOPUP_HTML_TEMPLATE, PROJECTPOPUP_HTML_OUTPUT,PROJECTPOPUP_DATABASE_TABLE, false, false);
     super.doAction(session, node, req);
     System.out.println("-----Project Pop up End-----");
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Project Pop up"));
@@ -87,10 +88,10 @@ public class ProjectPopup extends SuggestionPopup{
 			String column ="";
 			String sql;
 			List sqlResult= new LinkedList(); ;
-			sqlResult.add(getTargetItem(getEventInfo()).getName());  
-			for(int i=0; i<infoList.size(); i++){
-			      for(int j = 0; j< infoList.get(0).size(); j++){
-			    	  sqlResult.add(infoList.get(j).get(i));   	 
+			sqlResult.add(infoList.get(0).get(0));  
+			for(int i=1; i<infoList.size(); i++){
+			      for(int j = 0; j< infoList.get(1).size(); j++){
+			    	  sqlResult.add(infoList.get(i).get(j));   	 
 			      }
 			    }
 			for(int i=0; i<sqlResult.size();i++){	
@@ -106,10 +107,10 @@ public class ProjectPopup extends SuggestionPopup{
 			}
 			
 			
-			sql = "INSERT INTO "+PROJECTPOPUP_OUTPUT_PATH+" ("+column+") VALUES ("+value+")" ;
+			sql = "INSERT INTO "+PROJECTPOPUP_DATABASE_TABLE+" ("+column+") VALUES ("+value+")" ;
 			System.out.println(sql);
-//			Statement stat = conn_sql.createStatement();
-//			stat.executeQuery(sql);
+			Statement stat = conn_sql.createStatement();
+			stat.executeQuery(sql);
 			conn_sql.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -262,7 +263,7 @@ public class ProjectPopup extends SuggestionPopup{
 				userGroupList += userGroup.getName();
 			}
 		}
-		
+		if("".equals(userGroupList))userGroupList+="n/a";
 		memberSuggestion.add(userGroupList);
 		memberSuggestion.add(teamMember.getValue(UserConstants.ATT_GENERAL_INFO_FIRST_NAME)
 				+" "+teamMember.getValue(UserConstants.ATT_GENERAL_INFO_LAST_NAME));
@@ -276,9 +277,11 @@ public class ProjectPopup extends SuggestionPopup{
     }
     
     System.out.println("addEmptyInfoToList...");
-    addEmptyInfoToList(finalSuggestion);
+    addEmptyInfoToList(finalSuggestion,4);
     
     finalSuggestion.add(memberSuggestion);
+    
+    addEmptyInfoToList(finalSuggestion,7);
     
     conn.close();
     return finalSuggestion;
@@ -293,9 +296,9 @@ public class ProjectPopup extends SuggestionPopup{
     IProgram program = (IProgram) session.getObject(IProgram.OBJECT_TYPE, projectName);
     return program;
   }
-  @Override
-  protected List addEmptyInfoToList(List<List> infoList) {
-		while (infoList.size() < 4) {
+  
+  protected List addEmptyInfoToList(List<List> infoList,int size) {
+		while (infoList.size() < size) {
 			infoList.add(new LinkedList<>());
 			for (int i = 0; i < infoList.get(1).size(); i++) {
 				infoList.get(infoList.size() - 1).add("n/a");

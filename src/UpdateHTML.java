@@ -19,12 +19,12 @@ import java.util.Properties;
 
 public class UpdateHTML {
 
-  private String txtDirectory;
+  private String dbTableDirectory;
   private String templateDirectory;
   private String outputDirectory;
   // TODO �ݭn�N�o��Parameter�令�q��Ʈw���o���
-  UpdateHTML(String txt, String template, String output) {
-    setTxtDirectory(txt);
+  UpdateHTML(String dbTable, String template, String output) {
+    setTxtDirectory(dbTable);
     setTemplateDirectory(template);
     setOutputDirectory(output);
   }
@@ -154,11 +154,11 @@ public class UpdateHTML {
   /*Getters and Setters*/
 
   public String getTxtDirectory() {
-    return txtDirectory;
+    return dbTableDirectory;
   }
 
-  public void setTxtDirectory(String txtDirectory) {
-    this.txtDirectory = txtDirectory;
+  public void setTxtDirectory(String dbTableDirectory) {
+    this.dbTableDirectory = dbTableDirectory;
   }
 
   public String getTemplateDirectory() {

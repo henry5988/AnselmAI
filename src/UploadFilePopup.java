@@ -16,7 +16,7 @@ public class UploadFilePopup extends SuggestionPopup {
     String output_path = source + "uploadFilePopup.txt";
     String output_html = source + "uploadFilePopup.htm";
     String output_template = source + "uploadFilePopup.html";
-    init(session, req, output_path, output_html, output_template, true, true);
+    init(session, req, output_path, output_html, output_template," ", true, true);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "UploadFilePopup()"));
   }
 

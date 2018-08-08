@@ -23,7 +23,7 @@ public class CreateChange extends SuggestionPopup{
     String output_path = source + "createChange.txt";
     String output_html = source + "createChange.htm";
     String output_template = source + "createChange.html";
-    init(session, req,output_path, output_html, output_template, false, false);
+    init(session, req,output_path, output_html, output_template," ", false, false);
     super.doAction(session, node, req);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "CreateChange"));
   }

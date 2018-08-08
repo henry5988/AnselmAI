@@ -29,7 +29,7 @@ public class UpdateTitleBlockPopup extends SuggestionPopup {
     String output_path = source + "updateTitleBlockPopup.txt";
     String output_html = source + "updateTitleBlockPopup.htm";
     String output_template = source + "updateTitleBlockPopup.html";
-    init(session, req, output_path, output_html, output_template, true, true);
+    init(session, req, output_path, output_html, output_template," ", true, true);
     super.doAction(session, node, req);
     return new EventActionResult(req, new ActionResult(ActionResult.STRING, "UpdateTitleBlockPopup"));
   }

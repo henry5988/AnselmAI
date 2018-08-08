@@ -29,6 +29,7 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
   private IAgileSession session;
   private IEventInfo eventInfo;
   private String output_path;
+  private String database_Table;
   private String actionCode;
   private boolean fieldCheck; // this boolean has to be set at the beginning of doAction
   private String htmlTemplate; // directory for html templates
@@ -80,7 +81,7 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
 
       System.out.println("Creating BOM HTML for client...");
       File exist = new File(replaceServerSource(getSession().getCurrentUser().getName(), EXIST));
-		UpdateHTML htmlMaker = new UpdateHTML(getOutput_path(), getHtmlTemplate(), getHtmlOutput());
+		UpdateHTML htmlMaker = new UpdateHTML(getDataBase_Table(), getHtmlTemplate(), getHtmlOutput());
 		System.out.println("HTML Updating..");
 		htmlMaker.update();
 		FileWriter existWriter = new FileWriter(exist);
@@ -123,12 +124,13 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
   }
 
   protected void init(IAgileSession session, IEventInfo req, String output_path, String html_output, String html_template,
-      boolean fieldCheck, boolean test){
+      String database_table, boolean fieldCheck, boolean test){
     setSession(session);
     setEventInfo(req);
     try {
-      setOutput_path(replaceServerSource(getSession().getCurrentUser().getName(), output_path));
+      setOutput_path(replaceServerSource(getSession().getCurrentUser().getName(),output_path));
       setHtmlOutput(replaceServerSource(getSession().getCurrentUser().getName(), html_output));
+      setDataBase_Table(database_table);
       setHtmlTemplate(html_template);
     }catch(APIException e){
       System.err.println("Error in init(): " + e.getMessage());
@@ -243,11 +245,20 @@ public abstract class SuggestionPopup implements IEventAction, Constants {
   public String getOutput_path() {
     return output_path;
   }
+  
 
   public void setOutput_path(String output_path) {
     this.output_path = output_path;
   }
+  
+  public String getDataBase_Table() {
+	    return database_Table;
+  }
 
+  public void setDataBase_Table(String database_Table) {
+	    this.database_Table = database_Table;
+  }
+  
   public String getHtmlTemplate() {
     return htmlTemplate;
   }

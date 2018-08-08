@@ -6,7 +6,10 @@ import com.agile.api.IChange;
 import com.agile.api.IDataObject;
 import com.agile.api.IItem;
 import com.agile.api.INode;
+import com.agile.api.ITable;
 import com.agile.api.IUser;
+import com.agile.api.ItemConstants;
+import com.agile.api.NodeConstants;
 import com.agile.api.UserConstants;
 import com.agile.px.ActionResult;
 import com.agile.px.EventActionResult;
@@ -43,8 +46,8 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 	@Override
 	public EventActionResult doAction(IAgileSession session, INode node, IEventInfo req) {
 		init(session, req, GETFILEPOPUP_OUTPUT_PATH,
-				GETFILEPOPUP__HTML_TEMPLATE,
-				 GETFILEPOPUP_HTML_OUTPUT, false, false);
+				GETFILEPOPUP_HTML_TEMPLATE,
+				 GETFILEPOPUP_HTML_OUTPUT,GETFILEPOPUP_DATABASE_TABLE, false, false);
 		super.doAction(session, node, req);
 		return new EventActionResult(req, new ActionResult(ActionResult.STRING, "Get File Popup"));
 	}
@@ -96,10 +99,10 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 			}
 			
 			
-			sql = "INSERT INTO "+GETFILEPOPUP_OUTPUT_PATH+" ("+column+") VALUES ("+value+")" ;
+			sql = "INSERT INTO "+GETFILEPOPUP_DATABASE_TABLE+" ("+column+") VALUES ("+value+")" ;
 			System.out.println(sql);
-//			Statement stat = conn_sql.createStatement();
-//			stat.executeQuery(sql);
+			Statement stat = conn_sql.createStatement();
+			stat.executeQuery(sql);
 			conn_sql.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -191,19 +194,23 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 		IUser user = session.getCurrentUser();
 		IFileEventInfo info = (IFileEventInfo) req;
 		IEventDirtyFile[] files = info.getFiles();
+		
 		IDataObject ob = info.getDataObject();
 		IItem itm = (IItem)session.getObject(IItem.OBJECT_TYPE,  ob.getName());
 		Connection conn = getConnection(USERNAME, PASSWORD, URL);
 		//sql = "SELECT USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') as DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
-		sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') AS DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY TO_CHAR(DETAILS),USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
+		//sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY') AS DATETIME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY TO_CHAR(DETAILS),USER_NAME,to_char(to_date(TIMESTAMP,'DD-MON-YY'),'DD-MM-YY')";	
+		sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND ITEM IN (SELECT ID FROM ITEM WHERE ITEM_NUMBER = '"+itm.getName()+"')AND DETAILS LIKE '%"+files[0].getFilename()+"%' AND DETAILS LIKE '%"+files[0].getFileFolder().getName()+"%' AND USER_NAME != '"+user.toString()+"' GROUP BY TO_CHAR(DETAILS),USER_NAME";
 		Statement stat = conn.createStatement();
 		ResultSet rs = stat.executeQuery(sql);
 		System.out.println("★"+sql);
 		while (rs.next()) {
 			String userName = rs.getString("USER_NAME").toString();
-			String dateTime = rs.getString("DATETIME").toString();
+			//String dateTime = rs.getString("DATETIME").toString();
 			String detail = rs.getString("DETAILS").toString();
-			sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+detail+"%' AND TIMESTAMP >= TO_DATE('"+dateTime+"', 'DD-MM-YY')-7 AND TIMESTAMP <= TO_DATE('"+dateTime+"', 'DD-MM-YY')+7 GROUP BY TO_CHAR(DETAILS),USER_NAME ORDER BY USER_NAME";	
+			//sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+detail+"%' AND TIMESTAMP >= TO_DATE('"+dateTime+"', 'DD-MM-YY')-7 AND TIMESTAMP <= TO_DATE('"+dateTime+"', 'DD-MM-YY')+7 GROUP BY TO_CHAR(DETAILS),USER_NAME ORDER BY USER_NAME";	
+			sql = "SELECT TO_CHAR(DETAILS) AS DETAILS,USER_NAME  FROM ITEM_HISTORY   WHERE ACTION = 15 AND USER_NAME = '"+userName+"' AND DETAILS NOT LIKE '%"+detail+"%' GROUP BY TO_CHAR(DETAILS),USER_NAME ORDER BY USER_NAME";	
+			
 			System.out.println("★★"+sql);
 			Statement stat2 = conn.createStatement();
 			ResultSet rs2 = stat2.executeQuery(sql);
@@ -251,7 +258,7 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 	    	List suggestion = new LinkedList();
 	    	String detail = entry.getKey().toString();
 	    	String[] fileInfo = detail.split(" ");
-	    	sql = "SELECT ATTACHMENT.DESCRIPTION, FILES.FILENAME, ITEM.ITEM_NUMBER FROM ATTACHMENT "
+	    	sql = "SELECT ATTACHMENT.DESCRIPTION, FILES.FILENAME, ITEM.ITEM_NUMBER,ITEM.ID FROM ATTACHMENT "
 	    			+ "INNER JOIN  ATTACHMENT_MAP ON ATTACHMENT_MAP.ATTACH_ID = ATTACHMENT.ID "
 	    			+ "INNER JOIN FILES ON FILES.ID = ATTACHMENT_MAP.FILE_ID "
 	    			+ "INNER JOIN ITEM ON ITEM.ID =  ATTACHMENT_MAP.PARENT_ID "
@@ -267,13 +274,18 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 				System.out.println(itm+"        "+ user.hasPrivilege(UserConstants.PRIV_READ, itm));
 				if (!rs3.getString("DESCRIPTION").isEmpty())	
 					description = rs3.getString("DESCRIPTION").toString();
+				 String item_url = (String) getSession().getAdminInstance().getNode(NodeConstants.NODE_SERVER_LOCATION)
+		    		     .getProperty("Web Server URL").getValue()+"?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D10000%26objid%3D"+itm.getObjectId()+"%26tabid%3D13%26";  
 				
-				String filename = rs3.getString("FILENAME").toString();
+				 String filename = rs3.getString("FILENAME").toString();
 				String[] filetype = filename.split("\\.");
-				suggestion.add("aaa");
-				suggestion.add(filename);	
+				IItem picture = (IItem)session.getObject(IItem.OBJECT_TYPE,  "PROGRAMUSE");
+				ITable attachments = picture.getTable(ItemConstants.TABLE_ATTACHMENTS);
+				
+				suggestion.add("");
+				suggestion.add("<a href=\""+item_url+"\" target=\"_blank\" >"+filename+"</a>");	
 				suggestion.add(description);
-				suggestion.add(entry.getValue().toString());
+				suggestion.add(entry.getValue().toString()+" 人看過");
 				finalSuggestion.add(suggestion);	
 				
 				max++;
@@ -287,8 +299,6 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 				e.printStackTrace();
 				throw e;
 			}
-			
-
 	    	
 	    }
 	   

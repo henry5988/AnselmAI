@@ -36,7 +36,7 @@ public class CreateItem extends SuggestionPopup {
     String output_path = "createPart.txt"; // 推薦資料文件
     String output_html = "createPart.htm"; // 推薦html
     String output_template = "createPart.html"; // 推薦範本html
-    init(session, req, output_path, output_html, output_template, false, true); // 初始class設定，通過傳遞Session, EventInfo, output_path, 欄位檢查flag和跳過邏輯測試flag來執行此Event
+    init(session, req, output_path, output_html, output_template," ", false, true); // 初始class設定，通過傳遞Session, EventInfo, output_path, 欄位檢查flag和跳過邏輯測試flag來執行此Event
     super.doAction(session, node, req); // parent class的doAction()程式
     // super程式執行順序為
     // 1. checksField()
