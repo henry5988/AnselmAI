@@ -79,8 +79,8 @@ public class CAPAPopup extends SuggestionPopup {
 				String column ="";
 				String sql;
 				List sqlResult= new LinkedList(); ;
-				sqlResult.add(infoList.get(0).get(0));  
-				for(int i=1; i<infoList.size(); i++){
+				//sqlResult.add(getTargetItem(getEventInfo()).getName());   
+				for(int i=0; i<infoList.size(); i++){
 				      for(int j = 0; j< infoList.get(0).size(); j++){
 				    	  sqlResult.add(infoList.get(i).get(j));   	 
 				      }
@@ -98,7 +98,7 @@ public class CAPAPopup extends SuggestionPopup {
 				}
 				
 				
-				sql = "INSERT INTO "+PROJECTPOPUP_OUTPUT_PATH+" ("+column+") VALUES ("+value+")" ;
+				sql = "INSERT INTO "+CAPA_DATABASE_TABLE+" ("+column+") VALUES ("+value+")" ;
 				System.out.println(sql);
 				Statement stat = conn_sql.createStatement();
 				stat.executeQuery(sql);
@@ -124,7 +124,7 @@ public class CAPAPopup extends SuggestionPopup {
 					.getProperty("Web Server URL").getValue()
 					+ "?fromPCClient=true&module=QCRHandler&requestUrl=module%3DQCRHandler%26opcode%3DdisplayObject%26classid%3D4928%26objid%3D"
 					+ qcr.getObjectId() + "%26tabid%3D0%26";
-			itemInfo.add("<a href='" + item_url + "' target='_blank' >" + qcr.getName() + "</a>");
+			itemInfo.add("<a href=\"" + item_url + "\" target=\"_blank\" >" + qcr.getName() + "</a>");
 			itemInfo.add(qcr.getValue(QualityChangeRequestConstants.ATT_COVER_PAGE_DESCRIPTION));
 			String person = "n/a";
 			person = qcr.getCell(QualityChangeRequestConstants.ATT_COVER_PAGE_ORIGINATOR).getReferent().getName();

@@ -80,7 +80,9 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 			String column ="";
 			String sql;
 			List sqlResult= new LinkedList(); ;
-			sqlResult.add(getTargetItem(getEventInfo()).getName());  
+			IFileEventInfo info = (IFileEventInfo) getEventInfo();
+			IEventDirtyFile[] files = info.getFiles();
+			sqlResult.add(files[0].getFilename());  
 			for(int i=0; i<infoList.get(0).size(); i++){
 			      for(int j = 0; j< infoList.size(); j++){
 			    	  sqlResult.add(infoList.get(j).get(i));   	 
@@ -272,8 +274,8 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 			try{
 				itm = (IItem)session.getObject(IItem.OBJECT_TYPE,  rs3.getString("ITEM_NUMBER").toString());
 				System.out.println(itm+"        "+ user.hasPrivilege(UserConstants.PRIV_READ, itm));
-				if (!rs3.getString("DESCRIPTION").isEmpty())	
-					description = rs3.getString("DESCRIPTION").toString();
+				if (!rs3.wasNull())	
+					description = rs3.getString("DESCRIPTION")+"";
 				 String item_url = (String) getSession().getAdminInstance().getNode(NodeConstants.NODE_SERVER_LOCATION)
 		    		     .getProperty("Web Server URL").getValue()+"?fromPCClient=true&module=ItemHandler&requestUrl=module%3DItemHandler%26opcode%3DdisplayObject%26classid%3D10000%26objid%3D"+itm.getObjectId()+"%26tabid%3D13%26";  
 				
@@ -282,7 +284,21 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 				IItem picture = (IItem)session.getObject(IItem.OBJECT_TYPE,  "PROGRAMUSE");
 				ITable attachments = picture.getTable(ItemConstants.TABLE_ATTACHMENTS);
 				
-				suggestion.add("");
+				if(filetype[1].equals("doc")||filetype[1].equals("docx"))
+					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/word.png\">");
+				else if(filetype[1].equals("txt"))
+					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/txt.png\">");
+				else if(filetype[1].equals("ppt")|filetype[1].equals("pptx"))
+					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/ppt.png\">");
+				else if(filetype[1].equals("xls")||filetype[1].equals("xlsx"))
+					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/excel.png\">");
+				else if(filetype[1].equals("pdf"))
+					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/pdf.png\">");
+				else
+					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/file.png\">");
+				
+				
+				
 				suggestion.add("<a href=\""+item_url+"\" target=\"_blank\" >"+filename+"</a>");	
 				suggestion.add(description);
 				suggestion.add(entry.getValue().toString()+" 人看過");
