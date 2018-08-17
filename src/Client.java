@@ -92,7 +92,7 @@ public class Client implements Constants {
 	    statement.setString(1, username);
 	    ResultSet r = statement.executeQuery();
 	    if(!r.next()){
-	      System.out.println("甇文董������");
+	      System.out.println("此帳號無授權");
 //	      sql = "INSERT INTO userlogins (username, last_updated) VALUES (?, ?)";
 //	      statement = conn.prepareStatement(sql);
 //	      statement.setString(1, username);

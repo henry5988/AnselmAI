@@ -34,6 +34,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -119,34 +120,7 @@ public class ProjectPopup extends SuggestionPopup{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//    File f = new File(getOutput_path());
-//    File exist = new File(EXIST);
-//    if(!exist.exists()){
-//      Files.createDirectories(Paths.get(exist.getPath()).getParent());
-//      exist.createNewFile();
-//    }
-//    if(!f.exists()){
-//      Files.createDirectories(Paths.get(f.getPath()).getParent());
-//      f.createNewFile();
-//    }
-//
-//    FileWriter existWriter = new FileWriter(exist);
-//    existWriter.write("createProject\n" + System.currentTimeMillis());
-//    FileWriter fw = new FileWriter(f);
-//    if(!infoList.isEmpty()) {
-//    	for(List list:infoList) {
-//    		if(!list.isEmpty()) {
-//    			for(Object o:list) {
-//    				fw.write(o.toString()+"\r\n");
-//    				fw.flush();
-//    			}
-//    		}
-//    	}
-//    }else {
-//    	fw.write("empty");
-//    }
-//    existWriter.close();
-//    fw.close();
+
   }
 
   @Override
@@ -161,6 +135,8 @@ public class ProjectPopup extends SuggestionPopup{
       throws SQLException, APIException, ClassNotFoundException {
 	List projectSuggestion = new LinkedList();
     List memberSuggestion = new LinkedList();
+    List storeMember = new LinkedList();
+    List<List> finalMemberSuggestion = new LinkedList();
     List<List> finalSuggestion = new LinkedList();
     String url = "http://"+Constants.LOCALHOST+":7001/Agile/?fromPCClient=true"
     		+ "&module=ActivityHandler"
@@ -190,6 +166,7 @@ public class ProjectPopup extends SuggestionPopup{
     sqlResult = executeSQL(conn, sql);
     int countProject = 0;
     int countTeamMember = 0;
+    ArrayList<String> storeUser = new ArrayList<String>();
     // D. get the team table for each project
     for(Object relatedProjectName : sqlResult){
     	if(objname.equals(relatedProjectName.toString()))continue;
@@ -201,6 +178,8 @@ public class ProjectPopup extends SuggestionPopup{
       IProgram relatedProject = (IProgram) session.getObject(IProgram.OBJECT_TYPE, sqlResult.get(0).toString());
       IUser user = session.getCurrentUser();
       System.out.println(user.hasPrivilege(UserConstants.PRIV_READ, relatedProject));
+      if(!relatedProject.getValue(ProgramConstants.ATT_GENERAL_INFO_STATUS).toString().equals("Complete"))
+    	  continue;
       
       //      System.out.println("program name: " + relatedProject);
       if(countProject<3)projectSuggestion.add("<a href=\""+url+objID+footUrl+"\">"+relatedProjectName+"</a>");
@@ -224,6 +203,8 @@ public class ProjectPopup extends SuggestionPopup{
       }
       if(!"".equals(estimatedDuration))
     	  estimatedDuration = estimatedDrationI + "天";
+      if((estimatedDrationI+"").equals("0"))
+    	  estimatedDuration = "執行中";
       if(countProject<3) projectSuggestion.add(estimatedDuration);
       if(countProject<3) projectSuggestion.add(errorDuration);
       
@@ -232,9 +213,12 @@ public class ProjectPopup extends SuggestionPopup{
       
       for(Object r: teamTable){
     	if(countTeamMember==3)break;
+    	memberSuggestion = new LinkedList();
         IRow row = (IRow) r;
         IUser teamMember = (IUser) row.getReferent();
         System.out.println("Team member "+teamMember.toString()+" ...");
+//        storeMember.add(teamMember+"");
+//        if(storeMember.contains(teamMember+""))continue;
         System.out.println("Query working project...");
         
         // Check the quantity of the projects this user have
@@ -267,19 +251,20 @@ public class ProjectPopup extends SuggestionPopup{
 		memberSuggestion.add(userGroupList);
 		memberSuggestion.add(teamMember.getValue(UserConstants.ATT_GENERAL_INFO_FIRST_NAME)
 				+" "+teamMember.getValue(UserConstants.ATT_GENERAL_INFO_LAST_NAME));
+		finalMemberSuggestion.add(new LinkedList(memberSuggestion));
         countTeamMember++;
       }
       if(countProject<3)finalSuggestion.add(new LinkedList(projectSuggestion));
-      if(countProject>=3&&countTeamMember>=3) {
-    	  break;
-      }
+//      if(countProject>=3&&countTeamMember>=3) {
+//    	  break;
+//      }
       countProject++;
     }
     
     System.out.println("addEmptyInfoToList...");
     addEmptyInfoToList(finalSuggestion,4);
     
-    finalSuggestion.add(memberSuggestion);
+    finalSuggestion.addAll(finalMemberSuggestion);
     
     addEmptyInfoToList(finalSuggestion,7);
     
