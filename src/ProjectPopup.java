@@ -93,7 +93,7 @@ public class ProjectPopup extends SuggestionPopup{
 			      for(int j = 0; j< infoList.get(1).size(); j++){
 			    	  sqlResult.add(infoList.get(i).get(j));   	 
 			      }
-			    }
+			}
 			for(int i=0; i<sqlResult.size();i++){	
 				if (i==0) {
 					column += "column"+String.valueOf(i+1);

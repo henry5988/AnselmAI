@@ -283,7 +283,7 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 				String[] filetype = filename.split("\\.");
 				IItem picture = (IItem)session.getObject(IItem.OBJECT_TYPE,  "PROGRAMUSE");
 				ITable attachments = picture.getTable(ItemConstants.TABLE_ATTACHMENTS);
-				
+				/*
 				if(filetype[1].equals("doc")||filetype[1].equals("docx"))
 					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/word.png\">");
 				else if(filetype[1].equals("txt"))
@@ -296,7 +296,20 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/pdf.png\">");
 				else
 					suggestion.add("<img src=\"http://win-ooi3viu801v:7001/Agile/link/Part/P00004/Rev/Introductory/files/file.png\">");
-				
+				*/
+				if(filetype[1].equals("doc")||filetype[1].equals("docx"))
+					suggestion.add("<img src=\"https://ppt.cc/ft8Mox@.png\">");
+				else if(filetype[1].equals("txt"))
+					suggestion.add("<img src=\"https://ppt.cc/fY3Ghx@.png\">");
+				else if(filetype[1].equals("ppt")|filetype[1].equals("pptx"))
+					suggestion.add("<img src=\"https://ppt.cc/f3D1Xx@.png\">");
+				else if(filetype[1].equals("xls")||filetype[1].equals("xlsx"))
+					suggestion.add("<img src=\"https://ppt.cc/fvMIvx@.png\">");
+				else if(filetype[1].equals("pdf"))
+					suggestion.add("<img src=\"https://ppt.cc/fk3uux@.png\">");
+				else
+					suggestion.add("<img src=\"https://ppt.cc/fMLbux@.png\">");
+			
 				
 				
 				suggestion.add("<a href=\""+item_url+"\" target=\"_blank\" >"+filename+"</a>");	
@@ -305,7 +318,7 @@ public class GetFilePopup extends SuggestionPopup implements Constants{
 				finalSuggestion.add(suggestion);	
 				
 				max++;
-				if(max==3)
+				if(max==4)
 					break;
 			}catch(APIException e){
 				if(e.getErrorCode().toString().equals("407")){
