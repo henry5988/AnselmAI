@@ -263,7 +263,7 @@ public class BOMPopup extends SuggestionPopup {
 						altItems.push(tempItems.get(i));
 					}catch(APIException e){
 						if(e.getErrorCode().toString().equals("407")){
-							System.out.println("權限不足");
+							System.out.println("甈��雲");
 							continue;
 						}
 						e.printStackTrace();
